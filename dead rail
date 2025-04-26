@@ -1,0 +1,308 @@
+local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOogway/Fluent-Renewed/releases/latest/download/Fluent.luau"))()
+
+local Window = Library:CreateWindow{
+    Title = `rail`,
+    SubTitle = "",
+    TabWidth = 160,
+    Size = UDim2.fromOffset(830, 525),
+    Resize = true, -- Resize this ^ Size according to a 1920x1080 screen, good for mobile users but may look weird on some devices
+    MinSize = Vector2.new(470, 380),
+    Acrylic = true, -- The blur may be detectable, setting this to false disables blur entirely
+    Theme = "Dark",
+    MinimizeKey = Enum.KeyCode.RightControl -- Used when theres no MinimizeKeybind
+}
+
+local Tabs = {
+    Main = Window:CreateTab{
+        Title = "Main",
+        Icon = "nil"
+    }
+}
+
+local Toggle1 = Tabs.Main:CreateToggle("MyToggle", {Title = "Train", Default = false})
+
+-- Store added highlights and GUIs for cleanup
+local trainVisuals = {}
+
+Toggle1:OnChanged(function()
+    if not Toggle1Interacted then
+        Toggle1Interacted = true
+        return
+    end
+
+    esptrainEnabled = not esptrainEnabled
+
+    if esptrainEnabled then
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+        -- Function to highlight the whole Train model
+        local function highlightTrain(trainModel)
+            if trainModel and trainModel:IsA("Model") and trainModel.Name == "Train" then
+                -- Skip if already highlighted
+                if trainModel:FindFirstChildOfClass("Highlight") then return end
+
+                -- Create a Highlight for the model
+                local highlight = Instance.new("Highlight")
+                highlight.Parent = trainModel
+                highlight.Adornee = trainModel
+                highlight.FillColor = Color3.fromRGB(0, 255, 0)
+                highlight.FillTransparency = 0.5
+                highlight.OutlineColor = Color3.fromRGB(0, 0, 0)
+                highlight.OutlineTransparency = 0.5
+
+                -- Create a Billboard GUI to show distance
+                local billboardGui = Instance.new("BillboardGui")
+                billboardGui.Parent = trainModel
+                billboardGui.Adornee = trainModel -- Attach to the whole model
+                billboardGui.Size = UDim2.new(0, 200, 0, 50)
+                billboardGui.StudsOffset = Vector3.new(0, 3, 0)
+                billboardGui.AlwaysOnTop = true
+
+                local textLabel = Instance.new("TextLabel")
+                textLabel.Parent = billboardGui
+                textLabel.Size = UDim2.new(1, 0, 1, 0)
+                textLabel.BackgroundTransparency = 1
+                textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+                textLabel.TextSize = 14
+                textLabel.Text = "Train - Distance: --"
+
+                -- Store the visuals to clean them up later
+                table.insert(trainVisuals, highlight)
+                table.insert(trainVisuals, billboardGui)
+
+                -- Continuously update the distance text
+                local heartbeatConn
+                heartbeatConn = game:GetService("RunService").Heartbeat:Connect(function()
+                    if not esptrainEnabled then
+                        if heartbeatConn then
+                            heartbeatConn:Disconnect()
+                        end
+                        return
+                    end
+
+                    -- Calculate and update the distance
+                    local distance = (trainModel:GetModelCFrame().Position - humanoidRootPart.Position).Magnitude
+                    textLabel.Text = "Train - Distance: " .. math.floor(distance) .. " studs"
+                end)
+            end
+        end
+
+        -- Highlight all existing Train models
+        for _, train in pairs(workspace:GetDescendants()) do
+            if train:IsA("Model") and train.Name == "Train" then
+                highlightTrain(train)
+            end
+        end
+
+        -- Watch for new Train models being added
+        workspace.DescendantAdded:Connect(function(newModel)
+            if esptrainEnabled and newModel:IsA("Model") and newModel.Name == "Train" then
+                highlightTrain(newModel)
+            end
+        end)
+    else
+        -- Toggle OFF: remove all visuals
+        for _, v in pairs(trainVisuals) do
+            if v and v.Parent then
+                v:Destroy()
+            end
+        end
+        trainVisuals = {} -- Clear the table
+    end
+end)
+
+local Toggle2 = Tabs.Main:CreateToggle("MyToggle", {Title = "Tesla Lab", Default = false})
+
+-- Store added highlights and GUIs for cleanup
+local teslaLabVisuals = {}
+
+Toggle2:OnChanged(function()
+    if not Toggle2Interacted then
+        Toggle2Interacted = true
+        return
+    end
+
+    espteslaLabEnabled = not espteslaLabEnabled
+
+    if espteslaLabEnabled then
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+        -- Function to highlight the whole TeslaLab model
+        local function highlightTeslaLab(model)
+            if model and model:IsA("Model") and model.Name == "TeslaLab" then
+                -- Skip if already highlighted
+                if model:FindFirstChildOfClass("Highlight") then return end
+
+                -- Create a Highlight for the model
+                local highlight = Instance.new("Highlight")
+                highlight.Parent = model
+                highlight.Adornee = model
+                highlight.FillColor = Color3.fromRGB(0, 255, 0)
+                highlight.FillTransparency = 0.5
+                highlight.OutlineColor = Color3.fromRGB(0, 0, 0)
+                highlight.OutlineTransparency = 0.5
+
+                -- Create a Billboard GUI to show distance
+                local billboardGui = Instance.new("BillboardGui")
+                billboardGui.Parent = model
+                billboardGui.Adornee = model
+                billboardGui.Size = UDim2.new(0, 200, 0, 50)
+                billboardGui.StudsOffset = Vector3.new(0, 3, 0)
+                billboardGui.AlwaysOnTop = true
+
+                local textLabel = Instance.new("TextLabel")
+                textLabel.Parent = billboardGui
+                textLabel.Size = UDim2.new(1, 0, 1, 0)
+                textLabel.BackgroundTransparency = 1
+                textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+                textLabel.TextSize = 14
+                textLabel.Text = "TeslaLab - Distance: --"
+
+                -- Store the visuals to clean them up later
+                table.insert(teslaLabVisuals, highlight)
+                table.insert(teslaLabVisuals, billboardGui)
+
+                -- Continuously update the distance text
+                local heartbeatConn
+                heartbeatConn = game:GetService("RunService").Heartbeat:Connect(function()
+                    if not espteslaLabEnabled then
+                        if heartbeatConn then
+                            heartbeatConn:Disconnect()
+                        end
+                        return
+                    end
+
+                    -- Calculate and update the distance
+                    local distance = (model:GetModelCFrame().Position - humanoidRootPart.Position).Magnitude
+                    textLabel.Text = "TeslaLab - Distance: " .. math.floor(distance) .. " studs"
+                end)
+            end
+        end
+
+        -- Highlight all existing TeslaLab models
+        for _, model in pairs(workspace:GetDescendants()) do
+            if model:IsA("Model") and model.Name == "TeslaLab" then
+                highlightTeslaLab(model)
+            end
+        end
+
+        -- Watch for new TeslaLab models being added
+        workspace.DescendantAdded:Connect(function(newModel)
+            if espteslaEnabled and newModel:IsA("Model") and newModel.Name == "TeslaLab" then
+                highlightTeslaLab(newModel)
+            end
+        end)
+    else
+        -- Toggle OFF: remove all visuals
+        for _, v in pairs(teslaLabVisuals) do
+            if v and v.Parent then
+                v:Destroy()
+            end
+        end
+        teslaLabVisuals = {} -- Clear the table
+    end
+end)
+
+local Tabs = {
+    Main = Window:CreateTab{
+        Title = "attack",
+        Icon = "nil"
+    }
+}
+
+local Toggle3 = Tabs.Main:CreateToggle("MyToggle", {Title = "auto attack", Default = false})
+
+Toggle3:OnChanged(function()
+    if not Toggle3Interacted then
+        Toggle3Interacted = true
+        return
+    end
+
+    attackEnabled = not attackEnabled
+
+    if attackEnabled then
+        local args = {
+            [1] = Vector3.new(-0.6700190901756287, -0.003967110067605972, 0.7423332333564758)
+        }
+
+        task.spawn(function()
+            while attackEnabled do
+                game:GetService("Players").LocalPlayer.Character.Shovel.SwingEvent:FireServer(unpack(args))
+                task.wait(0)
+            end
+        end)
+    end
+end)
+
+local Toggle4 = Tabs.Main:CreateToggle("MyToggle", {Title = "aimbot zombie", Default = false})
+
+Toggle4:OnChanged(function()
+    if not Toggle4Interacted then
+        Toggle4Interacted = true
+        return
+    end
+
+    aimbotEnabled = not aimbotEnabled
+
+    if aimbotEnabled then
+        -- Set the range limit for the aimbot (in studs)
+        local AIMBOT_RANGE = 50
+            
+        -- Set the range limit for the aimbot (in studs)
+        local ZombieNames = {
+            "Model_Runner",
+            "Model_Walker",
+            "ZombieMiner"
+        }
+
+        local function getClosestZombie()
+            local closestZombie = nil
+            local shortestDist = AIMBOT_RANGE
+            local myPosition = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+
+            for _, zombieName in pairs(ZombieNames) do
+                for _, obj in pairs(workspace:GetDescendants()) do
+                    if obj.Name == zombieName and obj:IsA("Model") and obj:FindFirstChild("HumanoidRootPart") and obj:FindFirstChild("Humanoid") then
+                        local humanoid = obj.Humanoid
+                        if humanoid.Health > 0 then
+                            local dist = (obj.HumanoidRootPart.Position - myPosition).Magnitude
+                            if dist < shortestDist then
+                                shortestDist = dist
+                                closestZombie = obj
+                            end
+                        end
+                    end
+                end
+            end
+
+            return closestZombie
+        end
+
+        local function aimAtNearestZombie()
+            local zombie = getClosestZombie()
+            if zombie then
+                local targetPos = zombie.HumanoidRootPart.Position
+                local camera = workspace.CurrentCamera
+                camera.CFrame = CFrame.new(camera.CFrame.Position, targetPos)
+            end
+        end
+
+        task.spawn(function()
+            while aimbotEnabled do
+                aimAtNearestZombie()
+                task.wait(0)
+            end
+        end)
+    end
+end)
+
+local Tabs = {
+    Main = Window:CreateTab{
+        Title = "item",
+        Icon = "nil"
+    }
+}
