@@ -1,0 +1,173 @@
+local TweenService = game:GetService("TweenService")
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+-- Wait for Enemies folder to exist
+local enemiesFolder = workspace:FindFirstChild("Enemies") or workspace:WaitForChild("Enemies")
+
+-- Wait for Baking Staff NPC to appear in the Enemies folder
+local bakingStaff = enemiesFolder:FindFirstChild("Baking Staff")
+if not bakingStaff then
+    print("Waiting for Baking Staff to spawn...")
+    bakingStaff = enemiesFolder.ChildAdded:Wait()
+    while bakingStaff.Name ~= "Baking Staff" do
+        bakingStaff = enemiesFolder.ChildAdded:Wait()
+    end
+end
+
+-- Wait for its HumanoidRootPart
+local targetRootPart = bakingStaff:WaitForChild("HumanoidRootPart")
+
+-- Tween to Baking Staff
+local tweenSpeed = 2 -- You can adjust this
+local tweenInfo = TweenInfo.new(tweenSpeed, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+
+-- Optional: stand 3 studs in front of the NPC
+local goal = { CFrame = targetRootPart.CFrame + (targetRootPart.CFrame.LookVector * -3) }
+
+local tween = TweenService:Create(humanoidRootPart, tweenInfo, goal)
+tween:Play()
+
+-- with speed stud
+local TweenService = game:GetService("TweenService")
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+-- Wait for Enemies folder
+local enemiesFolder = workspace:FindFirstChild("Enemies") or workspace:WaitForChild("Enemies")
+
+-- Wait for Baking Staff
+local bakingStaff = enemiesFolder:FindFirstChild("Baking Staff")
+if not bakingStaff then
+    print("Waiting for Baking Staff to spawn...")
+    bakingStaff = enemiesFolder.ChildAdded:Wait()
+    while bakingStaff.Name ~= "Baking Staff" do
+        bakingStaff = enemiesFolder.ChildAdded:Wait()
+    end
+end
+
+local targetRootPart = bakingStaff:WaitForChild("HumanoidRootPart")
+
+-- Calculate distance and duration
+local destination = targetRootPart.CFrame.Position + (targetRootPart.CFrame.LookVector * -3)
+local currentPosition = humanoidRootPart.Position
+local distance = (destination - currentPosition).Magnitude
+
+local speed = 16 -- studs per second (you can change this)
+local duration = distance / speed
+
+local tweenInfo = TweenInfo.new(duration, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+local goal = { CFrame = CFrame.new(destination) }
+
+local tween = TweenService:Create(humanoidRootPart, tweenInfo, goal)
+tween:Play()
+
+-- with up stud
+local TweenService = game:GetService("TweenService")
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+-- Wait for Enemies folder
+local enemiesFolder = workspace:FindFirstChild("Enemies") or workspace:WaitForChild("Enemies")
+
+-- Wait for Baking Staff
+local bakingStaff = enemiesFolder:FindFirstChild("Baking Staff")
+if not bakingStaff then
+    print("Waiting for Baking Staff to spawn...")
+    bakingStaff = enemiesFolder.ChildAdded:Wait()
+    while bakingStaff.Name ~= "Baking Staff" do
+        bakingStaff = enemiesFolder.ChildAdded:Wait()
+    end
+end
+
+local targetRootPart = bakingStaff:WaitForChild("HumanoidRootPart")
+
+-- Calculate destination: 3 studs in front + 5 studs up from NPC
+local frontOffset = -targetRootPart.CFrame.LookVector * 3
+local upwardOffset = Vector3.new(0, 5, 0)
+local destination = targetRootPart.Position + frontOffset + upwardOffset
+
+-- Calculate distance and duration
+local currentPosition = humanoidRootPart.Position
+local distance = (destination - currentPosition).Magnitude
+local speed = 16 -- studs per second
+local duration = distance / speed
+
+local tweenInfo = TweenInfo.new(duration, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+local goal = { CFrame = CFrame.new(destination) }
+
+local tween = TweenService:Create(humanoidRootPart, tweenInfo, goal)
+tween:Play()
+
+-- full done auto tween
+local TweenService = game:GetService("TweenService")
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+-- Settings
+local enemiesFolder = workspace:WaitForChild("Enemies")
+local speed = 16 -- studs/second
+local frontOffsetDistance = 3
+local upwardOffset = Vector3.new(0, 5, 0)
+
+-- Function to tween to NPC and follow until it's gone
+local function tweenToNPC(npcModel)
+    local rootPart = npcModel:WaitForChild("HumanoidRootPart")
+    local alive = true
+
+    npcModel.AncestryChanged:Connect(function(_, parent)
+        if not parent then
+            alive = false
+        end
+    end)
+
+    while alive do
+        local frontOffset = -rootPart.CFrame.LookVector * frontOffsetDistance
+        local destination = rootPart.Position + frontOffset + upwardOffset
+
+        local currentPos = humanoidRootPart.Position
+        local distance = (destination - currentPos).Magnitude
+        local duration = distance / speed
+
+        local tweenInfo = TweenInfo.new(duration, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+        local goal = { CFrame = CFrame.new(destination) }
+        local tween = TweenService:Create(humanoidRootPart, tweenInfo, goal)
+        tween:Play()
+
+        local elapsed = 0
+        while elapsed < duration and alive do
+            local dt = RunService.Heartbeat:Wait()
+            elapsed += dt
+        end
+
+        task.wait(0.1)
+    end
+
+    print(npcModel.Name .. " has been removed.")
+end
+
+-- Main loop: wait for "Baking Staff" to appear, then follow it
+while true do
+    local npc = enemiesFolder:FindFirstChild("Baking Staff")
+    if not npc then
+        print("Waiting for Baking Staff to spawn...")
+        repeat
+            local added = enemiesFolder.ChildAdded:Wait()
+            if added.Name == "Baking Staff" then
+                npc = added
+            end
+        until npc
+    end
+
+    print("Found Baking Staff!")
+    tweenToNPC(npc)
+end
