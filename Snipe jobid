@@ -1,0 +1,202 @@
+local validKeys = {
+    ["Lqv5Y8Hd29MWcAz"] = true,
+}
+
+if not getgenv().Key or not validKeys[getgenv().Key] then
+    game.Players.LocalPlayer:Kick("Whitelist error Invalid key. Please use the correct key.")
+    return
+end
+
+local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOogway/Fluent-Renewed/releases/latest/download/Fluent.luau"))()
+
+local Window = Library:CreateWindow{
+    Title = `Snipe`,
+    SubTitle = "jobid",
+    TabWidth = 160,
+    Size = UDim2.fromOffset(830, 525),
+    Resize = true, -- Resize this ^ Size according to a 1920x1080 screen, good for mobile users but may look weird on some devices
+    MinSize = Vector2.new(470, 380),
+    Acrylic = true, -- The blur may be detectable, setting this to false disables blur entirely
+    Theme = "Dark",
+    MinimizeKey = Enum.KeyCode.RightControl -- Used when theres no MinimizeKeybind
+}
+
+local Tabs = {
+    Main = Window:CreateTab{
+        Title = "Main",
+        Icon = "nil"
+    }
+}
+
+-- Variables to store input values
+local gameid = ""
+local jobid = ""
+
+Tabs.Main:CreateButton{
+    Title = "Copy gameid",
+    Description = "",
+    Callback = function()
+        local clipboardFunc = setclipboard or toclipboard
+        if clipboardFunc then
+            clipboardFunc(tostring(game.PlaceId))
+            print("Copied Game ID:", game.PlaceId)
+        else
+            warn("Clipboard not supported on this executor.")
+        end
+    end
+}
+
+Tabs.Main:CreateButton{
+    Title = "Copy jobid",
+    Description = "",
+    Callback = function()
+        local clipboardFunc = setclipboard or toclipboard
+        if clipboardFunc then
+            clipboardFunc(tostring(game.JobId))
+            print("Copied Job ID:", game.JobId)
+        else
+            warn("Clipboard not supported on this executor.")
+        end
+    end
+}
+
+local Input = Tabs.Main:CreateInput("Input", {
+    Title = "GameId",
+    Default = "",
+    Placeholder = "",
+    Numeric = false, -- Only allows numbers
+    Finished = false,
+    Callback = function(Value)
+        gameid = Value
+        print("Game ID set to:", gameid)
+    end
+})
+
+local Input = Tabs.Main:CreateInput("Input", {
+    Title = "JobId",
+    Default = "",
+    Placeholder = "",
+    Numeric = false, -- Only allows numbers
+    Finished = false,
+    Callback = function(Value)
+        jobid = Value
+        print("Job ID set to:", jobid)
+    end
+})
+
+Tabs.Main:CreateButton{
+    Title = "Join Server",
+    Description = "",
+    Callback = function()
+        local TeleportService = game:GetService("TeleportService")
+        local placeId = tonumber(gameid)
+        local instanceId = tostring(jobid)
+
+        if placeId and instanceId ~= "" then
+            TeleportService:TeleportToPlaceInstance(placeId, instanceId, game.Players.LocalPlayer)
+        else
+            warn("Invalid Game ID or Job ID.")
+        end
+    end
+}
+
+Tabs.Main:CreateButton{
+    Title = "Server Hop",
+    Description = "",
+    Callback = function()
+        local HttpService = game:GetService("HttpService")
+        local TeleportService = game:GetService("TeleportService")
+        local LocalPlayer = game.Players.LocalPlayer
+
+        local PlaceId = game.PlaceId
+        local currentJobId = game.JobId
+
+        local function serverHop()
+            local success, response = pcall(function()
+                return HttpService:JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/" .. PlaceId .. "/servers/Public?sortOrder=Asc&limit=100"))
+            end)
+
+            if success and response and response.data then
+                for _, server in pairs(response.data) do
+                    if server.playing < server.maxPlayers and server.id ~= currentJobId then
+                        TeleportService:TeleportToPlaceInstance(PlaceId, server.id, LocalPlayer)
+                        return
+                    end
+                end
+                warn("No different server found.")
+            else
+                warn("Failed to get server list.")
+            end
+        end
+
+        serverHop()
+    end
+}
+
+Tabs.Main:CreateButton{
+    Title = "Small Server",
+    Description = "Might not work",
+    Callback = function()
+        local HttpService = game:GetService("HttpService")
+        local TeleportService = game:GetService("TeleportService")
+        local LocalPlayer = game.Players.LocalPlayer
+
+        local PlaceId = game.PlaceId
+        local currentJobId = game.JobId
+
+        local function getSmallestServer()
+            local smallestServerId = nil
+            local smallestPlayerCount = math.huge
+
+            local success, response = pcall(function()
+                return HttpService:JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/"..PlaceId.."/servers/Public?sortOrder=Asc&limit=100"))
+            end)
+
+            if success and response and response.data then
+                for _, server in pairs(response.data) do
+                    if server.id ~= currentJobId and server.playing < server.maxPlayers then
+                        if server.playing < smallestPlayerCount and server.playing > 0 then
+                            smallestPlayerCount = server.playing
+                            smallestServerId = server.id
+                        end
+                    end
+                end
+            else
+                warn("Failed to fetch server data.")
+            end
+
+            return smallestServerId
+        end
+
+        local smallestServer = getSmallestServer()
+        if smallestServer then
+            TeleportService:TeleportToPlaceInstance(PlaceId, smallestServer, LocalPlayer)
+        else
+            warn("No smaller server found.")
+        end
+    end
+}
+
+Tabs.Main:CreateButton{
+    Title = "Rejoin Server",
+    Description = "Might not work",
+    Callback = function()
+        local TeleportService = game:GetService("TeleportService")
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+
+        local function rejoinServer()
+            local currentJobId = game.JobId
+            TeleportService:TeleportToPlaceInstance(game.PlaceId, currentJobId, LocalPlayer)
+        end
+
+        rejoinServer()
+    end
+}
+
+local Tabs = {
+    Main = Window:CreateTab{
+        Title = "Snipe",
+        Icon = "nil"
+    }
+}
