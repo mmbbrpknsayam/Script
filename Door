@@ -1,0 +1,311 @@
+local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOogway/Fluent-Renewed/releases/latest/download/Fluent.luau"))()
+
+local Window = Library:CreateWindow{
+    Title = `door-door Hub`,
+    SubTitle = "discord(not ready)",
+    TabWidth = 160,
+    Size = UDim2.fromOffset(830, 525),
+    Resize = true, -- Resize this ^ Size according to a 1920x1080 screen, good for mobile users but may look weird on some devices
+    MinSize = Vector2.new(470, 380),
+    Acrylic = true, -- The blur may be detectable, setting this to false disables blur entirely
+    Theme = "Dark",
+    MinimizeKey = Enum.KeyCode.RightControl -- Used when theres no MinimizeKeybind
+}
+
+local Tabs = {
+    Main = Window:CreateTab{
+        Title = "Esp",
+        Icon = "nil"
+    }
+}
+
+Tabs.Main:CreateButton{
+    Title = "Esp door",
+    Description = "Click to esp door",
+    Callback = function()
+        -- Get the player and their character
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local humanoidRootPart = character:WaitForChild("HumanoidRootPart") -- The part from which distance is measured
+
+        -- Function to highlight the part and show name & distance
+        local function highlightPart(part)
+            if part and part:IsA("BasePart") and part.Name == "Door" then
+                -- Check if the part is already highlighted, to prevent adding duplicates
+                local existingHighlight = part:FindFirstChildOfClass("Highlight")
+                if existingHighlight then return end
+                
+                -- Create a Highlight object
+                local highlight = Instance.new("Highlight")
+                highlight.Parent = part
+                highlight.Adornee = part
+                highlight.FillColor = Color3.fromRGB(0, 255, 0) -- Red highlight
+                highlight.FillTransparency = 0.5 -- Semi-transparent
+                highlight.OutlineColor = Color3.fromRGB(0, 0, 0) -- Black outline
+                highlight.OutlineTransparency = 0.5 -- Slightly transparent outline
+
+                -- Create a BillboardGui to display the part name and distance above the part
+                local billboardGui = Instance.new("BillboardGui")
+                billboardGui.Parent = part
+                billboardGui.Adornee = part
+                billboardGui.Size = UDim2.new(0, 200, 0, 50)
+                billboardGui.StudsOffset = Vector3.new(0, 3, 0)  -- Offset the text above the part
+                billboardGui.AlwaysOnTop = true  -- Ensures the text is always visible above the part
+
+                -- Create the TextLabel to show the part name and distance
+                local textLabel = Instance.new("TextLabel")
+                textLabel.Parent = billboardGui
+                textLabel.Size = UDim2.new(1, 0, 1, 0)
+                textLabel.BackgroundTransparency = 1
+                textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+                textLabel.TextSize = 14
+                textLabel.Text = "Door - Distance: --"
+
+                -- Continuously update the distance as the player moves
+                game:GetService("RunService").Heartbeat:Connect(function()
+                    -- Calculate the distance from the humanoidRootPart to the part
+                    local distance = (part.Position - humanoidRootPart.Position).Magnitude
+                    
+                    -- Update the text with the current distance
+                    textLabel.Text = "Door - Distance: " .. math.floor(distance) .. " studs"
+                end)
+            end
+        end
+
+        -- Function to apply the ESP effect to all existing doors
+        local function applyESP()
+            -- Apply highlight to parts named "Door"
+            for _, part in pairs(workspace:GetDescendants()) do
+                if part:IsA("BasePart") and part.Name == "Door" then
+                    highlightPart(part)
+                end
+            end
+        end
+
+        -- Apply ESP to all existing doors when the button is clicked
+        applyESP()
+
+        -- Automatically highlight any new doors that spawn in the workspace
+        workspace.DescendantAdded:Connect(function(newPart)
+            -- If the new part is a door, highlight it
+            if newPart:IsA("BasePart") and newPart.Name == "Door" then
+                highlightPart(newPart)
+            end
+        end)
+    end
+}
+
+Tabs.Main:CreateButton{
+    Title = "Esp key",
+    Description = "esp",
+    Callback = function()
+        -- Get the player and their character
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local humanoidRootPart = character:WaitForChild("HumanoidRootPart") -- The part from which distance is measured
+
+        -- Function to highlight the part and show name & distance
+        local function highlightPart(part)
+            if part and part:IsA("BasePart") and part.Name == "Key" then
+                -- Check if the part is already highlighted, to prevent adding duplicates
+                local existingHighlight = part:FindFirstChildOfClass("Highlight")
+                if existingHighlight then return end
+                
+                -- Create a Highlight object
+                local highlight = Instance.new("Highlight")
+                highlight.Parent = part
+                highlight.Adornee = part
+                highlight.FillColor = Color3.fromRGB(0, 255, 0) -- Red highlight
+                highlight.FillTransparency = 0.5 -- Semi-transparent
+                highlight.OutlineColor = Color3.fromRGB(0, 0, 0) -- Black outline
+                highlight.OutlineTransparency = 0.5 -- Slightly transparent outline
+
+                -- Create a BillboardGui to display the part name and distance above the part
+                local billboardGui = Instance.new("BillboardGui")
+                billboardGui.Parent = part
+                billboardGui.Adornee = part
+                billboardGui.Size = UDim2.new(0, 200, 0, 50)
+                billboardGui.StudsOffset = Vector3.new(0, 3, 0)  -- Offset the text above the part
+                billboardGui.AlwaysOnTop = true  -- Ensures the text is always visible above the part
+
+                -- Create the TextLabel to show the part name and distance
+                local textLabel = Instance.new("TextLabel")
+                textLabel.Parent = billboardGui
+                textLabel.Size = UDim2.new(1, 0, 1, 0)
+                textLabel.BackgroundTransparency = 1
+                textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+                textLabel.TextSize = 14
+                textLabel.Text = "Key - Distance: --"
+
+                -- Continuously update the distance as the player moves
+                game:GetService("RunService").Heartbeat:Connect(function()
+                    -- Calculate the distance from the humanoidRootPart to the part
+                    local distance = (part.Position - humanoidRootPart.Position).Magnitude
+                    
+                    -- Update the text with the current distance
+                    textLabel.Text = "Key - Distance: " .. math.floor(distance) .. " studs"
+                end)
+            end
+        end
+
+        -- Function to apply the ESP effect to all existing doors
+        local function applyESP()
+            -- Apply highlight to parts named "Door"
+            for _, part in pairs(workspace:GetDescendants()) do
+                if part:IsA("BasePart") and part.Name == "Key" then
+                    highlightPart(part)
+                end
+            end
+        end
+
+        -- Apply ESP to all existing doors when the button is clicked
+        applyESP()
+
+        -- Automatically highlight any new doors that spawn in the workspace
+        workspace.DescendantAdded:Connect(function(newPart)
+            -- If the new part is a door, highlight it
+            if newPart:IsA("BasePart") and newPart.Name == "Key" then
+                highlightPart(newPart)
+            end
+        end)
+    end
+}
+
+Tabs.Main:CreateButton{
+    Title = "Esp book",
+    Description = "esp",
+    Callback = function()
+        -- Get the player and their character
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local humanoidRootPart = character:WaitForChild("HumanoidRootPart") -- The part from which distance is measured
+
+        -- Function to highlight the part and show name & distance
+        local function highlightPart(part)
+            if part and part:IsA("BasePart") and part.Name == "Hintbook" then
+                -- Check if the part is already highlighted, to prevent adding duplicates
+                local existingHighlight = part:FindFirstChildOfClass("Highlight")
+                if existingHighlight then return end
+                
+                -- Create a Highlight object
+                local highlight = Instance.new("Highlight")
+                highlight.Parent = part
+                highlight.Adornee = part
+                highlight.FillColor = Color3.fromRGB(0, 255, 0) -- Red highlight
+                highlight.FillTransparency = 0.5 -- Semi-transparent
+                highlight.OutlineColor = Color3.fromRGB(0, 0, 0) -- Black outline
+                highlight.OutlineTransparency = 0.5 -- Slightly transparent outline
+
+                -- Create a BillboardGui to display the part name and distance above the part
+                local billboardGui = Instance.new("BillboardGui")
+                billboardGui.Parent = part
+                billboardGui.Adornee = part
+                billboardGui.Size = UDim2.new(0, 200, 0, 50)
+                billboardGui.StudsOffset = Vector3.new(0, 3, 0)  -- Offset the text above the part
+                billboardGui.AlwaysOnTop = true  -- Ensures the text is always visible above the part
+
+                -- Create the TextLabel to show the part name and distance
+                local textLabel = Instance.new("TextLabel")
+                textLabel.Parent = billboardGui
+                textLabel.Size = UDim2.new(1, 0, 1, 0)
+                textLabel.BackgroundTransparency = 1
+                textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+                textLabel.TextSize = 14
+                textLabel.Text = "Hintbook - Distance: --"
+
+                -- Continuously update the distance as the player moves
+                game:GetService("RunService").Heartbeat:Connect(function()
+                    -- Calculate the distance from the humanoidRootPart to the part
+                    local distance = (part.Position - humanoidRootPart.Position).Magnitude
+                    
+                    -- Update the text with the current distance
+                    textLabel.Text = "Hintbook - Distance: " .. math.floor(distance) .. " studs"
+                end)
+            end
+        end
+
+        -- Function to apply the ESP effect to all existing doors
+        local function applyESP()
+            -- Apply highlight to parts named "Door"
+            for _, part in pairs(workspace:GetDescendants()) do
+                if part:IsA("BasePart") and part.Name == "Hintbook" then
+                    highlightPart(part)
+                end
+            end
+        end
+
+        -- Apply ESP to all existing doors when the button is clicked
+        applyESP()
+
+        -- Automatically highlight any new doors that spawn in the workspace
+        workspace.DescendantAdded:Connect(function(newPart)
+            -- If the new part is a door, highlight it
+            if newPart:IsA("BasePart") and newPart.Name == "Hintbook" then
+                highlightPart(newPart)
+            end
+        end)
+    end
+}
+
+local Slider = Tabs.Main:CreateSlider("Slider", {
+    Title = "SpeedBoost",
+    Description = "drag to set speedboost(this script doesnt have any bypass)",
+    Default = 1,
+    Min = 1,
+    Max = 100,
+    Rounding = 1,
+    Callback = function(Value)
+        game.Players.LocalPlayer.Character:SetAttribute("SpeedBoost", Value)
+        print("Slider was changed:", Value)
+    end
+})
+
+Tabs.Main:CreateButton{
+    Title = "speed",
+    Description = "speed",
+    Callback = function()
+        task.spawn(function()
+            while true do
+                local player = game.Players.LocalPlayer
+                if player and player.Character then
+                    player.Character:SetAttribute("SpeedBoost", 40)
+                end
+                task.wait(0.1) -- wait 1 second before repeating
+            end
+        end)
+    end
+}
+
+local Tabs = {
+    Main = Window:CreateTab{
+        Title = "Npc Status",
+        Icon = "nil"
+    }
+}
+
+-- Create the "Wall Status" paragraph UI with initial title
+local Paragraph = Tabs.Main:CreateParagraph("Paragraph", {
+    Title = "Rush Status: ",  -- Initial title with red status (no wall detected)
+    Content = ""  -- Empty content since you only want the title to change
+})
+
+-- Function to check if the "Wall" part exists in the Workspace
+task.spawn(function()
+    -- Main loop: wait for "Baking Staff" to appear, then follow it
+while true do
+    local added = Workspace.ChildAdded:Wait()
+            if added.Name == "RushMoving" then
+                npc = added
+            end
+
+        -- If the "RushMoving" part exists, update the title to green status
+        if RushMoving then
+            Paragraph:SetValue("Rush Status: 🟢")  -- Change title to green
+        else
+            -- If the "Wall" part doesn't exist, update the title to red status
+            Paragraph:SetValue("Rush Status: 🔴")  -- Change title to red
+        end
+
+        wait(1)  -- Check every 1 second
+    end
+end)
