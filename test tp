@@ -2,7 +2,7 @@ local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOog
 
 local Window = Library:CreateWindow{
     Title = `tp test`,
-    SubTitle = "discord(not ready)",
+    SubTitle = "",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
     Resize = true, -- Resize this ^ Size according to a 1920x1080 screen, good for mobile users but may look weird on some devices
@@ -19,7 +19,64 @@ local Tabs = {
     }
 }
 
+local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOogway/Fluent-Renewed/releases/latest/download/Fluent.luau"))()
+
+local Window = Library:CreateWindow{
+    Title = `door-door Hub`,
+    SubTitle = "discord(not ready)",
+    TabWidth = 160,
+    Size = UDim2.fromOffset(830, 525),
+    Resize = true, -- Resize this ^ Size according to a 1920x1080 screen, good for mobile users but may look weird on some devices
+    MinSize = Vector2.new(470, 380),
+    Acrylic = true, -- The blur may be detectable, setting this to false disables blur entirely
+    Theme = "Dark",
+    MinimizeKey = Enum.KeyCode.RightControl -- Used when theres no MinimizeKeybind
+}
+
+local Tabs = {
+    Main = Window:CreateTab{
+        Title = "Esp",
+        Icon = "nil"
+    }
+}
+
 Tabs.Main:CreateButton{
-    Title = "Button",
-    Description = "Very important button",
+    Title = "print position",
+    Description = "",
     Callback = function()
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+        -- Get player position
+        local playerPosition = humanoidRootPart.Position
+        print("You are at position:", playerPosition)
+
+        -- Copy position to clipboard
+        local clipboardFunc = setclipboard or toclipboard
+        if clipboardFunc then
+            clipboardFunc(tostring(playerPosition))
+            print("Copied position to clipboard:", playerPosition)
+        else
+            warn("Clipboard not supported on this executor.")
+        end
+    end
+}
+
+Tabs.Main:CreateButton{
+    Title = "tp",
+    Description = "",
+    Callback = function()
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+        -- Target position
+        local targetPosition = Vector3.new(-78.90654754638672, 148.4068603515625, -80.8273696899414)
+
+        -- Teleport the character
+        humanoidRootPart.CFrame = CFrame.new(targetPosition)
+
+        print("Teleported to:", targetPosition)
+    end
+}
