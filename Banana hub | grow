@@ -23,7 +23,7 @@ local Tabs = {
 local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
     Title = "Dropdown",
     Description = "You can select multiple values.",
-    Values = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen"},
+    Values = {"Carrot", "Strawberry", "Blueberry", "Orang Tulip", "Tomato", "Corn", "Daffodil", "Watermelon", "Pumkin", "Apple", "Bamboo", "Coconut", "Cactus", "Dragon Fruit", "Mango", "Mushroom"},
     Multi = true,
     Default = {"seven", "twelve"},
 })
