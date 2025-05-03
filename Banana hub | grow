@@ -63,3 +63,48 @@ Toggle1:OnChanged(function()
         end)
     end
 end)
+
+-- Create dropdown
+local selectedSeeds = {}
+
+local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
+    Title = "Dropdown",
+    Description = "You can select multiple values.",
+    Values = {"Carrot", "Strawberry", "Blueberry", "Orange Tulip", "Tomato", "Corn", "Daffodil", "Watermelon", "Pumpkin", "Apple", "Bamboo", "Coconut", "Cactus", "Dragon Fruit", "Mango", "Mushroom"},
+    Multi = true,
+    Default = {},
+})
+
+MultiDropdown:OnChanged(function(Value)
+    selectedSeeds = {}
+    for SeedName, IsSelected in pairs(Value) do
+        if IsSelected then
+            table.insert(selectedSeeds, SeedName)
+        end
+    end
+end)
+
+-- Toggle auto-buy
+local BuyEnabled = false
+local Toggle1Interacted = false
+
+Toggle1:OnChanged(function()
+    if not Toggle1Interacted then
+        Toggle1Interacted = true
+        return
+    end
+
+    BuyEnabled = not BuyEnabled
+
+    if BuyEnabled then
+        task.spawn(function()
+            while BuyEnabled do
+                for _, seed in ipairs(selectedSeeds) do
+                    local args = {seed}
+                    game:GetService("ReplicatedStorage").GameEvents.BuySeedStock:FireServer(unpack(args))
+                end
+                task.wait(0.1) -- single delay for the whole loop
+            end
+        end)
+    end
+end)
