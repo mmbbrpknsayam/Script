@@ -25,7 +25,7 @@ local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
     Description = "You can select multiple values.",
     Values = {"Carrot", "Strawberry", "Blueberry", "Orang-Tulip", "Tomato", "Corn", "Daffodil", "Watermelon", "Pumkin", "Apple", "Bamboo", "Coconut", "Cactus", "Dragon-Fruit", "Mango", "Mushroom"},
     Multi = true,
-    Default = {"Carrot", "Strawberry", "Blueberry", "Orang-Tulip", "Tomato", "Corn", "Daffodil", "Watermelon", "Pumkin", "Apple", "Bamboo", "Coconut", "Cactus", "Dragon-Fruit", "Mango", "Mushroom"},
+    Default = {""},
 })
 
 MultiDropdown:OnChanged(function(Value)
