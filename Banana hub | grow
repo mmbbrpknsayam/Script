@@ -36,12 +36,176 @@ MultiDropdown:OnChanged(function(Value)
     print("Mutlidropdown changed:", table.concat(Values, ", "))
 end)
 
+-- toggle to auto buy
 Toggle1:OnChanged(function()
     if not Toggle1Interacted then
         Toggle1Interacted = true
         return
     end
 
-    esptrainEnabled = not esptrainEnabled
+    BuyEnabled = not BuyEnabled
 
-    if esptrainEnabled then
+    if BuyEnabled then
+
+-- buy fuction
+
+=========================================================================================
+-- buy carrot
+
+local args = {
+    [1] = "Carrot"
+}
+
+game:GetService("ReplicatedStorage").GameEvents.BuySeedStock:FireServer(unpack(args))
+=========================================================================================
+
+=========================================================================================
+-- buy strawberry
+
+local args = {
+    [1] = "Strawberry"
+}
+
+game:GetService("ReplicatedStorage").GameEvents.BuySeedStock:FireServer(unpack(args))
+=========================================================================================
+
+=========================================================================================
+-- buy blueberry
+
+local args = {
+    [1] = "Blueberry"
+}
+
+game:GetService("ReplicatedStorage").GameEvents.BuySeedStock:FireServer(unpack(args))
+=========================================================================================
+
+=========================================================================================
+-- buy orange tulip
+
+local args = {
+    [1] = "Orange Tulip"
+}
+
+game:GetService("ReplicatedStorage").GameEvents.BuySeedStock:FireServer(unpack(args))
+
+=========================================================================================
+
+=========================================================================================
+-- buy tomato
+
+local args = {
+    [1] = "Tomato"
+}
+
+game:GetService("ReplicatedStorage").GameEvents.BuySeedStock:FireServer(unpack(args))
+=========================================================================================
+
+=========================================================================================
+-- buy corn seed
+
+local args = {
+    [1] = "Corn"
+}
+
+game:GetService("ReplicatedStorage").GameEvents.BuySeedStock:FireServer(unpack(args))
+=========================================================================================
+
+=========================================================================================
+-- buy daffed seed
+
+local args = {
+    [1] = "Daffodil"
+}
+
+game:GetService("ReplicatedStorage").GameEvents.BuySeedStock:FireServer(unpack(args))
+=========================================================================================
+
+=========================================================================================
+-- buy watermelon seed
+
+local args = {
+    [1] = "Watermelon"
+}
+
+game:GetService("ReplicatedStorage").GameEvents.BuySeedStock:FireServer(unpack(args))
+=========================================================================================
+
+=========================================================================================
+-- buy pumkim seed
+
+local args = {
+    [1] = "Pumpkin"
+}
+
+game:GetService("ReplicatedStorage").GameEvents.BuySeedStock:FireServer(unpack(args))
+=========================================================================================
+
+=========================================================================================
+-- buy Apple Seed
+
+local args = {
+    [1] = "Apple"
+}
+
+game:GetService("ReplicatedStorage").GameEvents.BuySeedStock:FireServer(unpack(args))
+=========================================================================================
+
+=========================================================================================
+-- buy bamboo seed
+
+local args = {
+    [1] = "Bamboo"
+}
+
+game:GetService("ReplicatedStorage").GameEvents.BuySeedStock:FireServer(unpack(args))
+=========================================================================================
+
+=========================================================================================
+-- buy coconat seed
+
+local args = {
+    [1] = "Coconut"
+}
+
+game:GetService("ReplicatedStorage").GameEvents.BuySeedStock:FireServer(unpack(args))
+=========================================================================================
+
+=========================================================================================
+-- buy cactus seed
+
+local args = {
+    [1] = "Cactus"
+}
+
+game:GetService("ReplicatedStorage").GameEvents.BuySeedStock:FireServer(unpack(args))
+=========================================================================================
+
+=========================================================================================
+-- buy dragon fruit seed
+
+local args = {
+    [1] = "Dragon Fruit"
+}
+
+game:GetService("ReplicatedStorage").GameEvents.BuySeedStock:FireServer(unpack(args))
+=========================================================================================
+
+=========================================================================================
+-- buy mango seed
+
+local args = {
+    [1] = "Mango"
+}
+
+game:GetService("ReplicatedStorage").GameEvents.BuySeedStock:FireServer(unpack(args))
+=========================================================================================
+
+=========================================================================================
+-- buy mushroom seed
+
+local args = {
+    [1] = "Mushroom"
+}
+
+game:GetService("ReplicatedStorage").GameEvents.BuySeedStock:FireServer(unpack(args))
+=========================================================================================
