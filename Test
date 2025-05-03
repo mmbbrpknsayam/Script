@@ -63,3 +63,22 @@ mt.__namecall = newcclosure(function(self, ...)
 end)
 
 setreadonly(mt, true)
+
+-- k
+local BlockRemote = game:GetService("ReplicatedStorage").RE:WaitForChild("1Too1l")
+
+local mt = getrawmetatable(game)
+local oldNamecall = mt.__namecall
+
+setreadonly(mt, false)
+
+mt.__namecall = newcclosure(function(self, ...)
+    local method = getnamecallmethod()
+    if self == BlockRemote and method == "InvokeServer" then
+        warn("Blocked 1Too1l RemoteFuction")
+        return nil -- block the call
+    end
+    return oldNamecall(self, ...)
+end)
+
+setreadonly(mt, true)
