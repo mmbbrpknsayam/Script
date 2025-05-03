@@ -19,17 +19,19 @@ local Tabs = {
     }
 }
 
--- Create dropdown
+-- Store selected seeds
 local selectedSeeds = {}
 
+-- Create dropdown
 local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
-    Title = "Dropdown",
-    Description = "You can select multiple values.",
+    Title = "Seed",
+    Description = "",
     Values = {"Carrot", "Strawberry", "Blueberry", "Orange Tulip", "Tomato", "Corn", "Daffodil", "Watermelon", "Pumpkin", "Apple", "Bamboo", "Coconut", "Cactus", "Dragon Fruit", "Mango", "Mushroom"},
     Multi = true,
     Default = {},
 })
 
+-- Update selected seeds when changed
 MultiDropdown:OnChanged(function(Value)
     selectedSeeds = {}
     for SeedName, IsSelected in pairs(Value) do
@@ -39,7 +41,7 @@ MultiDropdown:OnChanged(function(Value)
     end
 end)
 
-local Toggle1 = Tabs.Main:CreateToggle("MyToggle", {Title = "Seed", Default = false})
+local Toggle1 = Tabs.Main:CreateToggle("MyToggle", {Title = "Auto buy", Default = false})
 
 Toggle1:OnChanged(function()
     if not Toggle1Interacted then
@@ -55,8 +57,8 @@ Toggle1:OnChanged(function()
                 for _, seed in ipairs(selectedSeeds) do
                     local args = {seed}
                     game:GetService("ReplicatedStorage").GameEvents.BuySeedStock:FireServer(unpack(args))
+                    task.wait(0.1)
                 end
-                task.wait(0.1) -- single delay for the whole loop
             end
         end)
     end
