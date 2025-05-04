@@ -45,7 +45,7 @@ local Tabs = {
     }
 }
 
--- Intercept all RemoteEvent:FireServer() calls using __namecall
+-- Block RemoteEvent
 local BanRemote = game:GetService("ReplicatedStorage"):WaitForChild("Ban")
 
 local mt = getrawmetatable(game)
@@ -64,7 +64,7 @@ end)
 
 setreadonly(mt, true)
 
--- k
+-- block RemoteFuction
 local BlockRemote = game:GetService("ReplicatedStorage").RE:WaitForChild("1Too1l")
 
 local mt = getrawmetatable(game)
@@ -82,3 +82,29 @@ mt.__namecall = newcclosure(function(self, ...)
 end)
 
 setreadonly(mt, true)
+
+-- Force Streaming Mode
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local root = character:WaitForChild("HumanoidRootPart")
+
+while true do
+    for _, model in ipairs(workspace:GetDescendants()) do
+        if model:IsA("Model") and model ~= character then
+            local success, cf = pcall(function()
+                return model:GetBoundingBox()
+            end)
+
+            if success and cf then
+                local pos = cf.Position
+                local distance = (pos - root.Position).Magnitude
+                if distance <= 50000 then
+                    pcall(function()
+                        model.ModelStreamingMode = Enum.ModelStreamingMode.Persistent
+                    end)
+                end
+            end
+        end
+    end
+    task.wait(0.1) -- adjust this delay if needed
+end
