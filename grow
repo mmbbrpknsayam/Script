@@ -1,11 +1,7 @@
-local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOogway/Fluent-Renewed/releases/latest/download/Fluent.luau"))()
-
-if Library then
-    require(game.ReplicatedStorage.Modules.Notification):CreateNotification('<font color="#ADD8E6"><b>Script executed!</b></font>')
-else
-    require(game.ReplicatedStorage.Modules.Notification):CreateNotification('<font color="#ADD8E6"><b>Failed to execute!</b></font>')
+require(game.ReplicatedStorage.Modules.Notification):CreateNotification("<font color=\"#ADD8E6\"><b>Script executed!</b></font>")
 end
 
+local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOogway/Fluent-Renewed/releases/latest/download/Fluent.luau"))()
 
 local Window = Library:CreateWindow{
     Title = `Banana-grow [Premium]`,
