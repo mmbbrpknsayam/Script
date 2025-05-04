@@ -1,6 +1,3 @@
-require(game.ReplicatedStorage.Modules.Notification):CreateNotification("<font color=\"#ADD8E6\"><b>Script executed!</b></font>")
-end
-
 local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOogway/Fluent-Renewed/releases/latest/download/Fluent.luau"))()
 
 local Window = Library:CreateWindow{
@@ -231,3 +228,5 @@ imageButton.MouseButton1Click:Connect(function()
     task.wait(0.1) -- short delay to mimic natural keypress
     keyrelease(Enum.KeyCode.F3)
 end)
+
+require(game.ReplicatedStorage.Modules.Notification):CreateNotification("<font color=\"#ADD8E6\"><b>Script executed!</b></font>")
