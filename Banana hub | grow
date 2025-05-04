@@ -77,7 +77,7 @@ local selectedGears = {}
 local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
     Title = "Gear",
     Description = "",
-    Values = {"Carrot", "Strawberry", "Blueberry", "Orange Tulip", "Tomato", "Corn", "Daffodil", "Watermelon", "Pumpkin", "Apple", "Bamboo", "Coconut", "Cactus", "Dragon Fruit", "Mango", "Mushroom"},
+    Values = {"Watering Can", "Trowel", "Advanced Sprinkler", "Godly Sprinkler", "Lightning Rod", "Master Sprinkler"},
     Multi = true,
     Default = {},
 })
