@@ -27,8 +27,8 @@ end)
 local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOogway/Fluent-Renewed/releases/latest/download/Fluent.luau"))()
 
 local Window = Library:CreateWindow{
-    Title = `Banana-grow`,
-    SubTitle = "test",
+    Title = `Banana-grow [Premium]`,
+    SubTitle = "",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
     Resize = true, -- Resize this ^ Size according to a 1920x1080 screen, good for mobile users but may look weird on some devices
@@ -41,6 +41,13 @@ local Window = Library:CreateWindow{
 local Tabs = {
     Main = Window:CreateTab{
         Title = "Main",
+        Icon = "nil"
+    }
+}
+
+local Tabs = {
+    Main = Window:CreateTab{
+        Title = "Shop",
         Icon = "nil"
     }
 }
@@ -134,3 +141,16 @@ Toggle1:OnChanged(function()
         end)
     end
 end)
+
+local Tabs = {
+    Main = Window:CreateTab{
+        Title = "Teleport",
+        Icon = "nil"
+    }
+}
+
+Tabs.Main:CreateButton{
+    Title = "Button",
+    Description = "Very important button",
+    Callback = function()
+        Window:Dia
