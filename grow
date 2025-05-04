@@ -104,7 +104,7 @@ Toggle2:OnChanged(function()
 
     if BuyGearEnabled then
         task.spawn(function()
-            while BuyEnabled do
+            while BuyGearEnabled do
                 for _, gear in ipairs(selectedGears) do
                     local args = {gear}
                     game:GetService("ReplicatedStorage").GameEvents.BuyGearStock:FireServer(unpack(args))
