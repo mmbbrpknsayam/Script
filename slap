@@ -19,21 +19,26 @@ local Tabs = {
     }
 }
 
--- dropdown
+-- Store selected seeds
+local selectedItem = {}
+
+-- Create dropdown
 local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
-    Title = "Dropdown",
-    Description = "You can select multiple values.",
-    Values = {"Apple", "Bandage", "Bull's essence", "Cube of Ice", "Forcefield Crystal", "Frog Potion", "Lightning", "Speed Potion", "Sphere of fury", "True Power"},
+    Title = "Item",
+    Description = "",
+    Values = {"Apple", "Bandage", "Boba", "Bull's essence", "Cube of Ice", "Forcefield Crystal", "Frog Potion", "Lightning Potion", "Speed Potion", "Sphere of fury", "True Power"},
     Multi = true,
     Default = {},
 })
 
+-- Update selected seeds when changed
 MultiDropdown:OnChanged(function(Value)
-    local Values = {}
-    for Value, State in next, Value do
-        Values[#Values + 1] = Value
+    selectedSeeds = {}
+    for ItemName, IsSelected in pairs(Value) do
+        if IsSelected then
+            table.insert(selectedItem, ItemName)
+        end
     end
-    print("Mutlidropdown changed:", table.concat(Values, ", "))
 end)
 
 -- esp
