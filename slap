@@ -19,10 +19,28 @@ local Tabs = {
     }
 }
 
-local Toggle1 = Tabs.Main:CreateToggle("MyToggle", {Title = "Apple", Default = false})
+-- dropdown
+local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
+    Title = "Dropdown",
+    Description = "You can select multiple values.",
+    Values = {"Apple", "Bandage", "Bull's essence", "Cube of Ice", "Forcefield Crystal", "Frog Potion", "Lightning", "Speed Potion", "Sphere of fury", "True Power"},
+    Multi = true,
+    Default = {},
+})
+
+MultiDropdown:OnChanged(function(Value)
+    local Values = {}
+    for Value, State in next, Value do
+        Values[#Values + 1] = Value
+    end
+    print("Mutlidropdown changed:", table.concat(Values, ", "))
+end)
+
+-- esp
+local Toggle1 = Tabs.Main:CreateToggle("MyToggle", {Title = "esp", Default = false})
 
 -- Store added highlights and GUIs for cleanup
-local appleVisuals = {}
+local espVisuals = {}
 
 Toggle1:OnChanged(function()
     if not Toggle1Interacted then
@@ -30,9 +48,9 @@ Toggle1:OnChanged(function()
         return
     end
 
-    espappleEnabled = not espappleEnabled
+    espEnabled = not espEnabled
 
-    if espappleEnabled then
+    if espEnabled then
         local player = game.Players.LocalPlayer
         local character = player.Character or player.CharacterAdded:Wait()
         local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
@@ -62,15 +80,15 @@ Toggle1:OnChanged(function()
                 textLabel.Size = UDim2.new(1, 0, 1, 0)
                 textLabel.BackgroundTransparency = 1
                 textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-                textLabel.TextSize = 14
-                textLabel.Text = "Apple - Distance: --"
+                textLabel.TextSize = 8
+                textLabel.Text = "[Apple - Distance: --]"
 
-                table.insert(appleVisuals, highlight)
-                table.insert(appleVisuals, billboardGui)
+                table.insert(espVisuals, highlight)
+                table.insert(espVisuals, billboardGui)
 
                 local heartbeatConn
                 heartbeatConn = game:GetService("RunService").Heartbeat:Connect(function()
-                    if not espappleEnabled then
+                    if not espEnabled then
                         if heartbeatConn then
                             heartbeatConn:Disconnect()
                         end
@@ -96,18 +114,18 @@ Toggle1:OnChanged(function()
         -- Watch for new Apples being added under Items
         if itemsFolder then
             itemsFolder.ChildAdded:Connect(function(newModel)
-                if espappleEnabled and newModel:IsA("Model") and newModel.Name == "Apple" then
+                if espEnabled and newModel:IsA("Model") and newModel.Name == "Apple" then
                     highlightApple(newModel)
                 end
             end)
         end
     else
         -- Toggle OFF: remove all visuals
-        for _, v in pairs(appleVisuals) do
+        for _, v in pairs(espVisuals) do
             if v and v.Parent then
                 v:Destroy()
             end
         end
-        appleVisuals = {}
+        espVisuals = {}
     end
 end)
