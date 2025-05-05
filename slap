@@ -1,0 +1,113 @@
+local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOogway/Fluent-Renewed/releases/latest/download/Fluent.luau"))()
+
+local Window = Library:CreateWindow{
+    Title = `Slap`,
+    SubTitle = "[Premium]",
+    TabWidth = 160,
+    Size = UDim2.fromOffset(830, 525),
+    Resize = true, -- Resize this ^ Size according to a 1920x1080 screen, good for mobile users but may look weird on some devices
+    MinSize = Vector2.new(470, 380),
+    Acrylic = true, -- The blur may be detectable, setting this to false disables blur entirely
+    Theme = "Dark",
+    MinimizeKey = Enum.KeyCode.RightControl -- Used when theres no MinimizeKeybind
+}
+
+local Tabs = {
+    Main = Window:CreateTab{
+        Title = "Main",
+        Icon = "nil"
+    }
+}
+
+local Toggle1 = Tabs.Main:CreateToggle("MyToggle", {Title = "Apple", Default = false})
+
+-- Store added highlights and GUIs for cleanup
+local appleVisuals = {}
+
+Toggle1:OnChanged(function()
+    if not Toggle1Interacted then
+        Toggle1Interacted = true
+        return
+    end
+
+    espappleEnabled = not espappleEnabled
+
+    if espappleEnabled then
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+        -- Function to highlight the Apple model
+        local function highlightApple(appleModel)
+            if appleModel and appleModel:IsA("Model") and appleModel.Name == "Apple" then
+                if appleModel:FindFirstChildOfClass("Highlight") then return end
+
+                local highlight = Instance.new("Highlight")
+                highlight.Parent = appleModel
+                highlight.Adornee = appleModel
+                highlight.FillColor = Color3.fromRGB(255, 0, 0)
+                highlight.FillTransparency = 0.5
+                highlight.OutlineColor = Color3.fromRGB(0, 0, 0)
+                highlight.OutlineTransparency = 0.5
+
+                local billboardGui = Instance.new("BillboardGui")
+                billboardGui.Parent = appleModel
+                billboardGui.Adornee = appleModel
+                billboardGui.Size = UDim2.new(0, 200, 0, 50)
+                billboardGui.StudsOffset = Vector3.new(0, 3, 0)
+                billboardGui.AlwaysOnTop = true
+
+                local textLabel = Instance.new("TextLabel")
+                textLabel.Parent = billboardGui
+                textLabel.Size = UDim2.new(1, 0, 1, 0)
+                textLabel.BackgroundTransparency = 1
+                textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+                textLabel.TextSize = 14
+                textLabel.Text = "Apple - Distance: --"
+
+                table.insert(appleVisuals, highlight)
+                table.insert(appleVisuals, billboardGui)
+
+                local heartbeatConn
+                heartbeatConn = game:GetService("RunService").Heartbeat:Connect(function()
+                    if not espappleEnabled then
+                        if heartbeatConn then
+                            heartbeatConn:Disconnect()
+                        end
+                        return
+                    end
+
+                    local distance = (appleModel:GetModelCFrame().Position - humanoidRootPart.Position).Magnitude
+                    textLabel.Text = "[Apple - Distance: " .. math.floor(distance) .. " studs]"
+                end)
+            end
+        end
+
+        -- Highlight existing Apple model(s) inside Workspace > Items
+        local itemsFolder = workspace:FindFirstChild("Items")
+        if itemsFolder then
+            for _, apple in pairs(itemsFolder:GetChildren()) do
+                if apple:IsA("Model") and apple.Name == "Apple" then
+                    highlightApple(apple)
+                end
+            end
+        end
+
+        -- Watch for new Apples being added under Items
+        if itemsFolder then
+            itemsFolder.ChildAdded:Connect(function(newModel)
+                if espappleEnabled and newModel:IsA("Model") and newModel.Name == "Apple" then
+                    highlightApple(newModel)
+                end
+            end)
+        end
+    else
+        -- Toggle OFF: remove all visuals
+        for _, v in pairs(appleVisuals) do
+            if v and v.Parent then
+                v:Destroy()
+            end
+        end
+        appleVisuals = {}
+    end
+end)
