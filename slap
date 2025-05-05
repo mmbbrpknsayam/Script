@@ -19,7 +19,7 @@ local Tabs = {
     }
 }
 
--- Store selected seeds
+-- Store selected items
 local selectedItem = {}
 
 -- Create dropdown
@@ -31,9 +31,9 @@ local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
     Default = {},
 })
 
--- Update selected seeds when changed
+-- Update selected items when changed
 MultiDropdown:OnChanged(function(Value)
-    selectedSeeds = {}
+    selectedItem = {} -- Reset
     for ItemName, IsSelected in pairs(Value) do
         if IsSelected then
             table.insert(selectedItem, ItemName)
@@ -41,10 +41,9 @@ MultiDropdown:OnChanged(function(Value)
     end
 end)
 
--- esp
+-- ESP Toggle
 local Toggle1 = Tabs.Main:CreateToggle("MyToggle", {Title = "esp", Default = false})
 
--- Store added highlights and GUIs for cleanup
 local espVisuals = {}
 
 Toggle1:OnChanged(function()
@@ -60,72 +59,74 @@ Toggle1:OnChanged(function()
         local character = player.Character or player.CharacterAdded:Wait()
         local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 
-        -- Function to highlight the Apple model
-        local function highlightApple(appleModel)
-            if appleModel and appleModel:IsA("Model") and appleModel.Name == "Apple" then
-                if appleModel:FindFirstChildOfClass("Highlight") then return end
+        local function highlightModel(model)
+            if not model:IsA("Model") then return end
 
-                local highlight = Instance.new("Highlight")
-                highlight.Parent = appleModel
-                highlight.Adornee = appleModel
-                highlight.FillColor = Color3.fromRGB(255, 0, 0)
-                highlight.FillTransparency = 0.5
-                highlight.OutlineColor = Color3.fromRGB(0, 0, 0)
-                highlight.OutlineTransparency = 0.5
+            -- Check if the model's name is in the selected items
+            for _, item in ipairs(selectedItem) do
+                if model.Name == item then
+                    -- Check if model already has Highlight
+                    if model:FindFirstChildOfClass("Highlight") then return end
 
-                local billboardGui = Instance.new("BillboardGui")
-                billboardGui.Parent = appleModel
-                billboardGui.Adornee = appleModel
-                billboardGui.Size = UDim2.new(0, 200, 0, 50)
-                billboardGui.StudsOffset = Vector3.new(0, 3, 0)
-                billboardGui.AlwaysOnTop = true
+                    local highlight = Instance.new("Highlight")
+                    highlight.Parent = model
+                    highlight.Adornee = model
+                    highlight.FillColor = Color3.fromRGB(255, 255, 0) -- Yellow
+                    highlight.FillTransparency = 0.4
+                    highlight.OutlineColor = Color3.fromRGB(0, 0, 0)
+                    highlight.OutlineTransparency = 0.5
 
-                local textLabel = Instance.new("TextLabel")
-                textLabel.Parent = billboardGui
-                textLabel.Size = UDim2.new(1, 0, 1, 0)
-                textLabel.BackgroundTransparency = 1
-                textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-                textLabel.TextSize = 8
-                textLabel.Text = "[Apple - Distance: --]"
+                    local billboardGui = Instance.new("BillboardGui")
+                    billboardGui.Parent = model
+                    billboardGui.Adornee = model
+                    billboardGui.Size = UDim2.new(0, 200, 0, 30)
+                    billboardGui.StudsOffset = Vector3.new(0, 3, 0)
+                    billboardGui.AlwaysOnTop = true
 
-                table.insert(espVisuals, highlight)
-                table.insert(espVisuals, billboardGui)
+                    local textLabel = Instance.new("TextLabel")
+                    textLabel.Parent = billboardGui
+                    textLabel.Size = UDim2.new(1, 0, 1, 0)
+                    textLabel.BackgroundTransparency = 1
+                    textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+                    textLabel.TextSize = 8
+                    textLabel.Text = "[" .. model.Name .. " - Distance: --]"
 
-                local heartbeatConn
-                heartbeatConn = game:GetService("RunService").Heartbeat:Connect(function()
-                    if not espEnabled then
-                        if heartbeatConn then
-                            heartbeatConn:Disconnect()
+                    table.insert(espVisuals, highlight)
+                    table.insert(espVisuals, billboardGui)
+
+                    local heartbeatConn
+                    heartbeatConn = game:GetService("RunService").Heartbeat:Connect(function()
+                        if not espEnabled then
+                            if heartbeatConn then heartbeatConn:Disconnect() end
+                            return
                         end
-                        return
-                    end
+                        local distance = (model:GetModelCFrame().Position - humanoidRootPart.Position).Magnitude
+                        textLabel.Text = "[" .. model.Name .. " - Distance: " .. math.floor(distance) .. " studs]"
+                    end)
 
-                    local distance = (appleModel:GetModelCFrame().Position - humanoidRootPart.Position).Magnitude
-                    textLabel.Text = "[Apple - Distance: " .. math.floor(distance) .. " studs]"
-                end)
-            end
-        end
-
-        -- Highlight existing Apple model(s) inside Workspace > Items
-        local itemsFolder = workspace:FindFirstChild("Items")
-        if itemsFolder then
-            for _, apple in pairs(itemsFolder:GetChildren()) do
-                if apple:IsA("Model") and apple.Name == "Apple" then
-                    highlightApple(apple)
+                    return -- No need to continue checking if already highlighted
                 end
             end
         end
 
-        -- Watch for new Apples being added under Items
+        -- Initial ESP on models
+        local itemsFolder = workspace:FindFirstChild("Items")
+        if itemsFolder then
+            for _, model in pairs(itemsFolder:GetChildren()) do
+                highlightModel(model)
+            end
+        end
+
+        -- Listen for new models being added
         if itemsFolder then
             itemsFolder.ChildAdded:Connect(function(newModel)
-                if espEnabled and newModel:IsA("Model") and newModel.Name == "Apple" then
-                    highlightApple(newModel)
+                if espEnabled then
+                    highlightModel(newModel)
                 end
             end)
         end
     else
-        -- Toggle OFF: remove all visuals
+        -- Turn off ESP visuals
         for _, v in pairs(espVisuals) do
             if v and v.Parent then
                 v:Destroy()
