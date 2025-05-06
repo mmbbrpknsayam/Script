@@ -19,6 +19,31 @@ local Tabs = {
     }
 }
 
+Tabs.Main:CreateButton{
+    Title = "Remove all particle",
+    Description = "Frost visible",
+    Callback = function()
+        -- Target particle names to delete
+        local targetNames = {
+            FrozenParticle = true,
+            WetParticle = true,
+            ChilledParticle = true,
+            Shine_Particle = true,
+            Fire = true,
+        }
+
+        -- Loop forever every 1 second
+        while true do
+            for _, obj in ipairs(game:GetDescendants()) do
+                if obj:IsA("ParticleEmitter") and targetNames[obj.Name] then
+                    obj:Destroy()
+                end
+            end
+            task.wait(1) -- wait 1 second before scanning again
+        end
+    end
+}
+
 local Tabs = {
     Main = Window:CreateTab{
         Title = "Shop",
