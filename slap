@@ -148,18 +148,20 @@ Toggle2:OnChanged(function()
 
     if auraEnabled then
         for _, player in pairs(game:GetService("Players"):GetPlayers()) do
-    -- Make sure the player has a character and torso
-    if player.Character and player.Character:FindFirstChild("Torso") then
-        -- Define the arguments for the FireServer function
-        local args = {
-            [1] = player.Character.Torso
-        }
+            -- Make sure the player has a character and torso
+            if player.Character and player.Character:FindFirstChild("Torso") then
+                -- Define the arguments for the FireServer function
+                local args = {
+                    [1] = player.Character.Torso
+                }
 
-        task.spawn(function()
-            while attackEnabled do
-                game:GetService("ReplicatedStorage").b:FireServer(unpack(args))
-                task.wait(0.1)
+                task.spawn(function()
+                    while auraEnabled do
+                        game:GetService("ReplicatedStorage").b:FireServer(unpack(args))
+                        task.wait(0.1)
+                    end
+                end)
             end
-        end)
+        end
     end
-end
+end)
