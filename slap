@@ -157,7 +157,7 @@ Toggle2:OnChanged(function()
 
                 task.spawn(function()
                     while auraEnabled do
-                        game:GetService("ReplicatedStorage").b:FireServer(unpack(args))
+                        game:GetService("ReplicatedStorage").Events.Slap:FireServer(unpack(args))
                         task.wait(0.1)
                     end
                 end)
