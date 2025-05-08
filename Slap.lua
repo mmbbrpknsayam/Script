@@ -91,8 +91,35 @@ Toggle1:OnChanged(function()
                     textLabel.TextSize = 8
                     textLabel.Text = "[" .. model.Name .. " - Distance: --]"
 
+                    local basePart = model:FindFirstChildWhichIsA("BasePart")
+                    if not basePart then return end
+
+                    -- Attachments and beam
+                    local objectAttachment = Instance.new("Attachment")
+                    objectAttachment.Name = "ESPObjectAttachment"
+                    objectAttachment.Parent = basePart
+
+                    local playerAttachment = Instance.new("Attachment")
+                    playerAttachment.Name = "ESPPlayerAttachment"
+                    playerAttachment.Parent = humanoidRootPart
+
+                    local beam = Instance.new("Beam")
+                    beam.Attachment0 = objectAttachment
+                    beam.Attachment1 = playerAttachment
+                    beam.Color = ColorSequence.new(Color3.fromRGB(255, 255, 0))
+                    beam.Width0 = 0.1
+                    beam.Width1 = 0.1
+                    beam.FaceCamera = true
+                    beam.LightInfluence = 0
+                    beam.Transparency = NumberSequence.new(0.3)
+                    beam.Parent = objectAttachment
+
+                    -- Store visuals
                     table.insert(espVisuals, highlight)
                     table.insert(espVisuals, billboardGui)
+                    table.insert(espVisuals, objectAttachment)
+                    table.insert(espVisuals, playerAttachment)
+                    table.insert(espVisuals, beam)
 
                     local heartbeatConn
                     heartbeatConn = game:GetService("RunService").Heartbeat:Connect(function()
