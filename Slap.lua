@@ -54,85 +54,117 @@ Toggle1:OnChanged(function()
 
     espEnabled = not espEnabled
 
-    if espEnabled then
-        local player = game.Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-
-        local function highlightModel(model)
-            if not model:IsA("Model") then return end
-
-            -- Check if the model's name is in the selected items
-            for _, item in ipairs(selectedItem) do
-                if model.Name == item then
-                    -- Check if model already has Highlight
-                    if model:FindFirstChildOfClass("Highlight") then return end
-
-                    local highlight = Instance.new("Highlight")
-                    highlight.Parent = model
-                    highlight.Adornee = model
-                    highlight.FillColor = Color3.fromRGB(255, 255, 0) -- Yellow
-                    highlight.FillTransparency = 0.4
-                    highlight.OutlineColor = Color3.fromRGB(0, 0, 0)
-                    highlight.OutlineTransparency = 0.5
-
-                    local billboardGui = Instance.new("BillboardGui")
-                    billboardGui.Parent = model
-                    billboardGui.Adornee = model
-                    billboardGui.Size = UDim2.new(0, 200, 0, 30)
-                    billboardGui.StudsOffset = Vector3.new(0, 3, 0)
-                    billboardGui.AlwaysOnTop = true
-
-                    local textLabel = Instance.new("TextLabel")
-                    textLabel.Parent = billboardGui
-                    textLabel.Size = UDim2.new(1, 0, 1, 0)
-                    textLabel.BackgroundTransparency = 1
-                    textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-                    textLabel.TextSize = 8
-                    textLabel.Text = "[" .. model.Name .. " - Distance: --]"
-
-                    table.insert(espVisuals, highlight)
-                    table.insert(espVisuals, billboardGui)
-
-                    local heartbeatConn
-                    heartbeatConn = game:GetService("RunService").Heartbeat:Connect(function()
-                        if not espEnabled then
-                            if heartbeatConn then heartbeatConn:Disconnect() end
-                            return
-                        end
-                        local distance = (model:GetModelCFrame().Position - humanoidRootPart.Position).Magnitude
-                        textLabel.Text = "[" .. model.Name .. " - Distance: " .. math.floor(distance) .. " studs]"
-                    end)
-
-                    return -- No need to continue checking if already highlighted
-                end
-            end
-        end
-
-        -- Initial ESP on models
-        local itemsFolder = workspace:FindFirstChild("Items")
-        if itemsFolder then
-            for _, model in pairs(itemsFolder:GetChildren()) do
-                highlightModel(model)
-            end
-        end
-
-        -- Listen for new models being added
-        if itemsFolder then
-            itemsFolder.ChildAdded:Connect(function(newModel)
-                if espEnabled then
-                    highlightModel(newModel)
-                end
-            end)
-        end
-    else
-        -- Turn off ESP visuals
+    -- Cleanup visuals if disabled
+    if not espEnabled then
         for _, v in pairs(espVisuals) do
             if v and v.Parent then
                 v:Destroy()
             end
         end
         espVisuals = {}
+        return
+    end
+
+    -- ESP logic when enabled
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+    local function highlightModel(model)
+        if not model:IsA("Model") then return end
+
+        -- Check if the model's name is in the selected items
+        for _, item in ipairs(selectedItem) do
+            if model.Name == item then
+                if model:FindFirstChildOfClass("Highlight") then return end
+
+                -- Create highlight
+                local highlight = Instance.new("Highlight")
+                highlight.Parent = model
+                highlight.Adornee = model
+                highlight.FillColor = Color3.fromRGB(255, 255, 0)
+                highlight.FillTransparency = 0.4
+                highlight.OutlineColor = Color3.fromRGB(0, 0, 0)
+                highlight.OutlineTransparency = 0.5
+
+                -- Billboard label
+                local billboardGui = Instance.new("BillboardGui")
+                billboardGui.Parent = model
+                billboardGui.Adornee = model
+                billboardGui.Size = UDim2.new(0, 200, 0, 30)
+                billboardGui.StudsOffset = Vector3.new(0, 3, 0)
+                billboardGui.AlwaysOnTop = true
+
+                local textLabel = Instance.new("TextLabel")
+                textLabel.Parent = billboardGui
+                textLabel.Size = UDim2.new(1, 0, 1, 0)
+                textLabel.BackgroundTransparency = 1
+                textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+                textLabel.TextSize = 8
+                textLabel.Text = "[" .. model.Name .. " - Distance: --]"
+
+                -- Get any BasePart in the model
+                local basePart = model:FindFirstChildWhichIsA("BasePart")
+                if not basePart then return end
+
+                -- Attachments and beam
+                local objectAttachment = Instance.new("Attachment")
+                objectAttachment.Name = "ESPObjectAttachment"
+                objectAttachment.Parent = basePart
+
+                local playerAttachment = Instance.new("Attachment")
+                playerAttachment.Name = "ESPPlayerAttachment"
+                playerAttachment.Parent = humanoidRootPart
+
+                local beam = Instance.new("Beam")
+                beam.Attachment0 = objectAttachment
+                beam.Attachment1 = playerAttachment
+                beam.Color = ColorSequence.new(Color3.fromRGB(255, 255, 0))
+                beam.Width0 = 0.1
+                beam.Width1 = 0.1
+                beam.FaceCamera = true
+                beam.LightInfluence = 0
+                beam.Transparency = NumberSequence.new(0.3)
+                beam.Parent = objectAttachment
+
+                -- Store visuals
+                table.insert(espVisuals, highlight)
+                table.insert(espVisuals, billboardGui)
+                table.insert(espVisuals, objectAttachment)
+                table.insert(espVisuals, playerAttachment)
+                table.insert(espVisuals, beam)
+
+                -- Update distance
+                local heartbeatConn
+                heartbeatConn = game:GetService("RunService").Heartbeat:Connect(function()
+                    if not espEnabled or not basePart or not humanoidRootPart then
+                        if heartbeatConn then heartbeatConn:Disconnect() end
+                        return
+                    end
+                    local distance = (basePart.Position - humanoidRootPart.Position).Magnitude
+                    textLabel.Text = "[" .. model.Name .. " - Distance: " .. math.floor(distance) .. " studs]"
+                end)
+
+                return
+            end
+        end
+    end
+
+    -- Initial highlight
+    local itemsFolder = workspace:FindFirstChild("Items")
+    if itemsFolder then
+        for _, model in pairs(itemsFolder:GetChildren()) do
+            highlightModel(model)
+        end
+    end
+
+    -- Highlight new models
+    if itemsFolder then
+        itemsFolder.ChildAdded:Connect(function(newModel)
+            if espEnabled then
+                highlightModel(newModel)
+            end
+        end)
     end
 end)
 
