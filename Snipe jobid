@@ -201,10 +201,17 @@ local Tabs = {
     }
 }
 
-Tabs.Main:CreateButton{
-    Title = "aimbot",
-    Description = "",
-    Callback = function()
+local Toggle1 = Tabs.Main:CreateToggle("MyToggle", {Title = "Aimbot", Default = false})
+
+Toggle1:OnChanged(function()
+    if not Toggle1Interacted then
+        Toggle1Interacted = true
+        return
+    end
+
+    aimbotEnabled = not aimbotEnabled
+
+    if aimbotEnabled then
         -- Set the range limit for the aimbot (in studs)
         local AIMBOT_RANGE = 50  -- Change this value to adjust the range
 
@@ -244,9 +251,11 @@ Tabs.Main:CreateButton{
             end
         end
 
-        -- Call the function to update the camera aim towards the nearest player
-        while wait(0) do  -- You can adjust the interval to how fast it should update
-            aimAtNearestPlayer()
-        end
+        -- Run the loop in a separate thread so it can be stopped later
+        task.spawn(function()
+            while aimbotEnabled and task.wait(0) do
+                aimAtNearestPlayer()
+            end
+        end)
     end
-}
+end)
