@@ -99,6 +99,14 @@ levelLabel.TextScaled = true
 levelLabel.Font = Enum.Font.SourceSans
 levelLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
 
+local beliLabel = Instance.new("TextLabel", StatListFrame)
+beliLabel.Position = UDim2.new(0, 20, 0, 60)
+beliLabel.Size = UDim2.new(1, -40, 0, 25)
+beliLabel.Text = "Beli: "N/A"
+beliLabel.TextScaled = true
+beliLabel.Font = Enum.Font.SourceSans
+beliLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
+
 local viewLabel = Instance.new("TextButton", detailFrame)
 viewLabel.Position = UDim2.new(0, 20, 0, 500)
 viewLabel.Size = UDim2.new(1, -500, 0, 25)
@@ -119,6 +127,8 @@ local selectedPlayer = nil
 local originalSubject = camera.CameraSubject
 local currentHealthConnection = nil
 local currentLevelConnection = nil
+local currentBeliConnection = nil
+local currentFragmentsConnection = nil
 
 -- Health updater
 local function updateHealth(selectedPlayer)
@@ -154,12 +164,48 @@ local function updateLevel(selectedPlayer)
 	end
 end
 
+local function updateBeli(selectedPlayer)
+	if currentBeliConnection then currentBeliConnection:Disconnect() end
+
+	local success, beliValue = pcall(function()
+		return selectedPlayer:WaitForChild("Data"):WaitForChild("Beli")
+	end)
+
+	if success and beliValue then
+		beliLabel.Text = "Level: " .. beliValue.Value
+		currentBeliConnection = beliValue:GetPropertyChangedSignal("Value"):Connect(function()
+			beliLabel.Text = "Beli: " .. beliValue.Value
+		end)
+	else
+		beliLabel.Text = "Beli: N/A"
+	end
+end
+
+local function updateFragments(selectedPlayer)
+	if currentFragmentsConnection then currentFragmentsConnection:Disconnect() end
+
+	local success, fragmentsValue = pcall(function()
+		return selectedPlayer:WaitForChild("Data"):WaitForChild("Beli")
+	end)
+
+	if success and fragmentsValue then
+		fragmentsLabel.Text = "Fragments: " ..fragmentsValue.Value
+		currentFragmentsConnection = fragmentsValue:GetPropertyChangedSignal("Value"):Connect(function()
+			fragmentsLabel.Text = "Fragments: " .. fragmentsValue.Value
+		end)
+	else
+		fragmentsLabel.Text = "Fragments: N/A"
+	end
+end
+
 -- Main updater
 local function updateDetails(selectedPlayer)
 	displayNameLabel.Text = selectedPlayer.DisplayName
 	usernameLabel.Text = selectedPlayer.Name
 	updateHealth(selectedPlayer)
 	updateLevel(selectedPlayer)
+	updateBeli(selectedPlayers)
+	updateFragments(selectedPlayers)
 end
 
 -- Refresh player list
@@ -202,7 +248,7 @@ end)
 task.spawn(function()
 	while true do
 		refreshPlayerList()
-		task.wait(5)
+		task.wait(1)
 	end
 end)
 
