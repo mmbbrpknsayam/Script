@@ -110,7 +110,7 @@ beliLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
 local fragmentsLabel = Instance.new("TextLabel", StatListFrame)
 fragmentsLabel.Position = UDim2.new(0, 20, 0, 90)
 fragmentsLabel.Size = UDim2.new(1, -40, 0, 25)
-fragmentsLabel.Text = "Fragments: N/A""
+fragmentsLabel.Text = "Fragments: N/A"
 fragmentsLabel.TextScaled = true
 fragmentsLabel.Font = Enum.Font.SourceSans
 fragmentsLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
@@ -212,8 +212,8 @@ local function updateDetails(selectedPlayer)
 	usernameLabel.Text = selectedPlayer.Name
 	updateHealth(selectedPlayer)
 	updateLevel(selectedPlayer)
-	updateBeli(selectedPlayers)
-	updateFragments(selectedPlayers)
+	updateBeli(selectedPlayer)
+	updateFragments(selectedPlayer)
 end
 
 -- Refresh player list
