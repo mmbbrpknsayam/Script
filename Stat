@@ -180,7 +180,7 @@ local function updateBeli(selectedPlayer)
 	end)
 
 	if success and beliValue then
-		beliLabel.Text = "Level: " .. beliValue.Value
+		beliLabel.Text = "Beli: " .. beliValue.Value
 		currentBeliConnection = beliValue:GetPropertyChangedSignal("Value"):Connect(function()
 			beliLabel.Text = "Beli: " .. beliValue.Value
 		end)
