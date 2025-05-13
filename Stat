@@ -115,6 +115,14 @@ fragmentsLabel.TextScaled = true
 fragmentsLabel.Font = Enum.Font.SourceSans
 fragmentsLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
 
+local raceLabel = Instance.new("TextLabel", StatListFrame)
+raceLabel.Position = UDim2.new(0, 20, 0, 120)
+raceLabel.Size = UDim2.new(1, -40, 0, 25)
+raceLabel.Text = "Race: N/A"
+raceLabel.TextScaled = true
+raceLabel.Font = Enum.Font.SourceSans
+raceLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
+
 local viewLabel = Instance.new("TextButton", detailFrame)
 viewLabel.Position = UDim2.new(0, 20, 0, 500)
 viewLabel.Size = UDim2.new(1, -500, 0, 25)
@@ -137,6 +145,7 @@ local currentHealthConnection = nil
 local currentLevelConnection = nil
 local currentBeliConnection = nil
 local currentFragmentsConnection = nil
+local currentRaceConnection = nil
 
 -- Health updater
 local function updateHealth(selectedPlayer)
@@ -206,6 +215,23 @@ local function updateFragments(selectedPlayer)
 	end
 end
 
+local function updateRace(selectedPlayer)
+	if currentRaceConnection then currentRaceConnection:Disconnect() end
+
+	local success, raceValue = pcall(function()
+		return selectedPlayer:WaitForChild("Data"):WaitForChild("Race")
+	end)
+
+	if success and raceValue then
+		raceLabel.Text = "Race: " ..raceValue.Value
+		currentRaceConnection = raceValue:GetPropertyChangedSignal("Value"):Connect(function()
+			raceLabel.Text = "Race: " .. raceValue.Value
+		end)
+	else
+		raceLabel.Text = "Race: N/A"
+	end
+end
+
 -- Main updater
 local function updateDetails(selectedPlayer)
 	displayNameLabel.Text = selectedPlayer.DisplayName
@@ -214,6 +240,7 @@ local function updateDetails(selectedPlayer)
 	updateLevel(selectedPlayer)
 	updateBeli(selectedPlayer)
 	updateFragments(selectedPlayer)
+	updateRace(selectedPlayer)
 end
 
 -- Refresh player list
