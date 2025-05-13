@@ -240,16 +240,6 @@ local function updateRace(selectedPlayer)
 	end
 end
 
-teleportButton.MouseButton1Click:Connect(function()
-    if selectedPlayer and selectedPlayer.Character and selectedPlayer.Character:FindFirstChild("HumanoidRootPart") then
-        local targetPos = selectedPlayer.Character.HumanoidRootPart.CFrame
-        local myHRP = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
-        if myHRP then
-            myHRP.CFrame = targetPos + Vector3.new(0, 5, 0) -- offset so you don't clip inside them
-        end
-    end
-end)
-
 -- Main updater
 local function updateDetails(selectedPlayer)
 	displayNameLabel.Text = selectedPlayer.DisplayName
@@ -295,6 +285,16 @@ unviewLabel.MouseButton1Click:Connect(function()
 	if player.Character and player.Character:FindFirstChild("Humanoid") then
 		camera.CameraSubject = player.Character.Humanoid
 	end
+end)
+
+teleportButton.MouseButton1Click:Connect(function()
+    if selectedPlayer and selectedPlayer.Character and selectedPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        local targetPos = selectedPlayer.Character.HumanoidRootPart.CFrame
+        local myHRP = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+        if myHRP then
+            myHRP.CFrame = targetPos + Vector3.new(0, 5, 0) -- offset so you don't clip inside them
+        end
+    end
 end)
 
 -- Auto-refresh the player list every 5 seconds
