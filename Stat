@@ -107,6 +107,14 @@ beliLabel.TextScaled = true
 beliLabel.Font = Enum.Font.SourceSans
 beliLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
 
+local fragmentsLabel = Instance.new("TextLabel", StatListFrame)
+fragmentsLabel.Position = UDim2.new(0, 20, 0, 90)
+fragmentsLabel.Size = UDim2.new(1, -40, 0, 25)
+fragmentsLabel.Text = "Fragments: N/A""
+fragmentsLabel.TextScaled = true
+fragmentsLabel.Font = Enum.Font.SourceSans
+fragmentsLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
+
 local viewLabel = Instance.new("TextButton", detailFrame)
 viewLabel.Position = UDim2.new(0, 20, 0, 500)
 viewLabel.Size = UDim2.new(1, -500, 0, 25)
@@ -185,7 +193,7 @@ local function updateFragments(selectedPlayer)
 	if currentFragmentsConnection then currentFragmentsConnection:Disconnect() end
 
 	local success, fragmentsValue = pcall(function()
-		return selectedPlayer:WaitForChild("Data"):WaitForChild("Beli")
+		return selectedPlayer:WaitForChild("Data"):WaitForChild("Fragments")
 	end)
 
 	if success and fragmentsValue then
