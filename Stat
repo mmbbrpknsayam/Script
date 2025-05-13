@@ -139,6 +139,14 @@ unviewLabel.TextScaled = true
 unviewLabel.Font = Enum.Font.SourceSans
 unviewLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
 
+local teleportLabel = Instance.new("TextButton", detailFrame)
+teleportLabel.Position = UDim2.new(0, 150, 0, 500)
+teleportLabel.Size = UDim2.new(1, -500, 0, 25)
+teleportLabel.Text = "Teleport"
+teleportLabel.TextScaled = true
+teleportLabel.Font = Enum.Font.SourceSans
+teleportLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
+
 local selectedPlayer = nil
 local originalSubject = camera.CameraSubject
 local currentHealthConnection = nil
@@ -231,6 +239,16 @@ local function updateRace(selectedPlayer)
 		raceLabel.Text = "Race: N/A"
 	end
 end
+
+teleportButton.MouseButton1Click:Connect(function()
+    if selectedPlayer and selectedPlayer.Character and selectedPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        local targetPos = selectedPlayer.Character.HumanoidRootPart.CFrame
+        local myHRP = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+        if myHRP then
+            myHRP.CFrame = targetPos + Vector3.new(0, 5, 0) -- offset so you don't clip inside them
+        end
+    end
+end)
 
 -- Main updater
 local function updateDetails(selectedPlayer)
