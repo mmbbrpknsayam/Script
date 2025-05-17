@@ -9,7 +9,7 @@ local Window = Library:CreateWindow{
     MinSize = Vector2.new(470, 380),
     Acrylic = true, -- The blur may be detectable, setting this to false disables blur entirely
     Theme = "Dark",
-    MinimizeKey = Enum.KeyCode.F3 -- Used when theres no MinimizeKeybind
+    MinimizeKey = Enum.KeyCode.LeftControl -- Used when theres no MinimizeKeybind
 }
 
 local Tabs = {
@@ -254,9 +254,9 @@ uiCorner.Parent = imageButton
 
 -- When the button is clicked
 imageButton.MouseButton1Click:Connect(function()
-    keypress(Enum.KeyCode.F3)
+    keypress(Enum.KeyCode.LeftControl)
     task.wait(0.1) -- short delay to mimic natural keypress
-    keyrelease(Enum.KeyCode.F3)
+    keyrelease(Enum.KeyCode.LeftControl)
 end)
 
-require(game.ReplicatedStorage.Modules.Notification):CreateNotification("<font color=\"#ADD8E6\"><b>Script executed!</b></font>")
+require(game.ReplicatedStorage.Modules.Notification):CreateNotification("<font color=\"#ADD8E6\"><b>Banana Loaded!</b></font>")
