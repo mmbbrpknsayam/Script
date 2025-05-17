@@ -14,14 +14,21 @@ local Window = Library:CreateWindow{
 
 local Tabs = {
     Main = Window:CreateTab{
-        Title = "Tab Main",
+        Title = "Tab News",
+        Icon = "nil"
+    }
+}
+
+local Tabs = {
+    Main = Window:CreateTab{
+        Title = "Tab Local Player",
         Icon = "nil"
     }
 }
 
 Tabs.Main:CreateButton{
-    Title = "Remove all particle",
-    Description = "Frost visible",
+    Title = "Boost Fps",
+    Description = "",
     Callback = function()
         -- Target particle names to delete
         local targetNames = {
