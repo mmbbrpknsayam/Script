@@ -22,10 +22,14 @@ local Tabs = {
 local Paragraph = Tabs.Main:CreateParagraph("Paragraph", {
     Title = "Change logs!",
     Content = [[
-V-0.1.1
-[+] Blood Updates
-[+] Injection
-    ]]
+Ver-0.1.1
+[+] New Boost Fps
+[+] Update Shop Data
+
+Coming soon:
+- Auto Harvest
+- Auto collect
+]]
 })
 
 local Tabs = {
