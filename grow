@@ -21,8 +21,7 @@ local Tabs = {
 
 local Paragraph = Tabs.Main:CreateParagraph("Paragraph", {
     Title = "Change logs!",
-    Content = "V-0.1.0
-[+] Blood Update"
+    Content = "V-0.1.1    [+] Blood Update"
 })
 
 local Tabs = {
