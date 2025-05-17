@@ -2,7 +2,7 @@ local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOog
 
 local Window = Library:CreateWindow{
     Title = `Banana-grow [Premium]`,
-    SubTitle = "",
+    SubTitle = "V-0.1.0",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
     Resize = true, -- Resize this ^ Size according to a 1920x1080 screen, good for mobile users but may look weird on some devices
@@ -14,7 +14,7 @@ local Window = Library:CreateWindow{
 
 local Tabs = {
     Main = Window:CreateTab{
-        Title = "Main",
+        Title = "Tab Main",
         Icon = "nil"
     }
 }
@@ -44,7 +44,7 @@ Tabs.Main:CreateButton{
 
 local Tabs = {
     Main = Window:CreateTab{
-        Title = "Shop",
+        Title = "Tab Shop",
         Icon = "nil"
     }
 }
@@ -56,7 +56,7 @@ local selectedSeeds = {}
 local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
     Title = "Seed",
     Description = "",
-    Values = {"Carrot", "Strawberry", "Blueberry", "Orange Tulip", "Tomato", "Corn", "Daffodil", "Watermelon", "Pumpkin", "Apple", "Bamboo", "Coconut", "Cactus", "Dragon Fruit", "Mango", "Grape", "Mushroom", "Pepper", "Cacao"},
+    Values = {"Carrot", "Strawberry", "Blueberry", "Orange Tulip", "Tomato", "Corn", "Daffodil", "Watermelon", "Pumpkin", "Apple", "Bamboo", "Coconut", "Cactus", "Dragon Fruit", "Mango", "Grape", "Mushroom", "Pepper", "Cacao", "Beanstalk"},
     Multi = true,
     Default = {},
 })
@@ -100,7 +100,7 @@ local selectedGears = {}
 local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
     Title = "Gear",
     Description = "",
-    Values = {"Watering Can", "Trowel", "Advanced Sprinkler", "Godly Sprinkler", "Lightning Rod", "Master Sprinkler"},
+    Values = {"Watering Can", "Trowel", "Recall Wrench", "Basic Sprinkler", "Advanced Sprinkler", "Godly Sprinkler", "Lightning Rod", "Master Sprinkler", "Favorite Tool"},
     Multi = true,
     Default = {},
 })
@@ -140,7 +140,7 @@ end)
 
 local Tabs = {
     Main = Window:CreateTab{
-        Title = "Teleport",
+        Title = "Tab Place",
         Icon = "nil"
     }
 }
