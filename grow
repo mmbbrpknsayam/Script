@@ -3,7 +3,7 @@ local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOog
 
 local Window = Library:CreateWindow{
     Title = `Banana-grow [ Premium ]`,
-    SubTitle = "V-0.1.0",
+    SubTitle = "V-0.1.1",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
     Resize = true, -- Resize this ^ Size according to a 1920x1080 screen, good for mobile users but may look weird on some devices
@@ -23,7 +23,8 @@ local Tabs = {
 local Paragraph = Tabs.Main:CreateParagraph("Paragraph", {
     Title = "Change logs!",
     Content = [[
-Ver-0.1.0
+Ver-0.1.1
+[+] Updated to latest data
 [+] New Boost Fps
 [+] Update Shop Data
 
@@ -167,6 +168,55 @@ Toggle2:OnChanged(function()
                 for _, gear in ipairs(selectedGears) do
                     local args = {gear}
                     game:GetService("ReplicatedStorage").GameEvents.BuyGearStock:FireServer(unpack(args))
+                    task.wait(0.1)
+                end
+            end
+        end)
+    end
+end)
+
+local Paragraph = Tabs.Main:CreateParagraph("Paragraph", {
+    Title = "Event shop",
+    Content = ""
+})
+
+local selectedEvents = {}
+
+-- Create dropdown
+local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
+    Title = "Item",
+    Description = "",
+    Values = {"Mysterious Crate", "Blood Banana", "Moon Melon", "Star Caller", "Blood Hedgehog", "Blood Kiwi", "Lightning Rod", "Master Sprinkler", "Favorite Tool"},
+    Multi = true,
+    Default = {},
+})
+
+-- Update selected seeds when changed
+MultiDropdown:OnChanged(function(Value)
+    selectedEvents = {}
+    for EventName, IsSelected in pairs(Value) do
+        if IsSelected then
+            table.insert(selectedEvents, EventName)
+        end
+    end
+end)
+
+local Toggle5 = Tabs.Main:CreateToggle("MyToggle", {Title = "Auto buy", Default = false})
+
+Toggle5:OnChanged(function()
+    if not Toggle5Interacted then
+        Toggle5Interacted = true
+        return
+    end
+
+    BuyEventEnabled = not BuyEventEnabled
+
+    if BuyEventEnabled then
+        task.spawn(function()
+            while BuyEventEnabled do
+                for _, event in ipairs(selectedEvents) do
+                    local args = {event}
+                    game:GetService("ReplicatedStorage").GameEvents.BuyEventShopStock:FireServer(unpack(args))
                     task.wait(0.1)
                 end
             end
