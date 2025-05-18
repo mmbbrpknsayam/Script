@@ -1,3 +1,4 @@
+-- current toggle [4]
 local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOogway/Fluent-Renewed/releases/latest/download/Fluent.luau"))()
 
 local Window = Library:CreateWindow{
@@ -22,7 +23,7 @@ local Tabs = {
 local Paragraph = Tabs.Main:CreateParagraph("Paragraph", {
     Title = "Change logs!",
     Content = [[
-Ver-0.1.1
+Ver-0.1.0
 [+] New Boost Fps
 [+] Update Shop Data
 
@@ -68,6 +69,21 @@ local Tabs = {
         Icon = "nil"
     }
 }
+
+local Toggle4 = Tabs.Main:CreateToggle("MyToggle", {Title = "Auto Sell", Default = false})
+
+Toggle4:OnChanged(function()
+    if not Toggle4Interacted then
+        Toggle4Interacted = true
+        return
+    end
+
+    AutoSellEnabled = not AutoSellEnabled
+
+    if AutoSellEnabled then
+        game:GetService("ReplicatedStorage").GameEvents.Sell_Inventory:FireServer()
+    end
+end)
 
 -- Store selected seeds
 local selectedSeeds = {}
@@ -153,6 +169,30 @@ Toggle2:OnChanged(function()
                     game:GetService("ReplicatedStorage").GameEvents.BuyGearStock:FireServer(unpack(args))
                     task.wait(0.1)
                 end
+            end
+        end)
+    end
+end)
+
+local Toggle3 = Tabs.Main:CreateToggle("MyToggle", {Title = "Auto Sumbit Moonlit-Bloodlit Plant", Default = false})
+
+Toggle3:OnChanged(function()
+    if not Toggle3Interacted then
+        Toggle3Interacted = true
+        return
+    end
+
+    AutoSumbitEnabled = not AutoSumbitEnabled
+
+    if AutoSumbitEnabled then
+        task.spawn(function()
+            while AutoSumbitEnabled do
+                local args = {
+                    [1] = "SubmitAllPlants"
+                }
+
+                game:GetService("ReplicatedStorage").GameEvents.NightQuestRemoteEvent:FireServer(unpack(args))
+                task.wait(0.1)
             end
         end)
     end
