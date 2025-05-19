@@ -1,17 +1,8 @@
-local validKeys = {
-    ["Lqv5Y8Hd29MWcAz"] = true,
-}
-
-if not getgenv().Key or not validKeys[getgenv().Key] then
-    game.Players.LocalPlayer:Kick("Whitelist error Invalid key. Please use the correct key.")
-    return
-end
-
 local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOogway/Fluent-Renewed/releases/latest/download/Fluent.luau"))()
 
 local Window = Library:CreateWindow{
-    Title = `Snipe`,
-    SubTitle = "jobid",
+    Title = `MyLoader`,
+    SubTitle = "MyLoader",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
     Resize = true, -- Resize this ^ Size according to a 1920x1080 screen, good for mobile users but may look weird on some devices
@@ -23,7 +14,22 @@ local Window = Library:CreateWindow{
 
 local Tabs = {
     Main = Window:CreateTab{
-        Title = "Main",
+        Title = "News",
+        Icon = "nil"
+    }
+}
+
+local Paragraph = Tabs.Main:CreateParagraph("Paragraph", {
+    Title = "Change logs!",
+    Content = [[
+Update!
+[+] no longer need key
+]]
+})
+
+local Tabs = {
+    Main = Window:CreateTab{
+        Title = "Server",
         Icon = "nil"
     }
 }
@@ -196,66 +202,74 @@ Tabs.Main:CreateButton{
 
 local Tabs = {
     Main = Window:CreateTab{
-        Title = "Snipe",
+        Title = "Grapfic",
         Icon = "nil"
     }
 }
 
-local Toggle1 = Tabs.Main:CreateToggle("MyToggle", {Title = "Aimbot", Default = false})
+Tabs.Main:CreateButton{
+    Title = "Native Grapfic",
+    Description = "",
+    Callback = function()
+        local Lighting = game:GetService("Lighting")
 
-Toggle1:OnChanged(function()
-    if not Toggle1Interacted then
-        Toggle1Interacted = true
-        return
-    end
+        -- Set Lighting properties
+        Lighting.Ambient = Color3.fromRGB(50, 45, 50)
+        Lighting.Brightness = 8
+        Lighting.ColorShift_Bottom = Color3.fromRGB(255, 255, 255)
+        Lighting.ColorShift_Top = Color3.fromRGB(255, 255, 255)
+        Lighting.EnvironmentDiffuseScale = 1
+        Lighting.EnvironmentSpecularScale = 1
+        Lighting.GlobalShadows = true
+        Lighting.OutdoorAmbient = Color3.fromRGB(125, 125, 125)
+        Lighting.ShadowSoftness = 0.25
+        Lighting.Technology = Enum.Technology.Future
+        Lighting.ClockTime = 6.4
+        Lighting.GeographicLatitude = 3.141
+        Lighting.ExposureCompensation = -0.5
+        Lighting.FogColor = Color3.fromRGB(192, 192, 192)
+        Lighting.FogStart = 0
+        Lighting.FogEnd = 100000
 
-    aimbotEnabled = not aimbotEnabled
-
-    if aimbotEnabled then
-        -- Set the range limit for the aimbot (in studs)
-        local AIMBOT_RANGE = 50  -- Change this value to adjust the range
-
-        -- Function to find the nearest player within range
-        local function getClosestPlayer()
-            local closestPlayer = nil
-            local shortestDist = AIMBOT_RANGE  -- Start with the range limit
-            local myPosition = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
-            
-            -- Loop through all players to find the closest one within range
-            for _, player in pairs(game.Players:GetPlayers()) do
-                if player ~= game.Players.LocalPlayer and player.Character and player.Character:FindFirstChild("Head") then
-                    local dist = (player.Character.Head.Position - myPosition).Magnitude
-                    -- Only consider players within the range
-                    if dist < shortestDist then
-                        shortestDist = dist
-                        closestPlayer = player
-                    end
-                end
-            end
-
-            return closestPlayer
-        end
-
-        -- Function to aim the camera at the nearest player
-        local function aimAtNearestPlayer()
-            local closestPlayer = getClosestPlayer()
-            
-            if closestPlayer then
-                -- Get the position of the nearest player
-                local targetPosition = closestPlayer.Character.HumanoidRootPart.Position
-                local myPosition = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
-                
-                -- Set the camera's CFrame to focus on the nearest player
-                local camera = game.Workspace.CurrentCamera
-                camera.CFrame = CFrame.new(camera.CFrame.Position, targetPosition)
+        -- Delete existing Sky objects
+        for _, v in pairs(Lighting:GetChildren()) do
+            if v:IsA("Sky") then
+                v:Destroy()
             end
         end
 
-        -- Run the loop in a separate thread so it can be stopped later
-        task.spawn(function()
-            while aimbotEnabled and task.wait(0) do
-                aimAtNearestPlayer()
-            end
-        end)
+        -- Add Atmosphere
+        local atmosphere = Instance.new("Atmosphere", Lighting)
+        atmosphere.Density = 0.3
+        atmosphere.Offset = 0
+        atmosphere.Color = Color3.fromRGB(255, 255, 255)
+        atmosphere.Decay = Color3.fromRGB(16, 22, 25)
+        atmosphere.Glare = 0.1
+        atmosphere.Haze = 2
+
+        -- Add BloomEffect
+        local bloom = Instance.new("BloomEffect", Lighting)
+        bloom.Intensity = 2.5
+        bloom.Size = 25
+        bloom.Threshold = 2
+
+        -- Add ColorCorrectionEffect
+        local colorCorrection = Instance.new("ColorCorrectionEffect", Lighting)
+        colorCorrection.Brightness = -0.025
+        colorCorrection.Contrast = 0
+        colorCorrection.Saturation = -0.1
+        colorCorrection.TintColor = Color3.fromRGB(255, 255, 255)
+
+        -- Add DepthOfFieldEffect
+        local depthOfField = Instance.new("DepthOfFieldEffect", Lighting)
+        depthOfField.FarIntensity = 0.219
+        depthOfField.FocusDistance = 51.6
+        depthOfField.InFocusRadius = 50
+        depthOfField.NearIntensity = 1
+
+        -- Add SunRaysEffect
+        local sunRays = Instance.new("SunRaysEffect", Lighting)
+        sunRays.Intensity = 0.1
+        sunRays.Spread = 0.1
     end
-end)
+}
