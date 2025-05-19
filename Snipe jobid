@@ -208,7 +208,7 @@ local Tabs = {
 }
 
 Tabs.Main:CreateButton{
-    Title = "Native Grapfic",
+    Title = "Realistic Grapfic",
     Description = "",
     Callback = function()
         local Lighting = game:GetService("Lighting")
@@ -239,38 +239,48 @@ Tabs.Main:CreateButton{
             end
         end
 
-        -- Add Atmosphere
-        local atmosphere = Instance.new("Atmosphere", Lighting)
-        atmosphere.Density = 0.3
-        atmosphere.Offset = 0
-        atmosphere.Color = Color3.fromRGB(255, 255, 255)
-        atmosphere.Decay = Color3.fromRGB(16, 22, 25)
-        atmosphere.Glare = 0.1
-        atmosphere.Haze = 2
+        -- Modify existing Atmosphere
+        local atmosphere = Lighting:FindFirstChildOfClass("Atmosphere")
+        if atmosphere then
+            atmosphere.Density = 0.3
+            atmosphere.Offset = 0
+            atmosphere.Color = Color3.fromRGB(255, 255, 255)
+            atmosphere.Decay = Color3.fromRGB(16, 22, 25)
+            atmosphere.Glare = 0.1
+            atmosphere.Haze = 2
+        end
 
-        -- Add BloomEffect
-        local bloom = Instance.new("BloomEffect", Lighting)
-        bloom.Intensity = 2.5
-        bloom.Size = 25
-        bloom.Threshold = 2
+        -- Modify existing BloomEffect
+        local bloom = Lighting:FindFirstChildOfClass("BloomEffect")
+        if bloom then
+            bloom.Intensity = 2.5
+            bloom.Size = 25
+            bloom.Threshold = 2
+        end
 
-        -- Add ColorCorrectionEffect
-        local colorCorrection = Instance.new("ColorCorrectionEffect", Lighting)
-        colorCorrection.Brightness = -0.025
-        colorCorrection.Contrast = 0
-        colorCorrection.Saturation = -0.1
-        colorCorrection.TintColor = Color3.fromRGB(255, 255, 255)
+        -- Modify existing ColorCorrectionEffect
+        local colorCorrection = Lighting:FindFirstChildOfClass("ColorCorrectionEffect")
+        if colorCorrection then
+            colorCorrection.Brightness = -0.025
+            colorCorrection.Contrast = 0
+            colorCorrection.Saturation = -0.1
+            colorCorrection.TintColor = Color3.fromRGB(255, 255, 255)
+        end
 
-        -- Add DepthOfFieldEffect
-        local depthOfField = Instance.new("DepthOfFieldEffect", Lighting)
-        depthOfField.FarIntensity = 0.219
-        depthOfField.FocusDistance = 51.6
-        depthOfField.InFocusRadius = 50
-        depthOfField.NearIntensity = 1
+        -- Modify existing DepthOfFieldEffect
+        local depthOfField = Lighting:FindFirstChildOfClass("DepthOfFieldEffect")
+        if depthOfField then
+            depthOfField.FarIntensity = 0.219
+            depthOfField.FocusDistance = 51.6
+            depthOfField.InFocusRadius = 50
+            depthOfField.NearIntensity = 1
+        end
 
-        -- Add SunRaysEffect
-        local sunRays = Instance.new("SunRaysEffect", Lighting)
-        sunRays.Intensity = 0.1
-        sunRays.Spread = 0.1
+        -- Modify existing SunRaysEffect
+        local sunRays = Lighting:FindFirstChildOfClass("SunRaysEffect")
+        if sunRays then
+            sunRays.Intensity = 0.1
+            sunRays.Spread = 0.1
+        end
     end
 }
