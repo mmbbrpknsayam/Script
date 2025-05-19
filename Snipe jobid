@@ -226,7 +226,7 @@ Tabs.Main:CreateButton{
         Lighting.Technology = Enum.Technology.Future
         Lighting.ClockTime = 6.4
         Lighting.GeographicLatitude = 3.141
-        Lighting.TimeOfDay = 06:24:00
+        Lighting.TimeOfDay = "06:24:00"
         Lighting.ExposureCompensation = -0.5
         Lighting.FogColor = Color3.fromRGB(192, 192, 192)
         Lighting.FogStart = 0
