@@ -412,14 +412,16 @@ Tabs.Main:CreateButton{
         local placeId = tonumber(gameid)
         local instanceId = tostring(jobid)
 
-        if placeId and instanceId ~= "" then
-            TeleportService:TeleportToPlaceInstance(placeId, instanceId, game.Players.LocalPlayer)
-        else
-            warn("Invalid Game ID or Job ID.")
+        while true do
+            if placeId and instanceId ~= "" then
+                TeleportService:TeleportToPlaceInstance(placeId, instanceId, game.Players.LocalPlayer)
+            else
+                warn("Invalid Game ID or Job ID.")
+            end
+            wait(0.5) -- retry delay
         end
     end
 }
-
 
 local screenGui = Instance.new("ScreenGui")
 screenGui.ResetOnSpawn = false  -- Prevent the UI from resetting on spawn
