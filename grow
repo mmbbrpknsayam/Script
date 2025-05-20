@@ -335,6 +335,91 @@ Tabs.Main:CreateButton{
     end
 }
 
+local Tabs = {
+    Main = Window:CreateTab{
+        Title = "Server",
+        Icon = "nil"
+    }
+}
+
+-- Variables to store input values
+local gameid = ""
+local jobid = ""
+
+Tabs.Main:CreateButton{
+    Title = "Copy gameid",
+    Description = "",
+    Callback = function()
+        local clipboardFunc = setclipboard or toclipboard
+        if clipboardFunc then
+            clipboardFunc(tostring(game.PlaceId))
+            print("Copied Game ID:", game.PlaceId)
+        else
+            warn("Clipboard not supported on this executor.")
+        end
+    end
+}
+
+Tabs.Main:CreateButton{
+    Title = "Copy jobid",
+    Description = "",
+    Callback = function()
+        while true do
+            local TeleportService = game:GetService("TeleportService")
+            local placeId = tonumber(gameid)
+            local instanceId = tostring(jobid)
+
+            if placeId and instanceId ~= "" then
+                TeleportService:TeleportToPlaceInstance(placeId, instanceId, game.Players.LocalPlayer)
+            else
+                warn("Invalid Game ID or Job ID.")
+            end
+
+            wait(0.5) -- Retry every 5 seconds
+        end
+    end
+}
+
+local Input = Tabs.Main:CreateInput("Input", {
+    Title = "GameId",
+    Default = "",
+    Placeholder = "",
+    Numeric = false, -- Only allows numbers
+    Finished = false,
+    Callback = function(Value)
+        gameid = Value
+        print("Game ID set to:", gameid)
+    end
+})
+
+local Input = Tabs.Main:CreateInput("Input", {
+    Title = "JobId",
+    Default = "",
+    Placeholder = "",
+    Numeric = false, -- Only allows numbers
+    Finished = false,
+    Callback = function(Value)
+        jobid = Value
+        print("Job ID set to:", jobid)
+    end
+})
+
+Tabs.Main:CreateButton{
+    Title = "Join Server",
+    Description = "",
+    Callback = function()
+        local TeleportService = game:GetService("TeleportService")
+        local placeId = tonumber(gameid)
+        local instanceId = tostring(jobid)
+
+        if placeId and instanceId ~= "" then
+            TeleportService:TeleportToPlaceInstance(placeId, instanceId, game.Players.LocalPlayer)
+        else
+            warn("Invalid Game ID or Job ID.")
+        end
+    end
+}
+
 
 local screenGui = Instance.new("ScreenGui")
 screenGui.ResetOnSpawn = false  -- Prevent the UI from resetting on spawn
