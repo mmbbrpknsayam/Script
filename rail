@@ -1,8 +1,8 @@
 local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOogway/Fluent-Renewed/releases/latest/download/Fluent.luau"))()
 
 local Window = Library:CreateWindow{
-    Title = `rail`,
-    SubTitle = "",
+    Title = `Fluent {Library.Version}`,
+    SubTitle = "by Actual Master Oogway",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
     Resize = true, -- Resize this ^ Size according to a 1920x1080 screen, good for mobile users but may look weird on some devices
