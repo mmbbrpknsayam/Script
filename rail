@@ -83,3 +83,26 @@ Tabs.Main:CreateButton({
         workspace:WaitForChild("Map"):WaitForChild("Ingame"):WaitForChild("Map"):WaitForChild("Generator"):WaitForChild("Remotes"):WaitForChild("RE"):FireServer()
     end
 })
+
+Tabs.Main:CreateButton({
+    Title = "finish generator",
+    Description = "",
+    Callback = function()
+        local args = {"enter"}
+        workspace:WaitForChild("Map"):WaitForChild("Ingame"):WaitForChild("Map"):WaitForChild("Generator"):WaitForChild("Remotes"):WaitForChild("RF"):InvokeServer(unpack(args))
+    end
+})
+
+Tabs.Main:CreateButton({
+    Title = "fullbright + no fog",
+    Description = "",
+    Callback = function()
+        local lighting = game:GetService("Lighting")
+        lighting.Brightness = 5
+        lighting.ClockTime = 14
+        lighting.FogStart = 0
+        lighting.FogEnd = 999999
+        lighting.GlobalShadows = false
+    end
+})
+
