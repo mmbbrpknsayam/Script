@@ -110,9 +110,23 @@ Tabs.Main:CreateButton({
     Title = "finish generator",
     Description = "",
     Callback = function()
-        while true do
-            workspace:WaitForChild("Map"):WaitForChild("Ingame"):WaitForChild("Map"):WaitForChild("Generator"):WaitForChild("Remotes"):WaitForChild("RE"):FireServer()
-            task.wait(3)
-        end
+        task.spawn(function()
+            while true do
+                local generatorFolder = workspace:WaitForChild("Map"):WaitForChild("Ingame"):WaitForChild("Map"):WaitForChild("Generator")
+                for _, gen in ipairs(generatorFolder:GetChildren()) do
+                    local remotes = gen:FindFirstChild("Remotes")
+                    if remotes then
+                        local re = remotes:FindFirstChild("RE")
+                        if re and re:IsA("RemoteEvent") then
+                            pcall(function()
+                                re:FireServer()
+                            end)
+                        end
+                    end
+                end
+                task.wait(3)
+            end
+        end)
     end
 })
+
