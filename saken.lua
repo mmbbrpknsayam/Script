@@ -107,12 +107,12 @@ Tabs.Main:CreateButton({
 })
 
 Tabs.Main:CreateButton({
-    Title = "finish generator",
+    Title = "all generators",
     Description = "",
     Callback = function()
         task.spawn(function()
             while true do
-                local generatorFolder = workspace:WaitForChild("Map"):WaitForChild("Ingame"):WaitForChild("Map"):WaitForChild("Generator")
+                local generatorFolder = workspace:WaitForChild("Map"):WaitForChild("Ingame"):WaitForChild("Map")
                 for _, gen in ipairs(generatorFolder:GetChildren()) do
                     local remotes = gen:FindFirstChild("Remotes")
                     if remotes then
@@ -129,4 +129,3 @@ Tabs.Main:CreateButton({
         end)
     end
 })
-
