@@ -85,7 +85,7 @@ Tabs.Main:CreateButton({
 })
 
 Tabs.Main:CreateButton({
-    Title = "finish generator",
+    Title = "enter generator",
     Description = "",
     Callback = function()
         local args = {"enter"}
@@ -103,6 +103,17 @@ Tabs.Main:CreateButton({
         lighting.FogStart = 0
         lighting.FogEnd = 999999
         lighting.GlobalShadows = false
+    end
+})
+
+Tabs.Main:CreateButton({
+    Title = "finish generator",
+    Description = "",
+    Callback = function()
+        while true do
+            workspace:WaitForChild("Map"):WaitForChild("Ingame"):WaitForChild("Map"):WaitForChild("Generator"):WaitForChild("Remotes"):WaitForChild("RE"):FireServer()
+            task.wait(2)
+        end
     end
 })
 
