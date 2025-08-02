@@ -112,7 +112,7 @@ Tabs.Main:CreateButton({
     Callback = function()
         while true do
             workspace:WaitForChild("Map"):WaitForChild("Ingame"):WaitForChild("Map"):WaitForChild("Generator"):WaitForChild("Remotes"):WaitForChild("RE"):FireServer()
-            task.wait(2)
+            task.wait(3)
         end
     end
 })
