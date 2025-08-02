@@ -75,3 +75,11 @@ Toggle4:OnChanged(function()
         end
     end
 end)
+
+Tabs.Main:CreateButton({
+    Title = "finish generator",
+    Description = "",
+    Callback = function()
+        workspace:WaitForChild("Map"):WaitForChild("Ingame"):WaitForChild("Map"):WaitForChild("Generator"):WaitForChild("Remotes"):WaitForChild("RE"):FireServer()
+    end
+})
