@@ -1,7 +1,7 @@
 local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOogway/Fluent-Renewed/releases/latest/download/Fluent.luau"))()
 
 local Window = Library:CreateWindow{
-    Title = `Forsaken [ CHEATS ]`,
+    Title = `forsaken [ cheat ]`,
     SubTitle = "",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
@@ -19,11 +19,11 @@ local Tabs = {
     }
 }
 
-local Toggle4 = Tabs.Main:CreateToggle("MyToggle", {Title = "aimbot zombie", Default = false})
+local Toggle1 = Tabs.Main:CreateToggle("MyToggle", {Title = "aimbot", Default = false})
 
-Toggle4:OnChanged(function()
-    if not Toggle4Interacted then
-        Toggle4Interacted = true
+Toggle1:OnChanged(function()
+    if not Toggle1Interacted then
+        Toggle1Interacted = true
         return
     end
 
@@ -77,36 +77,6 @@ Toggle4:OnChanged(function()
 end)
 
 Tabs.Main:CreateButton({
-    Title = "finish generator",
-    Description = "",
-    Callback = function()
-        workspace:WaitForChild("Map"):WaitForChild("Ingame"):WaitForChild("Map"):WaitForChild("Generator"):WaitForChild("Remotes"):WaitForChild("RE"):FireServer()
-    end
-})
-
-Tabs.Main:CreateButton({
-    Title = "enter generator",
-    Description = "",
-    Callback = function()
-        local args = {"enter"}
-        workspace:WaitForChild("Map"):WaitForChild("Ingame"):WaitForChild("Map"):WaitForChild("Generator"):WaitForChild("Remotes"):WaitForChild("RF"):InvokeServer(unpack(args))
-    end
-})
-
-Tabs.Main:CreateButton({
-    Title = "fullbright + no fog",
-    Description = "",
-    Callback = function()
-        local lighting = game:GetService("Lighting")
-        lighting.Brightness = 5
-        lighting.ClockTime = 14
-        lighting.FogStart = 0
-        lighting.FogEnd = 999999
-        lighting.GlobalShadows = false
-    end
-})
-
-Tabs.Main:CreateButton({
     Title = "all generators",
     Description = "",
     Callback = function()
@@ -124,7 +94,7 @@ Tabs.Main:CreateButton({
                         end
                     end
                 end
-                task.wait(3)
+                task.wait(4)
             end
         end)
     end
