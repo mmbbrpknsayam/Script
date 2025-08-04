@@ -2,7 +2,7 @@
 local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOogway/Fluent-Renewed/releases/latest/download/Fluent.luau"))()
 
 local Window = Library:CreateWindow{
-    Title = `Banana-grow [ Premium ]`,
+    Title = `banana [ beta ]`,
     SubTitle = "V-0.1.1",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
@@ -12,82 +12,6 @@ local Window = Library:CreateWindow{
     Theme = "Dark",
     MinimizeKey = Enum.KeyCode.LeftControl -- Used when theres no MinimizeKeybind
 }
-
-local Tabs = {
-    Main = Window:CreateTab{
-        Title = "Tab News",
-        Icon = "nil"
-    }
-}
-
-local Toggle4 = Tabs.Main:CreateToggle("MyToggle", {Title = "aimbot zombie", Default = false})
-
-Toggle4:OnChanged(function()
-    if not Toggle4Interacted then
-        Toggle4Interacted = true
-        return
-    end
-
-    aimbotEnabled = not aimbotEnabled
-
-    if aimbotEnabled then
-        -- Set the range limit for the aimbot (in studs)
-local AIMBOT_RANGE = 50  -- Change this value to adjust the range
-
--- Function to find the nearest player within range
-local function getClosestPlayer()
-    local closestPlayer = nil
-    local shortestDist = AIMBOT_RANGE  -- Start with the range limit
-    local myPosition = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
-    
-    -- Loop through all players to find the closest one within range
-    for _, player in pairs(game.Players:GetPlayers()) do
-        if player ~= game.Players.LocalPlayer and player.Character and player.Character:FindFirstChild("Head") then
-            local dist = (player.Character.Head.Position - myPosition).Magnitude
-            -- Only consider players within the range
-            if dist < shortestDist then
-                shortestDist = dist
-                closestPlayer = player
-            end
-        end
-    end
-
-    return closestPlayer
-end
-
--- Function to aim the camera at the nearest player
-local function aimAtNearestPlayer()
-    local closestPlayer = getClosestPlayer()
-    
-    if closestPlayer then
-        -- Get the position of the nearest player
-        local targetPosition = closestPlayer.Character.HumanoidRootPart.Position
-        local myPosition = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
-        
-        -- Set the camera's CFrame to focus on the nearest player
-        local camera = game.Workspace.CurrentCamera
-        camera.CFrame = CFrame.new(camera.CFrame.Position, targetPosition)
-    end
-end
-
--- Call the function to update the camera aim towards the nearest player
-while wait(0) do  -- You can adjust the interval to how fast it should update
-    aimAtNearestPlayer()
-end
-
-local Paragraph = Tabs.Main:CreateParagraph("Paragraph", {
-    Title = "Change logs!",
-    Content = [[
-Ver-0.1.1
-[+] Updated to latest data
-[+] Update shop data
-[+] New boost fps
-
-game log
-[+] Blood shop reset every 15 min
-[+] Blood moon every 3 hours and 33% with moonlit
-]]
-})
 
 local Tabs = {
     Main = Window:CreateTab{
