@@ -6,7 +6,7 @@ local camera = workspace.CurrentCamera
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "PlayerHub"
 screenGui.ResetOnSpawn = false
-screenGui.Parent = player:WaitForChild("PlayerGui")
+screenGui.Parent = game.GoreGui
 
 -- Main Frame
 local mainFrame = Instance.new("Frame", screenGui)
