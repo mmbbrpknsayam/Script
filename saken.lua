@@ -110,10 +110,10 @@ Tabs.Main:CreateButton({
                 for _, gen in ipairs(generatorFolder:GetChildren()) do
                     local remotes = gen:FindFirstChild("Remotes")
                     if remotes then
-                        local re = remotes:FindFirstChild("RF")
-                        if re and re:IsA("RemoteEvent") then
+                        local rf = remotes:FindFirstChild("RF")
+                        if rf and rf:IsA("RemoteFuction") then
                             pcall(function()
-                                re:FireServer()
+                                rf:InvokeServer()
                             end)
                         end
                     end
