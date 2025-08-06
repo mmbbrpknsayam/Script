@@ -111,14 +111,14 @@ Tabs.Main:CreateButton({
                     local remotes = gen:FindFirstChild("Remotes")
                     if remotes then
                         local rf = remotes:FindFirstChild("RF")
-                        if rf and rf:IsA("RemoteFuction") then
+                        if rf and rf:IsA("RemoteFunction") then
                             pcall(function()
-                                rf:InvokeServer()
+                                rf:InvokeServer("enter")
                             end)
                         end
                     end
                 end
-                task.wait(0.5)
+                task.wait(3) -- loop every 3 seconds
             end
         end)
     end
