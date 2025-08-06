@@ -99,3 +99,27 @@ Tabs.Main:CreateButton({
         end)
     end
 })
+
+Tabs.Main:CreateButton({
+    Title = "enter generators",
+    Description = "",
+    Callback = function()
+        task.spawn(function()
+            while true do
+                local generatorFolder = workspace:WaitForChild("Map"):WaitForChild("Ingame"):WaitForChild("Map")
+                for _, gen in ipairs(generatorFolder:GetChildren()) do
+                    local remotes = gen:FindFirstChild("Remotes")
+                    if remotes then
+                        local re = remotes:FindFirstChild("RF")
+                        if re and re:IsA("RemoteEvent") then
+                            pcall(function()
+                                re:FireServer()
+                            end)
+                        end
+                    end
+                end
+                task.wait(0.5)
+            end
+        end)
+    end
+})
