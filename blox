@@ -27,7 +27,19 @@ local espEnabled = false
 local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
     Title = "Item",
     Description = "",
-    Values = {"Iron Body", "Bandage", "Fuel Canister", "Log", "Medkit", "Forcefield Crystal", "Frog Potion", "Lightning Potion", "Speed Potion", "Sphere of fury", "True Power"},
+    Values = {
+        "Iron Body",
+        "Bandage",
+        "Fuel Canister",
+        "Log",
+        "Medkit",
+        "Rifle",
+        "Rifle Ammo",
+        "Item chest",
+        "Revolver Ammo",
+        "Berry",
+        "Carrot"
+    },
     Multi = true,
     Default = {},
 })
