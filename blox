@@ -43,8 +43,9 @@ end)
 
 local Toggle1 = Tabs.Main:CreateToggle("MyToggle", {Title = "esp", Default = false})
 
--- Clean up ESP visuals & events
+-- Full cleanup function
 local function removeAllESP()
+    -- Destroy everything we tracked
     for _, v in pairs(espVisuals) do
         if v and v.Parent then
             v:Destroy()
@@ -52,12 +53,25 @@ local function removeAllESP()
     end
     espVisuals = {}
 
+    -- Disconnect all events
     for _, conn in pairs(espConnections) do
         if conn.Connected then
             conn:Disconnect()
         end
     end
     espConnections = {}
+
+    -- Safety wipe: remove ANY leftover ESP objects from items
+    local itemsFolder = workspace:FindFirstChild("Items")
+    if itemsFolder then
+        for _, model in pairs(itemsFolder:GetChildren()) do
+            for _, obj in pairs(model:GetChildren()) do
+                if obj:IsA("BillboardGui") or obj:IsA("Highlight") or obj:IsA("Attachment") or obj:IsA("Beam") then
+                    obj:Destroy()
+                end
+            end
+        end
+    end
 end
 
 Toggle1:OnChanged(function()
