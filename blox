@@ -1,173 +1,161 @@
-local TweenService = game:GetService("TweenService")
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOogway/Fluent-Renewed/releases/latest/download/Fluent.luau"))()
 
--- Wait for Enemies folder to exist
-local enemiesFolder = workspace:FindFirstChild("Enemies") or workspace:WaitForChild("Enemies")
+local Window = Library:CreateWindow{
+    Title = `banana [ beta ]`,
+    SubTitle = "V-0.1.1",
+    TabWidth = 160,
+    Size = UDim2.fromOffset(830, 525),
+    Resize = true, -- Resize this ^ Size according to a 1920x1080 screen, good for mobile users but may look weird on some devices
+    MinSize = Vector2.new(470, 380),
+    Acrylic = true, -- The blur may be detectable, setting this to false disables blur entirely
+    Theme = "Dark",
+    MinimizeKey = Enum.KeyCode.LeftControl -- Used when theres no MinimizeKeybind
+}
 
--- Wait for Baking Staff NPC to appear in the Enemies folder
-local bakingStaff = enemiesFolder:FindFirstChild("Baking Staff")
-if not bakingStaff then
-    print("Waiting for Baking Staff to spawn...")
-    bakingStaff = enemiesFolder.ChildAdded:Wait()
-    while bakingStaff.Name ~= "Baking Staff" do
-        bakingStaff = enemiesFolder.ChildAdded:Wait()
-    end
-end
+local Tabs = {
+    Main = Window:CreateTab{
+        Title = "esp",
+        Icon = "nil"
+    }
+}
 
--- Wait for its HumanoidRootPart
-local targetRootPart = bakingStaff:WaitForChild("HumanoidRootPart")
+local selectedItem = {}
+local espVisuals = {}
+local espConnections = {}
+local espEnabled = false
 
--- Tween to Baking Staff
-local tweenSpeed = 2 -- You can adjust this
-local tweenInfo = TweenInfo.new(tweenSpeed, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
+    Title = "Item",
+    Description = "",
+    Values = {"Iron Body", "Bandage", "Fuel Canister", "Log", "Medkit", "Forcefield Crystal", "Frog Potion", "Lightning Potion", "Speed Potion", "Sphere of fury", "True Power"},
+    Multi = true,
+    Default = {},
+})
 
--- Optional: stand 3 studs in front of the NPC
-local goal = { CFrame = targetRootPart.CFrame + (targetRootPart.CFrame.LookVector * -3) }
-
-local tween = TweenService:Create(humanoidRootPart, tweenInfo, goal)
-tween:Play()
-
--- with speed stud
-local TweenService = game:GetService("TweenService")
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-
--- Wait for Enemies folder
-local enemiesFolder = workspace:FindFirstChild("Enemies") or workspace:WaitForChild("Enemies")
-
--- Wait for Baking Staff
-local bakingStaff = enemiesFolder:FindFirstChild("Baking Staff")
-if not bakingStaff then
-    print("Waiting for Baking Staff to spawn...")
-    bakingStaff = enemiesFolder.ChildAdded:Wait()
-    while bakingStaff.Name ~= "Baking Staff" do
-        bakingStaff = enemiesFolder.ChildAdded:Wait()
-    end
-end
-
-local targetRootPart = bakingStaff:WaitForChild("HumanoidRootPart")
-
--- Calculate distance and duration
-local destination = targetRootPart.CFrame.Position + (targetRootPart.CFrame.LookVector * -3)
-local currentPosition = humanoidRootPart.Position
-local distance = (destination - currentPosition).Magnitude
-
-local speed = 16 -- studs per second (you can change this)
-local duration = distance / speed
-
-local tweenInfo = TweenInfo.new(duration, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
-local goal = { CFrame = CFrame.new(destination) }
-
-local tween = TweenService:Create(humanoidRootPart, tweenInfo, goal)
-tween:Play()
-
--- with up stud
-local TweenService = game:GetService("TweenService")
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-
--- Wait for Enemies folder
-local enemiesFolder = workspace:FindFirstChild("Enemies") or workspace:WaitForChild("Enemies")
-
--- Wait for Baking Staff
-local bakingStaff = enemiesFolder:FindFirstChild("Baking Staff")
-if not bakingStaff then
-    print("Waiting for Baking Staff to spawn...")
-    bakingStaff = enemiesFolder.ChildAdded:Wait()
-    while bakingStaff.Name ~= "Baking Staff" do
-        bakingStaff = enemiesFolder.ChildAdded:Wait()
-    end
-end
-
-local targetRootPart = bakingStaff:WaitForChild("HumanoidRootPart")
-
--- Calculate destination: 3 studs in front + 5 studs up from NPC
-local frontOffset = -targetRootPart.CFrame.LookVector * 3
-local upwardOffset = Vector3.new(0, 5, 0)
-local destination = targetRootPart.Position + frontOffset + upwardOffset
-
--- Calculate distance and duration
-local currentPosition = humanoidRootPart.Position
-local distance = (destination - currentPosition).Magnitude
-local speed = 16 -- studs per second
-local duration = distance / speed
-
-local tweenInfo = TweenInfo.new(duration, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
-local goal = { CFrame = CFrame.new(destination) }
-
-local tween = TweenService:Create(humanoidRootPart, tweenInfo, goal)
-tween:Play()
-
--- full done auto tween
-local TweenService = game:GetService("TweenService")
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local player = Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-
--- Settings
-local enemiesFolder = workspace:WaitForChild("Enemies")
-local speed = 16 -- studs/second
-local frontOffsetDistance = 3
-local upwardOffset = Vector3.new(0, 5, 0)
-
--- Function to tween to NPC and follow until it's gone
-local function tweenToNPC(npcModel)
-    local rootPart = npcModel:WaitForChild("HumanoidRootPart")
-    local alive = true
-
-    npcModel.AncestryChanged:Connect(function(_, parent)
-        if not parent then
-            alive = false
+MultiDropdown:OnChanged(function(Value)
+    selectedItem = {}
+    for ItemName, IsSelected in pairs(Value) do
+        if IsSelected then
+            table.insert(selectedItem, ItemName)
         end
-    end)
-
-    while alive do
-        local frontOffset = -rootPart.CFrame.LookVector * frontOffsetDistance
-        local destination = rootPart.Position + frontOffset + upwardOffset
-
-        local currentPos = humanoidRootPart.Position
-        local distance = (destination - currentPos).Magnitude
-        local duration = distance / speed
-
-        local tweenInfo = TweenInfo.new(duration, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
-        local goal = { CFrame = CFrame.new(destination) }
-        local tween = TweenService:Create(humanoidRootPart, tweenInfo, goal)
-        tween:Play()
-
-        local elapsed = 0
-        while elapsed < duration and alive do
-            local dt = RunService.Heartbeat:Wait()
-            elapsed += dt
-        end
-
-        task.wait(0.1)
     end
+end)
 
-    print(npcModel.Name .. " has been removed.")
+local Toggle1 = Tabs.Main:CreateToggle("MyToggle", {Title = "esp", Default = false})
+
+-- Clean up ESP visuals & events
+local function removeAllESP()
+    for _, v in pairs(espVisuals) do
+        if v and v.Parent then
+            v:Destroy()
+        end
+    end
+    espVisuals = {}
+
+    for _, conn in pairs(espConnections) do
+        if conn.Connected then
+            conn:Disconnect()
+        end
+    end
+    espConnections = {}
 end
 
--- Main loop: wait for "Baking Staff" to appear, then follow it
-while true do
-    local npc = enemiesFolder:FindFirstChild("Baking Staff")
-    if not npc then
-        print("Waiting for Baking Staff to spawn...")
-        repeat
-            local added = enemiesFolder.ChildAdded:Wait()
-            if added.Name == "Baking Staff" then
-                npc = added
+Toggle1:OnChanged(function()
+    if not Toggle1Interacted then
+        Toggle1Interacted = true
+        return
+    end
+
+    espEnabled = not espEnabled
+
+    if espEnabled then
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+        local function highlightModel(model)
+            if not model:IsA("Model") then return end
+
+            for _, item in ipairs(selectedItem) do
+                if model.Name == item and not model:FindFirstChildOfClass("Highlight") then
+                    local highlight = Instance.new("Highlight")
+                    highlight.Parent = model
+                    highlight.Adornee = model
+                    highlight.FillColor = Color3.fromRGB(255, 255, 0)
+                    highlight.FillTransparency = 0.4
+                    highlight.OutlineColor = Color3.fromRGB(0, 0, 0)
+                    highlight.OutlineTransparency = 0.5
+
+                    local billboardGui = Instance.new("BillboardGui")
+                    billboardGui.Parent = model
+                    billboardGui.Adornee = model
+                    billboardGui.Size = UDim2.new(0, 200, 0, 30)
+                    billboardGui.StudsOffset = Vector3.new(0, 3, 0)
+                    billboardGui.AlwaysOnTop = true
+
+                    local textLabel = Instance.new("TextLabel")
+                    textLabel.Parent = billboardGui
+                    textLabel.Size = UDim2.new(1, 0, 1, 0)
+                    textLabel.BackgroundTransparency = 1
+                    textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+                    textLabel.TextSize = 8
+                    textLabel.Text = "[" .. model.Name .. " - Distance: --]"
+
+                    local basePart = model:FindFirstChildWhichIsA("BasePart")
+                    if not basePart then return end
+
+                    local objectAttachment = Instance.new("Attachment")
+                    objectAttachment.Name = "ESPObjectAttachment"
+                    objectAttachment.Parent = basePart
+
+                    local playerAttachment = Instance.new("Attachment")
+                    playerAttachment.Name = "ESPPlayerAttachment"
+                    playerAttachment.Parent = humanoidRootPart
+
+                    local beam = Instance.new("Beam")
+                    beam.Attachment0 = objectAttachment
+                    beam.Attachment1 = playerAttachment
+                    beam.Color = ColorSequence.new(Color3.fromRGB(255, 255, 0))
+                    beam.Width0 = 0.1
+                    beam.Width1 = 0.1
+                    beam.FaceCamera = true
+                    beam.LightInfluence = 0
+                    beam.Transparency = NumberSequence.new(0.3)
+                    beam.Parent = objectAttachment
+
+                    table.insert(espVisuals, highlight)
+                    table.insert(espVisuals, billboardGui)
+                    table.insert(espVisuals, objectAttachment)
+                    table.insert(espVisuals, playerAttachment)
+                    table.insert(espVisuals, beam)
+
+                    local heartbeatConn = game:GetService("RunService").Heartbeat:Connect(function()
+                        if not espEnabled then return end
+                        local distance = (model:GetModelCFrame().Position - humanoidRootPart.Position).Magnitude
+                        textLabel.Text = "[" .. model.Name .. " - Distance: " .. math.floor(distance) .. " studs]"
+                    end)
+                    table.insert(espConnections, heartbeatConn)
+
+                    return
+                end
             end
-        until npc
-    end
+        end
 
-    print("Found Baking Staff!")
-    tweenToNPC(npc)
-end
+        local itemsFolder = workspace:FindFirstChild("Items")
+        if itemsFolder then
+            for _, model in pairs(itemsFolder:GetChildren()) do
+                highlightModel(model)
+            end
+
+            local conn = itemsFolder.ChildAdded:Connect(function(newModel)
+                if espEnabled then
+                    highlightModel(newModel)
+                end
+            end)
+            table.insert(espConnections, conn)
+        end
+
+    else
+        removeAllESP()
+    end
+end)
