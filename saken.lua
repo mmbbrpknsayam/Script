@@ -94,31 +94,7 @@ Tabs.Main:CreateButton({
                         end
                     end
                 end
-                task.wait(4)
-            end
-        end)
-    end
-})
-
-Tabs.Main:CreateButton({
-    Title = "enter generators",
-    Description = "",
-    Callback = function()
-        task.spawn(function()
-            while true do
-                local generatorFolder = workspace:WaitForChild("Map"):WaitForChild("Ingame"):WaitForChild("Map")
-                for _, gen in ipairs(generatorFolder:GetChildren()) do
-                    local remotes = gen:FindFirstChild("Remotes")
-                    if remotes then
-                        local rf = remotes:FindFirstChild("RF")
-                        if rf and rf:IsA("RemoteFunction") then
-                            pcall(function()
-                                rf:InvokeServer("enter")
-                            end)
-                        end
-                    end
-                end
-                task.wait(3) -- loop every 3 seconds
+                task.wait(3)
             end
         end)
     end
