@@ -2,7 +2,7 @@ local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOog
 
 local Window = Library:CreateWindow{
     Title = `develop`,
-    SubTitle = "1",
+    SubTitle = "10",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
     Resize = true, -- Resize this ^ Size according to a 1920x1080 screen, good for mobile users but may look weird on some devices
@@ -369,7 +369,7 @@ MultiDropdown:OnChanged(function(Value)
     end
 end)
 
-local Toggle4 = Tabs.Main:CreateToggle("MyToggle", {Title = "Auto Break Trees", Default = false})
+local Toggle4 = Tabs.Main:CreateToggle("MyToggle4", {Title = "Auto Break Trees", Default = false})
 
 Toggle4:OnChanged(function()
     if not Toggle4Interacted then
@@ -377,24 +377,30 @@ Toggle4:OnChanged(function()
         return
     end
 
-autoBreakEnabled = not autoBreakEnabled
+    autoBreakEnabled = not autoBreakEnabled
 
     if autoBreakEnabled then
         task.spawn(function()
             while autoBreakEnabled do
-                for _, treeName in ipairs(selectedTrees) do
-                    local tree = foliage:FindFirstChild(treeName)
-                    if tree and axe then
-                        local args = {
-                            tree,
-                            axe,
-                            "27_7500899975", -- attack animation ID for trees
-                            player.Character.HumanoidRootPart.CFrame -- use your character’s position
-                        }
-                        remote:InvokeServer(unpack(args))
+                local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+                if root and axe then
+                    for _, inst in ipairs(foliage:GetDescendants()) do
+                        if inst:IsA("Model") and table.find(selectedTrees, inst.Name) then
+                            -- Keep hitting this tree until it’s destroyed
+                            while autoBreakEnabled and inst.Parent do
+                                local args = {
+                                    inst,
+                                    axe,
+                                    "27_7500899975",
+                                    root.CFrame
+                                }
+                                remote:InvokeServer(unpack(args))
+                                task.wait(0.05) -- tiny wait so it doesn’t freeze
+                            end
+                        end
                     end
                 end
-                task.wait(0.3) -- same timing as mob kill aura
+                task.wait(0.2) -- short delay before rescanning foliage
             end
         end)
     end
