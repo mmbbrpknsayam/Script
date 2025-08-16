@@ -20,15 +20,21 @@ local Tabs = {
 }
 
 -- Store Config
-local selectedItem = {}
-local autoStoreEnabled = false
-local storeConnections = {}
+local player = game:GetService("Players").LocalPlayer
+local inventory = player:WaitForChild("Inventory")
+local sack = inventory:WaitForChild("Old Sack")
+local remote = game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("RequestBagStoreItem")
+local itemsFolder = workspace:WaitForChild("Items")
 
--- Dropdown for selecting which items to auto-store
-local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
-    Title = "Item",
-    Description = "Select items to auto-store",
+-- Dropdown setup
+local selectedItems = {}
+
+local MultiDropdown = Tabs.Main:CreateDropdown("StoreDropdown", {
+    Title = "Select Items to Store",
+    Description = "Choose items you want to auto store",
     Values = {
+        "Log",
+        "Coal",
         "Spear",
         "Rifle",
         "Rifle Ammo",
@@ -39,8 +45,6 @@ local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
         "Item chest",
         "Iron Body",
         "Leather Body",
-        "Log", -- important one
-        "Coal",
         "Fuel Canister",
         "Oil Barrel",
         "Chair",
@@ -71,66 +75,38 @@ local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
 })
 
 MultiDropdown:OnChanged(function(Value)
-    selectedItem = {}
-    for ItemName, IsSelected in pairs(Value) do
-        if IsSelected then
-            table.insert(selectedItem, ItemName)
+    selectedItems = {}
+    for itemName, isSelected in pairs(Value) do
+        if isSelected then
+            table.insert(selectedItems, itemName)
         end
     end
 end)
 
--- Toggle for auto-store
-local Toggle1 = Tabs.Main:CreateToggle("MyToggle", {Title = "Auto Store", Default = false})
+-- Toggle for auto-store loop
+local autoStoreEnabled = false
 
--- Cleanup function for disconnecting
-local function removeAllConnections()
-    for _, conn in pairs(storeConnections) do
-        if conn.Connected then
-            conn:Disconnect()
-        end
-    end
-    storeConnections = {}
-end
+local AutoStoreToggle = Tabs.Main:CreateToggle("AutoStoreToggle", {
+    Title = "Auto Store (repeat 0.5s)",
+    Default = false
+})
 
-Toggle1:OnChanged(function()
-    if not Toggle1Interacted then
-        Toggle1Interacted = true
-        return
-    end
-
-    autoStoreEnabled = not autoStoreEnabled
+AutoStoreToggle:OnChanged(function(state)
+    autoStoreEnabled = state
 
     if autoStoreEnabled then
-        local player = game.Players.LocalPlayer
-        local inventory = player:WaitForChild("Inventory")
-        local sack = inventory:WaitForChild("Old Sack")
-
-        local function tryStoreItem(item)
-            -- Check if name matches selected
-            for _, wanted in ipairs(selectedItem) do
-                if item.Name == wanted then
-                    local args = {sack, item}
-                    game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents")
-                        :WaitForChild("RequestBagStoreItem"):InvokeServer(unpack(args))
+        task.spawn(function()
+            while autoStoreEnabled do
+                for _, item in ipairs(itemsFolder:GetChildren()) do
+                    for _, wanted in ipairs(selectedItems) do
+                        if item.Name == wanted then
+                            local args = {sack, item}
+                            remote:InvokeServer(unpack(args))
+                        end
+                    end
                 end
-            end
-        end
-
-        -- Check already existing items
-        local itemBag = player:WaitForChild("ItemBag")
-        for _, item in ipairs(itemBag:GetChildren()) do
-            tryStoreItem(item)
-        end
-
-        -- Listen for new items being added
-        local conn = itemBag.ChildAdded:Connect(function(item)
-            if autoStoreEnabled then
-                tryStoreItem(item)
+                task.wait(0.5) -- repeat every 0.5 seconds
             end
         end)
-        table.insert(storeConnections, conn)
-
-    else
-        removeAllConnections()
     end
 end)
