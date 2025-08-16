@@ -2,7 +2,7 @@ local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOog
 
 local Window = Library:CreateWindow{
     Title = `testing [  ]`,
-    SubTitle = "mmk",
+    SubTitle = "tutut",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
     Resize = true, -- Resize this ^ Size according to a 1920x1080 screen, good for mobile users but may look weird on some devices
@@ -256,11 +256,11 @@ MultiDropdown:OnChanged(function(Value)
     end
 end)
 
-local Toggle1 = Tabs.Main:CreateToggle("MyToggle", {Title = "store", Default = false})
+local Toggle2 = Tabs.Main:CreateToggle("MyToggle", {Title = "store", Default = false})
 
-Toggle1:OnChanged(function()
-    if not Toggle1Interacted then
-        Toggle1Interacted = true
+Toggle2:OnChanged(function()
+    if not Toggle2Interacted then
+        Toggle2Interacted = true
         return
     end
 
@@ -283,60 +283,73 @@ autoStoreEnabled = not autoStoreEnabled
     end
 end)
 
---// Multi Dropdown for mob selection
 local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
     Title = "Select Mobs",
     Description = "",
-    Values = {"Bunny", "Wolf", "Cultist"},
+    Values = {"Bunny","Wolf","Cultist"},
     Multi = true,
     Default = {}
 })
 
 local selectedMobs = {}
-
 MultiDropdown:OnChanged(function(Value)
     selectedMobs = {}
     for MobName, IsSelected in pairs(Value) do
-        if IsSelected then
-            table.insert(selectedMobs, MobName)
-        end
+        if IsSelected then table.insert(selectedMobs, MobName) end
     end
 end)
 
-Tabs.Main:CreateToggle("MyToggle",{Title="Kill Aura",Default=false})
+local player = game.Players.LocalPlayer
+local charactersFolder = workspace:WaitForChild("Characters")
+local Inventory = player:WaitForChild("Inventory")
 
-autoHitEnabled = not autoHitEnabled
+-- ✅ correct remote path (what you used earlier for damage)
+local remote = game:GetService("ReplicatedStorage")
+    :WaitForChild("RemoteEvents")
+    :WaitForChild("ToolDamageObject")
 
-if autoHitEnabled then
-    task.spawn(function()
-        while autoHitEnabled do
-            -- inline axe finder
-            local axe
-            if Inventory:FindFirstChild("Old Axe") then
-                axe = Inventory:FindFirstChild("Old Axe")
-            elseif Inventory:FindFirstChild("Good Axe") then
-                axe = Inventory:FindFirstChild("Good Axe")
-            elseif Inventory:FindFirstChild("Strong Axe") then
-                axe = Inventory:FindFirstChild("Strong Axe")
-            end
+-- toggle state
+local autoHitEnabled = false
+local Toggle3Interacted = false
 
-            local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+-- give this toggle a UNIQUE id
+local Toggle3 = Tabs.Main:CreateToggle("MyToggle3", {Title = "Kill", Default = false})
 
-            if axe and root then
-                for _, mob in ipairs(charactersFolder:GetChildren()) do
-                    if table.find(selectedMobs, mob.Name) then
-                        local args = {
-                            mob,
-                            axe,
-                            "11_7500899975", -- attack animation ID
-                            root.CFrame
-                        }
-                        remote:InvokeServer(unpack(args))
+Toggle3:OnChanged(function()
+    -- ignore the first auto-fire from the UI
+    if not Toggle3Interacted then
+        Toggle3Interacted = true
+        return
+    end
+
+    autoHitEnabled = not autoHitEnabled
+
+    if autoHitEnabled then
+        task.spawn(function()
+            while autoHitEnabled do
+                -- inline axe finder (Inventory, as you said)
+                local axe
+                if Inventory:FindFirstChild("Old Axe") then
+                    axe = Inventory:FindFirstChild("Old Axe")
+                elseif Inventory:FindFirstChild("Good Axe") then
+                    axe = Inventory:FindFirstChild("Good Axe")
+                elseif Inventory:FindFirstChild("Strong Axe") then
+                    axe = Inventory:FindFirstChild("Strong Axe")
+                end
+
+                local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+
+                if axe and root then
+                    -- if mobs are nested, switch to GetDescendants()
+                    for _, mob in ipairs(charactersFolder:GetChildren()) do
+                        if table.find(selectedMobs, mob.Name) then
+                            remote:InvokeServer(mob, axe, "11_7500899975", root.CFrame)
+                        end
                     end
                 end
-            end
 
-            task.wait(0.2) -- attack speed
-        end
-    end)
-end
+                task.wait(0.2)
+            end
+        end)
+    end
+end)
