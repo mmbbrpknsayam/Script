@@ -2,7 +2,7 @@ local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOog
 
 local Window = Library:CreateWindow{
     Title = `develop`,
-    SubTitle = "1",
+    SubTitle = "2",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
     Resize = true, -- Resize this ^ Size according to a 1920x1080 screen, good for mobile users but may look weird on some devices
@@ -383,13 +383,12 @@ autoBreakEnabled = not autoBreakEnabled
         task.spawn(function()
             while autoBreakEnabled do
                 for _, treeName in ipairs(selectedTrees) do
-                    local tree = foliage:FindFirstChild(treeName)
-                    if tree and axe then
+                    if table.find(selectedTrees, tree.Name) then
                         local args = {
                             tree,
                             axe,
                             "27_7500899975", -- looks like a hit ID or damage ID
-                            tree.CFrame -- use tree's position as CFrame
+                            player.Character.HumanoidRootPart.CFrame -- use tree's position as CFrame
                         }
                         remote:InvokeServer(unpack(args))
                     end
