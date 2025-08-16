@@ -2,7 +2,7 @@ local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOog
 
 local Window = Library:CreateWindow{
     Title = `develop`,
-    SubTitle = "4",
+    SubTitle = "1",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
     Resize = true, -- Resize this ^ Size according to a 1920x1080 screen, good for mobile users but may look weird on some devices
@@ -360,7 +360,7 @@ local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
     Default = {},
 })
 
-TreeDropdown:OnChanged(function(Value)
+MultiDropdown:OnChanged(function(Value)
     selectedTrees = {}
     for treeName, isSelected in pairs(Value) do
         if isSelected then
