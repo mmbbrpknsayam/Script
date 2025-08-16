@@ -292,7 +292,7 @@ local remote = game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents")
 local selectedMobs = {}
 local MultiDropdown = Tabs.Main:CreateDropdown("MobDropdown", {
     Title = "Select Mobs",
-    Values = {"Bunny", "Wolf", "Cultist", "Crossbow Cultist", "Juggernaut Cultist", "Mammoth", "Polar Bear", "Arctic Fox", "Alpha Wolf"},
+    Values = {"Bunny", "Wolf", "Cultist", "Crossbow Cultist", "Juggernaut Cultist", "Mammoth", "Polar Bear", "Arctic Fox", "Alpha Wolf", "Bear", "Alpha Bear"},
     Multi = true,
     Default = {}
 })
@@ -325,7 +325,7 @@ Toggle3:OnChanged(function()
                 -- find axe quickly
                 local axe = Inventory:FindFirstChild("Old Axe")
                     or Inventory:FindFirstChild("Good Axe")
-                    or Inventory:FindFirstChild("Strong Axe")
+                    or Inventory:FindFirstChild("Spear")
 
                 -- no giant condition: just check inside
                 if axe and root then
