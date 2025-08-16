@@ -2,7 +2,7 @@ local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOog
 
 local Window = Library:CreateWindow{
     Title = `develop`,
-    SubTitle = "",
+    SubTitle = "0",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
     Resize = true, -- Resize this ^ Size according to a 1920x1080 screen, good for mobile users but may look weird on some devices
@@ -75,10 +75,10 @@ local MultiDropdown = Tabs.Main:CreateDropdown("StoreDropdown", {
 })
 
 MultiDropdown:OnChanged(function(Value)
-    selectedItems = {}
-    for itemName, isSelected in pairs(Value) do
+    selectedStores = {}
+    for storeName, isSelected in pairs(Value) do
         if isSelected then
-            table.insert(selectedItems, itemName)
+            table.insert(selectedStores, storeName)
         end
     end
 end)
@@ -97,8 +97,8 @@ autoStoreEnable = not autoStoreEnable
         task.spawn(function()
             while autoStoreEnabled do
                 for _, item in ipairs(itemsFolder:GetChildren()) do
-                    for _, wanted in ipairs(selectedItems) do
-                        if item.Name == wanted then
+                    for _, wanted in ipairs(selectedStores) do
+                        if store.Name == wanted then
                             local args = {sack, item}
                             remote:InvokeServer(unpack(args))
                         end
