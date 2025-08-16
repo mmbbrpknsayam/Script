@@ -1,7 +1,7 @@
 local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOogway/Fluent-Renewed/releases/latest/download/Fluent.luau"))()
 
 local Window = Library:CreateWindow{
-    Title = `testing [  ]`,
+    Title = `testing [gg]`,
     SubTitle = "w wave",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
@@ -194,50 +194,23 @@ Toggle1:OnChanged(function()
 end)
 
 local player = game:GetService("Players").LocalPlayer
-local Inventory = player:WaitForChild("Inventory")
+local inventory = player:WaitForChild("Inventory")
 local itemsFolder = workspace:WaitForChild("Items")
 local remote = game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("RequestBagStoreItem")
 
--- Dropdown for item selection
+-- Dropdown setup
 local selectedItems = {}
-local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
-    Title = "Store Items",
+
+local MultiDropdown = Tabs.Main:CreateDropdown("StoreDropdown", {
+    Title = "Item to Store",
+    Description = "",
     Values = {
-        "Log",
-        "Coal",
-        "Spear",
-        "Rifle",
-        "Rifle Ammo",
-        "Revolver",
-        "Revolver Ammo",
-        "MedKit",
-        "Bandage",
-        "Item chest",
-        "Iron Body",
-        "Leather Body",
-        "Fuel Canister",
-        "Oil Barrel",
-        "Chair",
-        "Feather",
-        "Metal Chair",
-        "Bolt",
-        "Broken Fan",
-        "Broken Microwave",
-        "Sheet Metal",
-        "Tyre",
-        "Old Car Engine",
-        "Old Radio",
-        "Cultist Prototype",
-        "Washing Machine",
-        "Morsel",
-        "Cake",
-        "Berry",
-        "Carrot",
-        "Steak",
-        "Anvil Front",
-        "Anvil Base",
-        "Anvil Back",
-        "Cultist Gem",
+        "Log","Coal","Spear","Rifle","Rifle Ammo","Revolver","Revolver Ammo",
+        "MedKit","Bandage","Item chest","Iron Body","Leather Body","Fuel Canister",
+        "Oil Barrel","Chair","Feather","Metal Chair","Bolt","Broken Fan",
+        "Broken Microwave","Sheet Metal","Tyre","Old Car Engine","Old Radio",
+        "Cultist Prototype","Washing Machine","Morsel","Cake","Berry","Carrot",
+        "Steak","Anvil Front","Anvil Base","Anvil Back","Cultist Gem",
         "Gem of the Forest Fragment"
     },
     Multi = true,
@@ -253,15 +226,13 @@ MultiDropdown:OnChanged(function(Value)
     end
 end)
 
--- Toggle
+local Toggle1 = Tabs.Main:CreateToggle("MyToggle", {Title = "Auto Store", Default = false})
+local Toggle1Interacted = false
 local autoStoreEnabled = false
-local Toggle2Interacted = false
 
-local Toggle2 = Tabs.Main:CreateToggle("MyToggle", {Title = "Auto Store", Default = false})
-
-Toggle2:OnChanged(function()
-    if not Toggle2Interacted then
-        Toggle2Interacted = true
+Toggle1:OnChanged(function()
+    if not Toggle1Interacted then
+        Toggle1Interacted = true
         return
     end
 
@@ -270,21 +241,33 @@ Toggle2:OnChanged(function()
     if autoStoreEnabled then
         task.spawn(function()
             while autoStoreEnabled do
+                -- dynamically find a sack
+                local sack = inventory:FindFirstChild("Old Sack")
+                    or inventory:FindFirstChild("Good Sack")
+                    or inventory:FindFirstChild("Giant Sack")
+
                 local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
-                local sack = Inventory:FindFirstChild("Old Sack")
-                        or Inventory:FindFirstChild("Good Sack")
-                        or Inventory:FindFirstChild("Giant Sack")
-                
-                if root and sack then
+
+                if sack and root and #selectedItems > 0 then
+                    -- find nearest item
                     local nearestItem
-                    local shortestDist = math.huge
+                    local nearestDist = math.huge
 
                     for _, item in ipairs(itemsFolder:GetChildren()) do
                         if table.find(selectedItems, item.Name) then
-                            local dist = (item.Position - root.Position).Magnitude
-                            if dist < shortestDist then
+                            local pos
+                            if item:IsA("Model") and item.PrimaryPart then
+                                pos = item.PrimaryPart.Position
+                            elseif item:IsA("BasePart") then
+                                pos = item.Position
+                            else
+                                pos = item:GetModelCFrame().Position
+                            end
+
+                            local dist = (pos - root.Position).Magnitude
+                            if dist < nearestDist then
+                                nearestDist = dist
                                 nearestItem = item
-                                shortestDist = dist
                             end
                         end
                     end
@@ -294,7 +277,7 @@ Toggle2:OnChanged(function()
                     end
                 end
 
-                task.wait(0.05) -- very fast repeat
+                task.wait(0.05) -- fast repeat
             end
         end)
     end
@@ -309,7 +292,7 @@ local remote = game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents")
 local selectedMobs = {}
 local MultiDropdown = Tabs.Main:CreateDropdown("MobDropdown", {
     Title = "Select Mobs",
-    Values = {"Bunny","Wolf","Cultist"},
+    Values = {"Bunny", "Wolf", "Cultist", "Crossbow Cultist", "Juggernaut Cultist", "Mammoth", "Polar Bear", "Arctic Fox", "Alpha Wolf"},
     Multi = true,
     Default = {}
 })
