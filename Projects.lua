@@ -2,7 +2,7 @@ local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOog
 
 local Window = Library:CreateWindow{
     Title = `testing [  ]`,
-    SubTitle = "tutut",
+    SubTitle = "w wave",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
     Resize = true, -- Resize this ^ Size according to a 1920x1080 screen, good for mobile users but may look weird on some devices
@@ -199,7 +199,7 @@ local sack = inventory:WaitForChild("Old Sack")
 local remote = game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("RequestBagStoreItem")
 local itemsFolder = workspace:WaitForChild("Items")
 
--- Dropdown setup
+-- Dropdown setup (same format)
 local selectedItems = {}
 
 local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
@@ -256,6 +256,10 @@ MultiDropdown:OnChanged(function(Value)
     end
 end)
 
+-- Toggle (kept your style)
+local autoStoreEnabled = false
+local Toggle2Interacted = false
+
 local Toggle2 = Tabs.Main:CreateToggle("MyToggle", {Title = "store", Default = false})
 
 Toggle2:OnChanged(function()
@@ -264,7 +268,7 @@ Toggle2:OnChanged(function()
         return
     end
 
-autoStoreEnabled = not autoStoreEnabled
+    autoStoreEnabled = not autoStoreEnabled
 
     if autoStoreEnabled then
         task.spawn(function()
@@ -272,16 +276,16 @@ autoStoreEnabled = not autoStoreEnabled
                 for _, item in ipairs(itemsFolder:GetChildren()) do
                     for _, wanted in ipairs(selectedItems) do
                         if item.Name == wanted then
-                            local args = {sack, item}
-                            remote:InvokeServer(unpack(args))
+                            remote:InvokeServer(sack, item)
                         end
                     end
                 end
-                task.wait(0.3)
+                task.wait(0.05) -- faster loop
             end
         end)
     end
 end)
+
 
 local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
     Title = "Select Mobs",
@@ -302,15 +306,6 @@ end)
 local player = game.Players.LocalPlayer
 local charactersFolder = workspace:WaitForChild("Characters")
 local Inventory = player:WaitForChild("Inventory")
-
--- ✅ correct remote path (what you used earlier for damage)
-local remote = game:GetService("ReplicatedStorage")
-    :WaitForChild("RemoteEvents")
-    :WaitForChild("ToolDamageObject")
-
--- toggle state
-local autoHitEnabled = false
-local Toggle3Interacted = false
 
 -- give this toggle a UNIQUE id
 local Toggle3 = Tabs.Main:CreateToggle("MyToggle3", {Title = "Kill", Default = false})
@@ -348,7 +343,7 @@ Toggle3:OnChanged(function()
                     end
                 end
 
-                task.wait(0.2)
+                task.wait(0.5)
             end
         end)
     end
