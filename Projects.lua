@@ -2,7 +2,7 @@ local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOog
 
 local Window = Library:CreateWindow{
     Title = `testing [  ]`,
-    SubTitle = "V-0.1.1",
+    SubTitle = "gg",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
     Resize = true, -- Resize this ^ Size according to a 1920x1080 screen, good for mobile users but may look weird on some devices
@@ -190,5 +190,167 @@ Toggle1:OnChanged(function()
 
     else
         removeAllESP()
+    end
+end)
+
+local player = game:GetService("Players").LocalPlayer
+local inventory = player:WaitForChild("Inventory")
+local sack = inventory:WaitForChild("Old Sack")
+local remote = game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("RequestBagStoreItem")
+local itemsFolder = workspace:WaitForChild("Items")
+
+-- Dropdown setup
+local selectedItems = {}
+
+local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
+    Title = "store",
+    Description = "",
+    Values = {
+        "Log",
+        "Coal",
+        "Spear",
+        "Rifle",
+        "Rifle Ammo",
+        "Revolver",
+        "Revolver Ammo",
+        "MedKit",
+        "Bandage",
+        "Item chest",
+        "Iron Body",
+        "Leather Body",
+        "Fuel Canister",
+        "Oil Barrel",
+        "Chair",
+        "Feather",
+        "Metal Chair",
+        "Bolt",
+        "Broken Fan",
+        "Broken Microwave",
+        "Sheet Metal",
+        "Tyre",
+        "Old Car Engine",
+        "Old Radio",
+        "Cultist Prototype",
+        "Washing Machine",
+        "Morsel",
+        "Cake",
+        "Berry",
+        "Carrot",
+        "Steak",
+        "Anvil Front",
+        "Anvil Base",
+        "Anvil Back",
+        "Cultist Gem",
+        "Gem of the Forest Fragment"
+    },
+    Multi = true,
+    Default = {},
+})
+
+MultiDropdown:OnChanged(function(Value)
+    selectedItems = {}
+    for itemName, isSelected in pairs(Value) do
+        if isSelected then
+            table.insert(selectedItems, itemName)
+        end
+    end
+end)
+
+local Toggle1 = Tabs.Main:CreateToggle("MyToggle", {Title = "store", Default = false})
+
+Toggle1:OnChanged(function()
+    if not Toggle1Interacted then
+        Toggle1Interacted = true
+        return
+    end
+
+autoStoreEnabled = not autoStoreEnabled
+
+    if autoStoreEnabled then
+        task.spawn(function()
+            while autoStoreEnabled do
+                for _, item in ipairs(itemsFolder:GetChildren()) do
+                    for _, wanted in ipairs(selectedItems) do
+                        if item.Name == wanted then
+                            local args = {sack, item}
+                            remote:InvokeServer(unpack(args))
+                        end
+                    end
+                end
+                task.wait(0.3)
+            end
+        end)
+    end
+end)
+
+local selectedMobs = {}
+
+local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
+    Title = "Select Mobs",
+    Description = "",
+    Values = {"Bunny", "Wolf", "Cultist"},
+    Multi = true,
+    Default = {}
+})
+
+MultiDropdown:OnChanged(function(Value)
+    selectedMobs = {}
+    for MobName, IsSelected in pairs(Value) do
+        if IsSelected then
+            table.insert(selectedMobs, MobName)
+        end
+    end
+end)
+
+local player = game.Players.LocalPlayer
+local charactersFolder = workspace:WaitForChild("Characters")
+local ItemBag = player:WaitForChild("ItemBag")
+local remote = game.ReplicatedStorage:WaitForChild("RemoteFunction")
+
+local axeList = {"Old Axe", "Good Axe", "Strong Axe"}
+
+local function getAnyAxe()
+    for _, axeName in ipairs(axeList) do
+        local axe = ItemBag:FindFirstChild(axeName)
+        if axe then
+            return axe
+        end
+    end
+    return nil
+end
+
+local Toggle3 = Tabs.Main:CreateToggle("MyToggle3", {Title = "Kill Aura", Default = false})
+
+Toggle3:OnChanged(function()
+    if not Toggle3Interacted then
+        Toggle3Interacted = true
+        return
+    end
+    
+    autoHitEnabled = not autoHitEnabled
+
+    if autoHitEnabled then
+        task.spawn(function()
+            while autoHitEnabled do
+                local axe = getAnyAxe()
+                local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+
+                if axe and root then
+                    for _, mob in ipairs(charactersFolder:GetChildren()) do
+                        if table.find(selectedMobs, mob.Name) then
+                            local args = {
+                                mob,
+                                axe,
+                                "11_7500899975",
+                                root.CFrame
+                            }
+                            remote:InvokeServer(unpack(args))
+                        end
+                    end
+                end
+
+                task.wait(0.2)
+            end
+        end)
     end
 end)
