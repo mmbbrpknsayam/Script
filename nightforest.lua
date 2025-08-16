@@ -217,3 +217,76 @@ Toggle1:OnChanged(function()
         removeAllESP()
     end
 end)
+
+local selectedMobs = {}
+local MultiDropdown = Tabs.Main:CreateDropdown("MobDropdown", {
+    Title = "Select Mobs",
+    Values = {
+        "Bunny", "Wolf", "Cultist", "Crossbow Cultist", "Juggernaut Cultist",
+        "Mammoth", "Polar Bear", "Arctic Fox", "Alpha Wolf", "Bear", "Alpha Bear"
+    },
+    Multi = true,
+    Default = {}
+})
+MultiDropdown:OnChanged(function(val)
+    selectedMobs = {}
+    for name, chosen in pairs(val) do
+        if chosen then table.insert(selectedMobs, name) end
+    end
+end)
+
+local autoHitEnabled = false
+local Toggle3Interacted = false
+
+local Toggle3 = Tabs.Main:CreateToggle("KillAuraToggle", {Title = "Kill", Default = false})
+
+Toggle3:OnChanged(function()
+    if not Toggle3Interacted then
+        Toggle3Interacted = true
+        return
+    end
+
+    autoHitEnabled = not autoHitEnabled
+
+    if autoHitEnabled then
+        task.spawn(function()
+            while autoHitEnabled do
+                local char = player.Character
+                local root = char and char:FindFirstChild("HumanoidRootPart")
+
+                -- find axe dynamically
+                local axe = Inventory:FindFirstChild("Old Axe")
+                    or Inventory:FindFirstChild("Good Axe")
+                    or Inventory:FindFirstChild("Spear")
+
+                if axe and root and #selectedMobs > 0 then
+                    -- find nearest mob
+                    local nearestMob
+                    local nearestDist = math.huge
+
+                    for _, inst in ipairs(charactersFolder:GetDescendants()) do
+                        if inst:IsA("Model") and table.find(selectedMobs, inst.Name) then
+                            local mobRoot = inst:FindFirstChild("HumanoidRootPart")
+                            if mobRoot then
+                                local dist = (mobRoot.Position - root.Position).Magnitude
+                                if dist < nearestDist then
+                                    nearestDist = dist
+                                    nearestMob = inst
+                                end
+                            end
+                        end
+                    end
+
+                    if nearestMob then
+                        pcall(function()
+                            remote:InvokeServer(nearestMob, axe, "11_7500899975", root.CFrame)
+                        end)
+                    end
+                end
+
+                task.wait(0.3)
+            end
+        end)
+    end
+end)
+
