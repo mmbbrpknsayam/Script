@@ -104,7 +104,7 @@ autoStoreEnabled = not autoStoreEnabled
                         end
                     end
                 end
-                task.wait(0.5) -- repeat every 0.5 seconds
+                task.wait(0.3) -- repeat every 0.5 seconds
             end
         end)
     end
