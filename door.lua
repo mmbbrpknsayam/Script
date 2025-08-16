@@ -2,7 +2,7 @@ local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOog
 
 local Window = Library:CreateWindow{
     Title = `develop`,
-    SubTitle = "3",
+    SubTitle = "4",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
     Resize = true, -- Resize this ^ Size according to a 1920x1080 screen, good for mobile users but may look weird on some devices
@@ -338,3 +338,65 @@ autoHitEnabled = not autoHitEnabled
         end)
     end
 end)
+
+local player = game:GetService("Players").LocalPlayer
+local inventory = player:WaitForChild("Inventory")
+local axe = inventory:WaitForChild("Old Axe")
+local foliage = workspace:WaitForChild("Map"):WaitForChild("Foliage")
+local remote = game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("ToolDamageObject")
+
+-- Selected trees
+local selectedTrees = {}
+
+-- Dropdown for tree type
+local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
+    Title = "Trees to Break",
+    Description = "",
+    Values = {
+        "Small Tree",
+        "Giant Tree"
+    },
+    Multi = true,
+    Default = {},
+})
+
+TreeDropdown:OnChanged(function(Value)
+    selectedTrees = {}
+    for treeName, isSelected in pairs(Value) do
+        if isSelected then
+            table.insert(selectedTrees, treeName)
+        end
+    end
+end)
+
+local Toggle4 = Tabs.Main:CreateToggle("MyToggle", {Title = "Auto Break Trees", Default = false})
+
+Toggle4:OnChanged(function()
+    if not Toggle4Interacted then
+        Toggle4Interacted = true
+        return
+    end
+
+autoBreakEnabled = not autoBreakEnabled
+
+    if autoBreakEnabled then
+        task.spawn(function()
+            while autoBreakEnabled do
+                for _, treeName in ipairs(selectedTrees) do
+                    local tree = foliage:FindFirstChild(treeName)
+                    if tree and axe then
+                        local args = {
+                            tree,
+                            axe,
+                            "27_7500899975", -- looks like a hit ID or damage ID
+                            tree.CFrame -- use tree's position as CFrame
+                        }
+                        remote:InvokeServer(unpack(args))
+                    end
+                end
+                task.wait(0.3) -- hit every 0.5s
+            end
+        end)
+    end
+end)
+
