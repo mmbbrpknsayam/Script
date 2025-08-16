@@ -286,32 +286,32 @@ Toggle2:OnChanged(function()
     end
 end)
 
+local player = game:GetService("Players").LocalPlayer
+local Inventory = player:WaitForChild("Inventory")
+local charactersFolder = workspace:WaitForChild("Characters")
+local remote = game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("ToolDamageObject")
 
-local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
+-- mob picker
+local selectedMobs = {}
+local MultiDropdown = Tabs.Main:CreateDropdown("MobDropdown", {
     Title = "Select Mobs",
-    Description = "",
     Values = {"Bunny","Wolf","Cultist"},
     Multi = true,
     Default = {}
 })
-
-local selectedMobs = {}
-MultiDropdown:OnChanged(function(Value)
+MultiDropdown:OnChanged(function(val)
     selectedMobs = {}
-    for MobName, IsSelected in pairs(Value) do
-        if IsSelected then table.insert(selectedMobs, MobName) end
+    for name, chosen in pairs(val) do
+        if chosen then table.insert(selectedMobs, name) end
     end
 end)
 
-local player = game.Players.LocalPlayer
-local charactersFolder = workspace:WaitForChild("Characters")
-local Inventory = player:WaitForChild("Inventory")
+local autoHitEnabled = false
+local Toggle3Interacted = false
 
--- give this toggle a UNIQUE id
-local Toggle3 = Tabs.Main:CreateToggle("MyToggle3", {Title = "Kill", Default = false})
+local Toggle3 = Tabs.Main:CreateToggle("KillAuraToggle", {Title = "Kill", Default = false})
 
 Toggle3:OnChanged(function()
-    -- ignore the first auto-fire from the UI
     if not Toggle3Interacted then
         Toggle3Interacted = true
         return
@@ -322,28 +322,26 @@ Toggle3:OnChanged(function()
     if autoHitEnabled then
         task.spawn(function()
             while autoHitEnabled do
-                -- inline axe finder (Inventory, as you said)
-                local axe
-                if Inventory:FindFirstChild("Old Axe") then
-                    axe = Inventory:FindFirstChild("Old Axe")
-                elseif Inventory:FindFirstChild("Good Axe") then
-                    axe = Inventory:FindFirstChild("Good Axe")
-                elseif Inventory:FindFirstChild("Strong Axe") then
-                    axe = Inventory:FindFirstChild("Strong Axe")
-                end
+                local char = player.Character
+                local root = char and char:FindFirstChild("HumanoidRootPart")
 
-                local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+                -- find axe quickly
+                local axe = Inventory:FindFirstChild("Old Axe")
+                    or Inventory:FindFirstChild("Good Axe")
+                    or Inventory:FindFirstChild("Strong Axe")
 
+                -- no giant condition: just check inside
                 if axe and root then
-                    -- if mobs are nested, switch to GetDescendants()
-                    for _, mob in ipairs(charactersFolder:GetChildren()) do
-                        if table.find(selectedMobs, mob.Name) then
-                            remote:InvokeServer(mob, axe, "11_7500899975", root.CFrame)
+                    for _, inst in ipairs(charactersFolder:GetDescendants()) do
+                        if inst:IsA("Model") and table.find(selectedMobs, inst.Name) then
+                            pcall(function()
+                                remote:InvokeServer(inst, axe, "11_7500899975", root.CFrame)
+                            end)
                         end
                     end
                 end
 
-                task.wait(0.5)
+                task.wait(0.2)
             end
         end)
     end
