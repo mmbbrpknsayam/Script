@@ -303,32 +303,7 @@ MultiDropdown:OnChanged(function(Value)
     end
 end)
 
---// Variables
-local player = game.Players.LocalPlayer
-local charactersFolder = workspace:WaitForChild("Characters")
-local ItemBag = player:WaitForChild("ItemBag")
-local remote = game.ReplicatedStorage:WaitForChild("RemoteFunction")
-
--- Axe list
-local axeList = {"Old Axe", "Good Axe", "Strong Axe"}
-
--- State variables for toggle
-local autoHitEnabled = false
-local Toggle3Interacted = false
-
--- Function to get any available axe
-local function getAnyAxe()
-    for _, axeName in ipairs(axeList) do
-        local axe = ItemBag:FindFirstChild(axeName)
-        if axe then
-            return axe
-        end
-    end
-    return nil
-end
-
---// Kill Aura toggle
-local Toggle3 = Tabs.Main:CreateToggle("MyToggle3", {Title = "Kill Aura", Default = false})
+local Toggle3 = Tabs.Main:CreateToggle("MyToggle", {Title = "Kill Aura", Default = false})
 
 Toggle3:OnChanged(function()
     if not Toggle3Interacted then
@@ -341,7 +316,7 @@ Toggle3:OnChanged(function()
     if autoHitEnabled then
         task.spawn(function()
             while autoHitEnabled do
-                local axe = getAnyAxe()
+                local axe = (Old Axe etc
                 local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
 
                 if axe and root then
