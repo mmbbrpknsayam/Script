@@ -2,7 +2,7 @@ local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOog
 
 local Window = Library:CreateWindow{
     Title = `testing [  ]`,
-    SubTitle = "titit",
+    SubTitle = "mmk",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
     Resize = true, -- Resize this ^ Size according to a 1920x1080 screen, good for mobile users but may look weird on some devices
@@ -312,12 +312,12 @@ if autoHitEnabled then
         while autoHitEnabled do
             -- inline axe finder
             local axe
-            if ItemBag:FindFirstChild("Old Axe") then
-                axe = ItemBag:FindFirstChild("Old Axe")
-            elseif ItemBag:FindFirstChild("Good Axe") then
-                axe = ItemBag:FindFirstChild("Good Axe")
-            elseif ItemBag:FindFirstChild("Strong Axe") then
-                axe = ItemBag:FindFirstChild("Strong Axe")
+            if Inventory:FindFirstChild("Old Axe") then
+                axe = Inventory:FindFirstChild("Old Axe")
+            elseif Inventory:FindFirstChild("Good Axe") then
+                axe = Inventory:FindFirstChild("Good Axe")
+            elseif Inventory:FindFirstChild("Strong Axe") then
+                axe = Inventory:FindFirstChild("Strong Axe")
             end
 
             local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
