@@ -2,7 +2,7 @@ local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOog
 
 local Window = Library:CreateWindow{
     Title = `testing [  ]`,
-    SubTitle = "gg",
+    SubTitle = "kntl",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
     Resize = true, -- Resize this ^ Size according to a 1920x1080 screen, good for mobile users but may look weird on some devices
@@ -283,8 +283,7 @@ autoStoreEnabled = not autoStoreEnabled
     end
 end)
 
-local selectedMobs = {}
-
+--// Multi Dropdown for mob selection
 local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
     Title = "Select Mobs",
     Description = "",
@@ -292,6 +291,8 @@ local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
     Multi = true,
     Default = {}
 })
+
+local selectedMobs = {}
 
 MultiDropdown:OnChanged(function(Value)
     selectedMobs = {}
@@ -302,13 +303,20 @@ MultiDropdown:OnChanged(function(Value)
     end
 end)
 
+--// Variables
 local player = game.Players.LocalPlayer
 local charactersFolder = workspace:WaitForChild("Characters")
 local ItemBag = player:WaitForChild("ItemBag")
 local remote = game.ReplicatedStorage:WaitForChild("RemoteFunction")
 
+-- Axe list
 local axeList = {"Old Axe", "Good Axe", "Strong Axe"}
 
+-- State variables for toggle
+local autoHitEnabled = false
+local Toggle3Interacted = false
+
+-- Function to get any available axe
 local function getAnyAxe()
     for _, axeName in ipairs(axeList) do
         local axe = ItemBag:FindFirstChild(axeName)
@@ -319,6 +327,7 @@ local function getAnyAxe()
     return nil
 end
 
+--// Kill Aura toggle
 local Toggle3 = Tabs.Main:CreateToggle("MyToggle3", {Title = "Kill Aura", Default = false})
 
 Toggle3:OnChanged(function()
@@ -326,7 +335,7 @@ Toggle3:OnChanged(function()
         Toggle3Interacted = true
         return
     end
-    
+
     autoHitEnabled = not autoHitEnabled
 
     if autoHitEnabled then
@@ -341,7 +350,7 @@ Toggle3:OnChanged(function()
                             local args = {
                                 mob,
                                 axe,
-                                "11_7500899975",
+                                "11_7500899975", -- attack animation ID
                                 root.CFrame
                             }
                             remote:InvokeServer(unpack(args))
@@ -349,7 +358,7 @@ Toggle3:OnChanged(function()
                     end
                 end
 
-                task.wait(0.2)
+                task.wait(0.2) -- attack speed
             end
         end)
     end
