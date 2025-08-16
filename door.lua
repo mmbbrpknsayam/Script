@@ -2,7 +2,7 @@ local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOog
 
 local Window = Library:CreateWindow{
     Title = `develop`,
-    SubTitle = "2",
+    SubTitle = "3",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
     Resize = true, -- Resize this ^ Size according to a 1920x1080 screen, good for mobile users but may look weird on some devices
@@ -333,9 +333,8 @@ autoHitEnabled = not autoHitEnabled
                         remote:InvokeServer(unpack(args))
                     end
                 end
-                task.wait(0.3)
+                task.wait(0.5)
             end
         end)
     end
 end)
-
