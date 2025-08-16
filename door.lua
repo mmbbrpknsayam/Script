@@ -2,7 +2,7 @@ local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOog
 
 local Window = Library:CreateWindow{
     Title = `develop`,
-    SubTitle = "2",
+    SubTitle = "1",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
     Resize = true, -- Resize this ^ Size according to a 1920x1080 screen, good for mobile users but may look weird on some devices
@@ -383,19 +383,19 @@ autoBreakEnabled = not autoBreakEnabled
         task.spawn(function()
             while autoBreakEnabled do
                 for _, treeName in ipairs(selectedTrees) do
-                    if table.find(selectedTrees, tree.Name) then
+                    local tree = foliage:FindFirstChild(treeName)
+                    if tree and axe then
                         local args = {
                             tree,
                             axe,
-                            "27_7500899975", -- looks like a hit ID or damage ID
-                            player.Character.HumanoidRootPart.CFrame -- use tree's position as CFrame
+                            "27_7500899975", -- attack animation ID for trees
+                            player.Character.HumanoidRootPart.CFrame -- use your character’s position
                         }
                         remote:InvokeServer(unpack(args))
                     end
                 end
-                task.wait(0.3) -- hit every 0.5s
+                task.wait(0.3) -- same timing as mob kill aura
             end
         end)
     end
 end)
-
