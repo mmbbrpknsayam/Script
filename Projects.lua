@@ -2,7 +2,7 @@ local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOog
 
 local Window = Library:CreateWindow{
     Title = `testing [  ]`,
-    SubTitle = "kntl",
+    SubTitle = "titit",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
     Resize = true, -- Resize this ^ Size according to a 1920x1080 screen, good for mobile users but may look weird on some devices
@@ -303,38 +303,40 @@ MultiDropdown:OnChanged(function(Value)
     end
 end)
 
-local Toggle3 = Tabs.Main:CreateToggle("MyToggle", {Title = "Kill Aura", Default = false})
+Tabs.Main:CreateToggle("MyToggle",{Title="Kill Aura",Default=false})
 
-Toggle3:OnChanged(function()
-    if not Toggle3Interacted then
-        Toggle3Interacted = true
-        return
-    end
+autoHitEnabled = not autoHitEnabled
 
-    autoHitEnabled = not autoHitEnabled
+if autoHitEnabled then
+    task.spawn(function()
+        while autoHitEnabled do
+            -- inline axe finder
+            local axe
+            if ItemBag:FindFirstChild("Old Axe") then
+                axe = ItemBag:FindFirstChild("Old Axe")
+            elseif ItemBag:FindFirstChild("Good Axe") then
+                axe = ItemBag:FindFirstChild("Good Axe")
+            elseif ItemBag:FindFirstChild("Strong Axe") then
+                axe = ItemBag:FindFirstChild("Strong Axe")
+            end
 
-    if autoHitEnabled then
-        task.spawn(function()
-            while autoHitEnabled do
-                local axe = (Old Axe etc
-                local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+            local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
 
-                if axe and root then
-                    for _, mob in ipairs(charactersFolder:GetChildren()) do
-                        if table.find(selectedMobs, mob.Name) then
-                            local args = {
-                                mob,
-                                axe,
-                                "11_7500899975", -- attack animation ID
-                                root.CFrame
-                            }
-                            remote:InvokeServer(unpack(args))
-                        end
+            if axe and root then
+                for _, mob in ipairs(charactersFolder:GetChildren()) do
+                    if table.find(selectedMobs, mob.Name) then
+                        local args = {
+                            mob,
+                            axe,
+                            "11_7500899975", -- attack animation ID
+                            root.CFrame
+                        }
+                        remote:InvokeServer(unpack(args))
                     end
                 end
-
-                task.wait(0.2) -- attack speed
             end
-        end)
-    end
-end)
+
+            task.wait(0.2) -- attack speed
+        end
+    end)
+end
