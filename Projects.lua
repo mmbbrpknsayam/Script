@@ -194,17 +194,14 @@ Toggle1:OnChanged(function()
 end)
 
 local player = game:GetService("Players").LocalPlayer
-local inventory = player:WaitForChild("Inventory")
-local sack = inventory:WaitForChild("Old Sack")
-local remote = game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("RequestBagStoreItem")
+local Inventory = player:WaitForChild("Inventory")
 local itemsFolder = workspace:WaitForChild("Items")
+local remote = game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("RequestBagStoreItem")
 
--- Dropdown setup (same format)
+-- Dropdown for item selection
 local selectedItems = {}
-
 local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
-    Title = "store",
-    Description = "",
+    Title = "Store Items",
     Values = {
         "Log",
         "Coal",
@@ -256,11 +253,11 @@ MultiDropdown:OnChanged(function(Value)
     end
 end)
 
--- Toggle (kept your style)
+-- Toggle
 local autoStoreEnabled = false
 local Toggle2Interacted = false
 
-local Toggle2 = Tabs.Main:CreateToggle("MyToggle", {Title = "store", Default = false})
+local Toggle2 = Tabs.Main:CreateToggle("MyToggle", {Title = "Auto Store", Default = false})
 
 Toggle2:OnChanged(function()
     if not Toggle2Interacted then
@@ -273,14 +270,31 @@ Toggle2:OnChanged(function()
     if autoStoreEnabled then
         task.spawn(function()
             while autoStoreEnabled do
-                for _, item in ipairs(itemsFolder:GetChildren()) do
-                    for _, wanted in ipairs(selectedItems) do
-                        if item.Name == wanted then
-                            remote:InvokeServer(sack, item)
+                local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+                local sack = Inventory:FindFirstChild("Old Sack")
+                        or Inventory:FindFirstChild("Good Sack")
+                        or Inventory:FindFirstChild("Giant Sack")
+                
+                if root and sack then
+                    local nearestItem
+                    local shortestDist = math.huge
+
+                    for _, item in ipairs(itemsFolder:GetChildren()) do
+                        if table.find(selectedItems, item.Name) then
+                            local dist = (item.Position - root.Position).Magnitude
+                            if dist < shortestDist then
+                                nearestItem = item
+                                shortestDist = dist
+                            end
                         end
                     end
+
+                    if nearestItem then
+                        remote:InvokeServer(sack, nearestItem)
+                    end
                 end
-                task.wait(0.05) -- faster loop
+
+                task.wait(0.05) -- very fast repeat
             end
         end)
     end
