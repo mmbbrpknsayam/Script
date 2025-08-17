@@ -19,43 +19,68 @@ local Tabs = {
     }
 }
 
-Tabs.Main:CreateButton{
-    Title = "print position",
-    Description = "",
-    Callback = function()
-        local player = game.Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+local player = game:GetService("Players").LocalPlayer
+local Inventory = player:WaitForChild("Inventory")
+local charactersFolder = workspace:WaitForChild("Characters")
+local remote = game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("ToolDamageObject")
 
-        -- Get player position
-        local playerPosition = humanoidRootPart.Position
-        print("You are at position:", playerPosition)
+-- Selected mobs
+local selectedMobs = {}
 
-        -- Copy position to clipboard
-        local clipboardFunc = setclipboard or toclipboard
-        if clipboardFunc then
-            clipboardFunc(tostring(playerPosition))
-            print("Copied position to clipboard:", playerPosition)
-        else
-            warn("Clipboard not supported on this executor.")
-        end
+local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
+    Title = "Select Mobs",
+    Values = {"Bunny", "Wolf", "Cultist", "Crossbow Cultist", "Juggernaut Cultist", "Mammoth", "Polar Bear", "Arctic Fox", "Alpha Wolf", "Bear", "Alpha Bear"},
+    Multi = true,
+    Default = {},
+})
+
+MultiDropdown:OnChanged(function(val)
+    selectedMobs = {}
+    for name, chosen in pairs(val) do
+        if chosen then table.insert(selectedMobs, name) end
     end
-}
+end)
 
-Tabs.Main:CreateButton{
-    Title = "tp",
-    Description = "",
-    Callback = function()
-        local player = game.Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+local autoHitEnabled = false
+local Toggle3Interacted = false
 
-        -- Target position
-        local targetPosition = Vector3.new(-78.90654754638672, 148.4068603515625, -80.8273696899414)
+local Toggle3 = Tabs.Main:CreateToggle("MyToggle", {Title = "Kill", Default = false})
 
-        -- Teleport the character
-        humanoidRootPart.CFrame = CFrame.new(targetPosition)
-
-        print("Teleported to:", targetPosition)
+Toggle3:OnChanged(function()
+    if not Toggle3Interacted then
+        Toggle3Interacted = true
+        return
     end
-}
+
+    autoHitEnabled = not autoHitEnabled
+
+    if autoHitEnabled then
+        task.spawn(function()
+            while autoHitEnabled do
+                local char = player.Character
+                local root = char and char:FindFirstChild("HumanoidRootPart")
+
+                -- find best axe
+                local axe = Inventory:FindFirstChild("Old Axe")
+                        or Inventory:FindFirstChild("Good Axe")
+                        or Inventory:FindFirstChild("Strong Axe")
+
+                if axe and root and #selectedMobs > 0 then
+                    for _, inst in ipairs(charactersFolder:GetDescendants()) do
+                        if inst:IsA("Model") and table.find(selectedMobs, inst.Name) then
+                            local mobRoot = inst:FindFirstChild("HumanoidRootPart")
+                            if mobRoot then
+                                -- instantly hit this mob, no waiting for it to die
+                                pcall(function()
+                                    remote:InvokeServer(inst, axe, "11_7500899975", root.CFrame)
+                                end)
+                            end
+                        end
+                    end
+                end
+
+                task.wait(0.2) -- attack speed
+            end
+        end)
+    end
+end)
