@@ -1,7 +1,7 @@
 local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOogway/Fluent-Renewed/releases/latest/download/Fluent.luau"))()
 
 local Window = Library:CreateWindow{
-    Title = `testing [gg]`,
+    Title = `testing [w]`,
     SubTitle = "w wave",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
@@ -288,14 +288,16 @@ local Inventory = player:WaitForChild("Inventory")
 local charactersFolder = workspace:WaitForChild("Characters")
 local remote = game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("ToolDamageObject")
 
--- mob picker
+-- Selected mobs
 local selectedMobs = {}
-local MultiDropdown = Tabs.Main:CreateDropdown("MobDropdown", {
+
+local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
     Title = "Select Mobs",
     Values = {"Bunny", "Wolf", "Cultist", "Crossbow Cultist", "Juggernaut Cultist", "Mammoth", "Polar Bear", "Arctic Fox", "Alpha Wolf", "Bear", "Alpha Bear"},
     Multi = true,
-    Default = {}
+    Default = {},
 })
+
 MultiDropdown:OnChanged(function(val)
     selectedMobs = {}
     for name, chosen in pairs(val) do
@@ -306,7 +308,7 @@ end)
 local autoHitEnabled = false
 local Toggle3Interacted = false
 
-local Toggle3 = Tabs.Main:CreateToggle("KillAuraToggle", {Title = "Kill", Default = false})
+local Toggle3 = Tabs.Main:CreateToggle("MyToggle", {Title = "Kill", Default = false})
 
 Toggle3:OnChanged(function()
     if not Toggle3Interacted then
@@ -322,23 +324,26 @@ Toggle3:OnChanged(function()
                 local char = player.Character
                 local root = char and char:FindFirstChild("HumanoidRootPart")
 
-                -- find axe quickly
+                -- find best axe
                 local axe = Inventory:FindFirstChild("Old Axe")
-                    or Inventory:FindFirstChild("Good Axe")
-                    or Inventory:FindFirstChild("Spear")
+                        or Inventory:FindFirstChild("Good Axe")
+                        or Inventory:FindFirstChild("Spear")
 
-                -- no giant condition: just check inside
-                if axe and root then
+                if axe and root and #selectedMobs > 0 then
                     for _, inst in ipairs(charactersFolder:GetDescendants()) do
                         if inst:IsA("Model") and table.find(selectedMobs, inst.Name) then
-                            pcall(function()
-                                remote:InvokeServer(inst, axe, "11_7500899975", root.CFrame)
-                            end)
+                            local mobRoot = inst:FindFirstChild("HumanoidRootPart")
+                            if mobRoot then
+                                -- instantly hit this mob, no waiting for it to die
+                                pcall(function()
+                                    remote:InvokeServer(inst, axe, "11_7500899975", root.CFrame)
+                                end)
+                            end
                         end
                     end
                 end
 
-                task.wait(0.2)
+                task.wait(0.3) -- attack speed
             end
         end)
     end
