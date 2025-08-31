@@ -77,7 +77,7 @@ Toggle1:OnChanged(function()
 end)
 
 Tabs.Main:CreateButton({
-    Title = "all generators",
+    Title = "auto generators",
     Description = "",
     Callback = function()
         task.spawn(function()
@@ -94,8 +94,32 @@ Tabs.Main:CreateButton({
                         end
                     end
                 end
-                task.wait(3)
+                task.wait(4)
             end
         end)
+    end
+})
+
+Tabs.Main:CreateButton{
+    Title = "inf stamina",
+    Description = "",
+    Callback = function()
+        local staminaModule = require(game.ReplicatedStorage.Systems.Character.Game.Sprinting)
+        staminaModule.StaminaLossDisabled = true
+    end
+}
+
+local staminaModule = require(game.ReplicatedStorage.Systems.Character.Game.Sprinting)
+
+local Slider = Tabs.Main:CreateSlider("Slider", {
+    Title = "stamina bar",
+    Description = "",
+    Default = 100,
+    Min = 100,
+    Max = 10000,
+    Rounding = 1,
+    Callback = function(Value)
+        staminaModule.MaxStamina = Value
+        staminaModule.Stamina = Value
     end
 })
