@@ -143,7 +143,8 @@ Tabs.Main:CreateButton{
     Description = "Sets your stamina instantly",
     Callback = function()
         staminaModule.MaxStamina = staminalol
-        staminaModule.Stamina = staminalol
-        print("Stamina applied:", staminalol)
+        staminaModule.Stamina = math.min(staminalol, staminaModule.MaxStamina)
+        print("Stamina applied:", staminaModule.Stamina, "/", staminaModule.MaxStamina)
     end
 }
+
