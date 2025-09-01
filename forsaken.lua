@@ -166,11 +166,11 @@ Tabs.Main:CreateButton{
     end
 }
 
-local Toggle3 = Tabs.Main:CreateToggle("MyToggle", {Title = "esp survivor", Default = false})
+local Toggle2 = Tabs.Main:CreateToggle("MyToggle", {Title = "esp survivor", Default = false})
 
-Toggle3:OnChanged(function()
-    if not Toggle3Interacted then
-        Toggle3Interacted = true
+Toggle2:OnChanged(function()
+    if not Toggle2Interacted then
+        Toggle2Interacted = true
         return
     end
 
@@ -193,8 +193,6 @@ Toggle3:OnChanged(function()
             highlight.Parent = char
         end
 
-        if espSurvivor then
-        -- highlight existing players
         for _, player in ipairs(Players:GetPlayers()) do
             if player ~= LocalPlayer and player.Character then
                 highlightCharacter(player.Character)
@@ -212,6 +210,9 @@ Toggle3:OnChanged(function()
         end)
     else
         -- remove highlights from all players
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+
         for _, player in ipairs(Players:GetPlayers()) do
             if player ~= LocalPlayer and player.Character then
                 local highlight = player.Character:FindFirstChild("CustomHighlight")
