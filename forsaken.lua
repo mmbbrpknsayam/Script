@@ -104,12 +104,12 @@ Tabs.Main:CreateButton{
     Title = "inf stamina",
     Description = "",
     Callback = function()
-        local staminaModule = require(game.ReplicatedStorage.Systems.Character.Game.Sprinting)
-        staminaModule.StaminaLossDisabled = true
+        local staminagg = require(game.ReplicatedStorage.Systems.Character.Game.Sprinting)
+        staminagg.StaminaLossDisabled = true
     end
 }
 
-local staminaModule = require(game.ReplicatedStorage.Systems.Character.Game.Sprinting)
+local staminaa = require(game.ReplicatedStorage.Systems.Character.Game.Sprinting)
 
 local Slider = Tabs.Main:CreateSlider("Slider", {
     Title = "stamina bar",
@@ -119,7 +119,44 @@ local Slider = Tabs.Main:CreateSlider("Slider", {
     Max = 10000,
     Rounding = 1,
     Callback = function(Value)
-        staminaModule.MaxStamina = Value
-        staminaModule.Stamina = Value
+        staminaa.MaxStamina = Value
+        staminaa.Stamina = Value
     end
 })
+
+local staminaModule = require(game.ReplicatedStorage.Systems.Character.Game.Sprinting)
+
+local Input = Tabs.Main:CreateInput("Input", {
+    Title = "Stamina",
+    Default = "",
+    Placeholder = "",
+    Numeric = true,
+    Finished = false,
+    Callback = function(Value)
+        staminalol = Value
+        print("staminalol :", staminalol)
+    end
+})
+
+local Toggle2 = Tabs.Main:CreateToggle("MyToggle", {Title = "Apply stamina", Default = false})
+
+Toggle2:OnChanged(function()
+    if not Toggl21Interacted then
+        Toggle2Interacted = true
+        return
+    end
+
+    StaminaEnabled = not StaminaEnabled
+
+    if StaminaEnabled then
+        task.spawn(function()
+            while StaminaEnabled do
+                if staminaModule then
+                    staminaModule.MaxStamina = staminalol
+                    staminaModule.Stamina = staminalol
+                end
+                task.wait(1)
+            end
+        end)
+    end
+end)
