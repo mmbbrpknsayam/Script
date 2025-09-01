@@ -1,8 +1,8 @@
 local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOogway/Fluent-Renewed/releases/latest/download/Fluent.luau"))()
 
 local Window = Library:CreateWindow{
-    Title = `forsaken [ beta ]`,
-    SubTitle = "",
+    Title = `forsaken [ beta fake ]`,
+    SubTitle = "v1",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
     Resize = true, -- Resize this ^ Size according to a 1920x1080 screen, good for mobile users but may look weird on some devices
@@ -141,7 +141,7 @@ local Input = Tabs.Main:CreateInput("Input", {
 local Toggle2 = Tabs.Main:CreateToggle("MyToggle", {Title = "Apply stamina", Default = false})
 
 Toggle2:OnChanged(function()
-    if not Toggl21Interacted then
+    if not Toggl2Interacted then
         Toggle2Interacted = true
         return
     end
