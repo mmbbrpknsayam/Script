@@ -185,39 +185,38 @@ Toggle3:OnChanged(function()
             local highlight = Instance.new("Highlight")
             highlight.Name = "CustomHighlight"
             highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-            highlight.FillColor = Color3.fromRGB(0, 0, 255)
+            highlight.FillColor = Color3.fromRGB(255, 191, 0)
             highlight.FillTransparency = 0.5
-            highlight.OutlineColor = Color3.fromRGB(0, 85, 127)
+            highlight.OutlineColor = Color3.fromRGB(255, 191, 0)
             highlight.OutlineTransparency = 0
             highlight.Enabled = true
             highlight.Parent = char
         end
 
         if espSurvivor then
-            -- highlight existing players
-            for _, player in ipairs(Players:GetPlayers()) do
-                if player ~= LocalPlayer and player.Character then
-                    highlightCharacter(player.Character)
-                end
-                if player ~= LocalPlayer then
-                    player.CharacterAdded:Connect(highlightCharacter)
-                end
+        -- highlight existing players
+        for _, player in ipairs(Players:GetPlayers()) do
+            if player ~= LocalPlayer and player.Character then
+                highlightCharacter(player.Character)
             end
+            if player ~= LocalPlayer then
+                player.CharacterAdded:Connect(highlightCharacter)
+            end
+        end
 
-            -- highlight new players
-            Players.PlayerAdded:Connect(function(player)
-                if player ~= LocalPlayer then
-                    player.CharacterAdded:Connect(highlightCharacter)
-                end
-            end)
-        else
-            -- remove highlights from all players
-            for _, player in ipairs(Players:GetPlayers()) do
-                if player ~= LocalPlayer and player.Character then
-                    local highlight = player.Character:FindFirstChild("CustomHighlight")
-                    if highlight then
-                        highlight:Destroy()
-                    end
+        -- highlight new players
+        Players.PlayerAdded:Connect(function(player)
+            if player ~= LocalPlayer then
+                player.CharacterAdded:Connect(highlightCharacter)
+            end
+        end)
+    else
+        -- remove highlights from all players
+        for _, player in ipairs(Players:GetPlayers()) do
+            if player ~= LocalPlayer and player.Character then
+                local highlight = player.Character:FindFirstChild("CustomHighlight")
+                if highlight then
+                    highlight:Destroy()
                 end
             end
         end
