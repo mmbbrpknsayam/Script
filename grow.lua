@@ -171,3 +171,34 @@ Tabs.Main:CreateButton{
         game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("CraftingGlobalObjectService"):FireServer(unpack(args))
     end
 }
+
+local Tabs = {
+    Main = Window:CreateTab{
+        Title = "Bug",
+        Icon = "nil"
+    }
+}
+
+Tabs.Main:CreateButton{
+    Title = "Back Beanstalk Event",
+    Description = "",
+    Callback = function()
+        local BeanstalkEvent = game:GetService("ReplicatedStorage").Modules.UpdateService
+
+        if BeanstalkEvent then
+            BeanstalkEvent.Parent = workspace
+        end
+    end
+}
+
+Tabs.Main:CreateButton{
+    Title = "Back Fairy Event",
+    Description = "",
+    Callback = function()
+        local FairyEvent = game:GetService("ReplicatedStorage").Modules.UpdateService
+
+        if FairyEvent then
+            FairyEvent.Parent = workspace
+        end
+    end
+}
