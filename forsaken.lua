@@ -176,49 +176,135 @@ Toggle2:OnChanged(function()
 
     espSurvivor = not espSurvivor
 
+    local SurvivorFolder = workspace.Players.Survivors
+
+    local function createHighlight(model)
+        local highlight = Instance.new("Highlight")
+        highlight.Name = "CustomHighlight"
+        highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+        highlight.FillColor = Color3.fromRGB(255, 191, 0)
+        highlight.FillTransparency = 0.5
+        highlight.OutlineColor = Color3.fromRGB(255, 191, 0)
+        highlight.OutlineTransparency = 0
+        highlight.Parent = model
+    end
+
     if espSurvivor then
-
-        local Players = game:GetService("Players")
-        local LocalPlayer = Players.LocalPlayer
-
-        local function highlightCharacter(char)
-            local highlight = Instance.new("Highlight")
-            highlight.Name = "CustomHighlight"
-            highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-            highlight.FillColor = Color3.fromRGB(255, 191, 0)
-            highlight.FillTransparency = 0.5
-            highlight.OutlineColor = Color3.fromRGB(255, 191, 0)
-            highlight.OutlineTransparency = 0
-            highlight.Enabled = true
-            highlight.Parent = char
-        end
-
-        for _, player in ipairs(Players:GetPlayers()) do
-            if player ~= LocalPlayer and player.Character then
-                highlightCharacter(player.Character)
-            end
-            if player ~= LocalPlayer then
-                player.CharacterAdded:Connect(highlightCharacter)
+        -- highlight all current survivors
+        for _, model in ipairs(SurvivorFolder:GetChildren()) do
+            if model:IsA("Model") then
+                createHighlight(model)
             end
         end
 
-        -- highlight new players
-        Players.PlayerAdded:Connect(function(player)
-            if player ~= LocalPlayer then
-                player.CharacterAdded:Connect(highlightCharacter)
+        -- highlight new survivors
+        SurvivorFolder.ChildAdded:Connect(function(child)
+            if child:IsA("Model") then
+                createHighlight(child)
             end
         end)
     else
-        -- remove highlights from all players
-        local Players = game:GetService("Players")
-        local LocalPlayer = Players.LocalPlayer
+        -- remove highlights
+        for _, model in ipairs(SurvivorFolder:GetChildren()) do
+            local hl = model:FindFirstChild("CustomHighlight")
+            if hl then
+                hl:Destroy()
+            end
+        end
+    end
+end)
 
-        for _, player in ipairs(Players:GetPlayers()) do
-            if player ~= LocalPlayer and player.Character then
-                local highlight = player.Character:FindFirstChild("CustomHighlight")
-                if highlight then
-                    highlight:Destroy()
-                end
+local Toggle2 = Tabs.Main:CreateToggle("MyToggle", {Title = "esp survivor", Default = false})
+
+Toggle2:OnChanged(function()
+    if not Toggle2Interacted then
+        Toggle2Interacted = true
+        return
+    end
+
+    espSurvivor = not espSurvivor
+
+    local SurvivorFolder = workspace.Players.Survivors
+
+    local function createHighlight(model)
+        local highlight = Instance.new("Highlight")
+        highlight.Name = "CustomHighlight"
+        highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+        highlight.FillColor = Color3.fromRGB(255, 191, 0)
+        highlight.FillTransparency = 0.5
+        highlight.OutlineColor = Color3.fromRGB(255, 191, 0)
+        highlight.OutlineTransparency = 0
+        highlight.Parent = model
+    end
+
+    if espSurvivor then
+        -- highlight all current survivors
+        for _, model in ipairs(SurvivorFolder:GetChildren()) do
+            if model:IsA("Model") then
+                createHighlight(model)
+            end
+        end
+
+        -- highlight new survivors
+        SurvivorFolder.ChildAdded:Connect(function(child)
+            if child:IsA("Model") then
+                createHighlight(child)
+            end
+        end)
+    else
+        -- remove highlights
+        for _, model in ipairs(SurvivorFolder:GetChildren()) do
+            local hl = model:FindFirstChild("CustomHighlight")
+            if hl then
+                hl:Destroy()
+            end
+        end
+    end
+end)
+
+local Toggle3 = Tabs.Main:CreateToggle("MyToggle", {Title = "esp killer", Default = false})
+
+Toggle3:OnChanged(function()
+    if not Toggle3Interacted then
+        Toggle3Interacted = true
+        return
+    end
+
+    espKiller = not espKiller
+
+    local KillerFolder = workspace.Players.Killers
+
+    local function createHighlight(model)
+        local highlight = Instance.new("Highlight")
+        highlight.Name = "CustomHighlight"
+        highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+        highlight.FillColor = Color3.fromRGB(255, 0, 0)
+        highlight.FillTransparency = 0.5
+        highlight.OutlineColor = Color3.fromRGB(170, 0, 0)
+        highlight.OutlineTransparency = 0
+        highlight.Parent = model
+    end
+
+    if espKiller then
+        -- highlight all current survivors
+        for _, model in ipairs(KillerFolder:GetChildren()) do
+            if model:IsA("Model") then
+                createHighlight(model)
+            end
+        end
+
+        -- highlight new survivors
+        KillerFolder.ChildAdded:Connect(function(child)
+            if child:IsA("Model") then
+                createHighlight(child)
+            end
+        end)
+    else
+        -- remove highlights
+        for _, model in ipairs(KillerFolder:GetChildren()) do
+            local hl = model:FindFirstChild("CustomHighlight")
+            if hl then
+                hl:Destroy()
             end
         end
     end
