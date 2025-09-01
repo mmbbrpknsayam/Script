@@ -1,8 +1,8 @@
 local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOogway/Fluent-Renewed/releases/latest/download/Fluent.luau"))()
 
 local Window = Library:CreateWindow{
-    Title = `nightforest [ beta ]`,
-    SubTitle = "V-0.1.1",
+    Title = `99 night`,
+    SubTitle = "",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
     Resize = true, -- Resize this ^ Size according to a 1920x1080 screen, good for mobile users but may look weird on some devices
@@ -110,7 +110,7 @@ local function removeAllESP()
     if itemsFolder then
         for _, model in pairs(itemsFolder:GetChildren()) do
             for _, obj in pairs(model:GetChildren()) do
-                if obj:IsA("BillboardGui") or obj:IsA("Highlight") or obj:IsA("Attachment") or obj:IsA("Beam") then
+                if obj:IsA("BillboardGui") or obj:IsA("Highlight") then
                     obj:Destroy()
                 end
             end
@@ -157,40 +157,15 @@ Toggle1:OnChanged(function()
                     textLabel.BackgroundTransparency = 1
                     textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
                     textLabel.TextSize = 8
-                    textLabel.Text = "[" .. model.Name .. " - Distance: --]"
-
-                    local basePart = model:FindFirstChildWhichIsA("BasePart")
-                    if not basePart then return end
-
-                    local objectAttachment = Instance.new("Attachment")
-                    objectAttachment.Name = "ESPObjectAttachment"
-                    objectAttachment.Parent = basePart
-
-                    local playerAttachment = Instance.new("Attachment")
-                    playerAttachment.Name = "ESPPlayerAttachment"
-                    playerAttachment.Parent = humanoidRootPart
-
-                    local beam = Instance.new("Beam")
-                    beam.Attachment0 = objectAttachment
-                    beam.Attachment1 = playerAttachment
-                    beam.Color = ColorSequence.new(Color3.fromRGB(255, 255, 0))
-                    beam.Width0 = 0.1
-                    beam.Width1 = 0.1
-                    beam.FaceCamera = true
-                    beam.LightInfluence = 0
-                    beam.Transparency = NumberSequence.new(0.3)
-                    beam.Parent = objectAttachment
+                    textLabel.Text = string.format("%s (--)", model.Name)
 
                     table.insert(espVisuals, highlight)
                     table.insert(espVisuals, billboardGui)
-                    table.insert(espVisuals, objectAttachment)
-                    table.insert(espVisuals, playerAttachment)
-                    table.insert(espVisuals, beam)
 
                     local heartbeatConn = game:GetService("RunService").Heartbeat:Connect(function()
                         if not espEnabled then return end
                         local distance = (model:GetModelCFrame().Position - humanoidRootPart.Position).Magnitude
-                        textLabel.Text = "[" .. model.Name .. " - Distance: " .. math.floor(distance) .. " studs]"
+                        textLabel.Text = string.format("%s (%d)", model.Name, math.floor(distance))
                     end)
                     table.insert(espConnections, heartbeatConn)
 
@@ -218,16 +193,111 @@ Toggle1:OnChanged(function()
     end
 end)
 
-local selectedMobs = {}
-local MultiDropdown = Tabs.Main:CreateDropdown("MobDropdown", {
-    Title = "Select Mobs",
+local player = game:GetService("Players").LocalPlayer
+local inventory = player:WaitForChild("Inventory")
+local itemsFolder = workspace:WaitForChild("Items")
+local remote = game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("RequestBagStoreItem")
+
+-- Dropdown setup
+local selectedItems = {}
+
+local MultiDropdown = Tabs.Main:CreateDropdown("StoreDropdown", {
+    Title = "Item to Store",
+    Description = "",
     Values = {
-        "Bunny", "Wolf", "Cultist", "Crossbow Cultist", "Juggernaut Cultist",
-        "Mammoth", "Polar Bear", "Arctic Fox", "Alpha Wolf", "Bear", "Alpha Bear"
+        "Log","Coal","Spear","Rifle","Rifle Ammo","Revolver","Revolver Ammo",
+        "MedKit","Bandage","Item chest","Iron Body","Leather Body","Fuel Canister",
+        "Oil Barrel","Chair","Feather","Metal Chair","Bolt","Broken Fan",
+        "Broken Microwave","Sheet Metal","Tyre","Old Car Engine","Old Radio",
+        "Cultist Prototype","Washing Machine","Morsel","Cake","Berry","Carrot",
+        "Steak","Anvil Front","Anvil Base","Anvil Back","Cultist Gem",
+        "Gem of the Forest Fragment"
     },
     Multi = true,
-    Default = {}
+    Default = {},
 })
+
+MultiDropdown:OnChanged(function(Value)
+    selectedItems = {}
+    for itemName, isSelected in pairs(Value) do
+        if isSelected then
+            table.insert(selectedItems, itemName)
+        end
+    end
+end)
+
+local Toggle1 = Tabs.Main:CreateToggle("MyToggle", {Title = "Auto Store", Default = false})
+local Toggle1Interacted = false
+local autoStoreEnabled = false
+
+Toggle1:OnChanged(function()
+    if not Toggle1Interacted then
+        Toggle1Interacted = true
+        return
+    end
+
+    autoStoreEnabled = not autoStoreEnabled
+
+    if autoStoreEnabled then
+        task.spawn(function()
+            while autoStoreEnabled do
+                -- dynamically find a sack
+                local sack = inventory:FindFirstChild("Old Sack")
+                    or inventory:FindFirstChild("Good Sack")
+                    or inventory:FindFirstChild("Giant Sack")
+
+                local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+
+                if sack and root and #selectedItems > 0 then
+                    -- find nearest item
+                    local nearestItem
+                    local nearestDist = math.huge
+
+                    for _, item in ipairs(itemsFolder:GetChildren()) do
+                        if table.find(selectedItems, item.Name) then
+                            local pos
+                            if item:IsA("Model") and item.PrimaryPart then
+                                pos = item.PrimaryPart.Position
+                            elseif item:IsA("BasePart") then
+                                pos = item.Position
+                            else
+                                pos = item:GetModelCFrame().Position
+                            end
+
+                            local dist = (pos - root.Position).Magnitude
+                            if dist < nearestDist then
+                                nearestDist = dist
+                                nearestItem = item
+                            end
+                        end
+                    end
+
+                    if nearestItem then
+                        remote:InvokeServer(sack, nearestItem)
+                    end
+                end
+
+                task.wait(0.05) -- fast repeat
+            end
+        end)
+    end
+end)
+
+local player = game:GetService("Players").LocalPlayer
+local Inventory = player:WaitForChild("Inventory")
+local charactersFolder = workspace:WaitForChild("Characters")
+local remote = game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("ToolDamageObject")
+
+-- Selected mobs
+local selectedMobs = {}
+
+local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
+    Title = "Select Mobs",
+    Values = {"Bunny", "Wolf", "Cultist", "Crossbow Cultist", "Juggernaut Cultist", "Mammoth", "Polar Bear", "Arctic Fox", "Alpha Wolf", "Bear", "Alpha Bear"},
+    Multi = true,
+    Default = {},
+})
+
 MultiDropdown:OnChanged(function(val)
     selectedMobs = {}
     for name, chosen in pairs(val) do
@@ -238,7 +308,7 @@ end)
 local autoHitEnabled = false
 local Toggle3Interacted = false
 
-local Toggle3 = Tabs.Main:CreateToggle("KillAuraToggle", {Title = "Kill", Default = false})
+local Toggle3 = Tabs.Main:CreateToggle("MyToggle", {Title = "Kill", Default = false})
 
 Toggle3:OnChanged(function()
     if not Toggle3Interacted then
@@ -254,39 +324,27 @@ Toggle3:OnChanged(function()
                 local char = player.Character
                 local root = char and char:FindFirstChild("HumanoidRootPart")
 
-                -- find axe dynamically
+                -- find best axe
                 local axe = Inventory:FindFirstChild("Old Axe")
-                    or Inventory:FindFirstChild("Good Axe")
-                    or Inventory:FindFirstChild("Spear")
+                        or Inventory:FindFirstChild("Good Axe")
+                        or Inventory:FindFirstChild("Spear")
 
                 if axe and root and #selectedMobs > 0 then
-                    -- find nearest mob
-                    local nearestMob
-                    local nearestDist = math.huge
-
                     for _, inst in ipairs(charactersFolder:GetDescendants()) do
                         if inst:IsA("Model") and table.find(selectedMobs, inst.Name) then
                             local mobRoot = inst:FindFirstChild("HumanoidRootPart")
                             if mobRoot then
-                                local dist = (mobRoot.Position - root.Position).Magnitude
-                                if dist < nearestDist then
-                                    nearestDist = dist
-                                    nearestMob = inst
-                                end
+                                -- instantly hit this mob, no waiting for it to die
+                                pcall(function()
+                                    remote:InvokeServer(inst, axe, "11_7500899975", root.CFrame)
+                                end)
                             end
                         end
                     end
-
-                    if nearestMob then
-                        pcall(function()
-                            remote:InvokeServer(nearestMob, axe, "11_7500899975", root.CFrame)
-                        end)
-                    end
                 end
 
-                task.wait(0.3)
+                task.wait(0.3) -- attack speed
             end
         end)
     end
 end)
-
