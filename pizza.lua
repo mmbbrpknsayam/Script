@@ -2,7 +2,7 @@ local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOog
 
 local Window = Library:CreateWindow{
     Title = `pizza place`,
-    SubTitle = "test1",
+    SubTitle = "",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
     Resize = true, -- Resize this ^ Size according to a 1920x1080 screen, good for mobile users but may look weird on some devices
