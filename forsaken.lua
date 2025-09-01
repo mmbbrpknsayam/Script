@@ -5,11 +5,11 @@ local Window = Library:CreateWindow{
     SubTitle = "v1",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
-    Resize = true, -- Resize this ^ Size according to a 1920x1080 screen, good for mobile users but may look weird on some devices
+    Resize = true,
     MinSize = Vector2.new(470, 380),
-    Acrylic = true, -- The blur may be detectable, setting this to false disables blur entirely
+    Acrylic = true,
     Theme = "Dark",
-    MinimizeKey = Enum.KeyCode.LeftControl -- Used when theres no MinimizeKeybind
+    MinimizeKey = Enum.KeyCode.LeftControl
 }
 
 local Tabs = {
@@ -30,20 +30,18 @@ Toggle1:OnChanged(function()
     aimbotEnabled = not aimbotEnabled
 
     if aimbotEnabled then
-        -- Set the range limit for the aimbot (in studs)
-        local AIMBOT_RANGE = 50  -- Change this value to adjust the range
 
-        -- Function to find the nearest player within range
+        local AIMBOT_RANGE = 50
+
         local function getClosestPlayer()
             local closestPlayer = nil
-            local shortestDist = AIMBOT_RANGE  -- Start with the range limit
+            local shortestDist = AIMBOT_RANGE
             local myPosition = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
 
-            -- Loop through all players to find the closest one within range
             for _, player in pairs(game.Players:GetPlayers()) do
                 if player ~= game.Players.LocalPlayer and player.Character and player.Character:FindFirstChild("Head") then
                     local dist = (player.Character.Head.Position - myPosition).Magnitude
-                    -- Only consider players within the range
+
                     if dist < shortestDist then
                         shortestDist = dist
                         closestPlayer = player
@@ -54,23 +52,20 @@ Toggle1:OnChanged(function()
             return closestPlayer
         end
 
-        -- Function to aim the camera at the nearest player
         local function aimAtNearestPlayer()
             local closestPlayer = getClosestPlayer()
 
             if closestPlayer then
-                -- Get the position of the nearest player
+
                 local targetPosition = closestPlayer.Character.HumanoidRootPart.Position
                 local myPosition = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
 
-                -- Set the camera's CFrame to focus on the nearest player
                 local camera = game.Workspace.CurrentCamera
                 camera.CFrame = CFrame.new(camera.CFrame.Position, targetPosition)
             end
         end
 
-        -- Call the function to update the camera aim towards the nearest player
-        while aimbotEnabled and wait(0) do  -- You can adjust the interval
+        while aimbotEnabled and wait(0) do
             aimAtNearestPlayer()
         end
     end
@@ -190,21 +185,20 @@ Toggle2:OnChanged(function()
     end
 
     if espSurvivor then
-        -- highlight all current survivors
+
         for _, model in ipairs(SurvivorFolder:GetChildren()) do
             if model:IsA("Model") then
                 createHighlight(model)
             end
         end
 
-        -- highlight new survivors
         SurvivorFolder.ChildAdded:Connect(function(child)
             if child:IsA("Model") then
                 createHighlight(child)
             end
         end)
     else
-        -- remove highlights
+
         for _, model in ipairs(SurvivorFolder:GetChildren()) do
             local hl = model:FindFirstChild("CustomHighlight")
             if hl then
@@ -238,21 +232,20 @@ Toggle2:OnChanged(function()
     end
 
     if espSurvivor then
-        -- highlight all current survivors
+
         for _, model in ipairs(SurvivorFolder:GetChildren()) do
             if model:IsA("Model") then
                 createHighlight(model)
             end
         end
 
-        -- highlight new survivors
         SurvivorFolder.ChildAdded:Connect(function(child)
             if child:IsA("Model") then
                 createHighlight(child)
             end
         end)
     else
-        -- remove highlights
+
         for _, model in ipairs(SurvivorFolder:GetChildren()) do
             local hl = model:FindFirstChild("CustomHighlight")
             if hl then
@@ -286,26 +279,134 @@ Toggle3:OnChanged(function()
     end
 
     if espKiller then
-        -- highlight all current survivors
+
         for _, model in ipairs(KillerFolder:GetChildren()) do
             if model:IsA("Model") then
                 createHighlight(model)
             end
         end
 
-        -- highlight new survivors
         KillerFolder.ChildAdded:Connect(function(child)
             if child:IsA("Model") then
                 createHighlight(child)
             end
         end)
     else
-        -- remove highlights
+
         for _, model in ipairs(KillerFolder:GetChildren()) do
             local hl = model:FindFirstChild("CustomHighlight")
             if hl then
                 hl:Destroy()
             end
         end
+    end
+end)
+
+local Toggle4 = Tabs.Main:CreateToggle("MyToggle", {Title = "ESP", Default = false})
+
+local espVisuals = {}
+local espConnections = {}
+
+local selectedItem = {"BloxyCola", "Medkit"}
+
+local function removeAllESP()
+    for _, v in pairs(espVisuals) do
+        if v and v.Parent then
+            v:Destroy()
+        end
+    end
+    espVisuals = {}
+
+    for _, conn in pairs(espConnections) do
+        if conn.Connected then
+            conn:Disconnect()
+        end
+    end
+    espConnections = {}
+
+    local itemsFolder = workspace:WaitForChild("Map"):WaitForChild("Ingame"):WaitForChild("Map")
+    if itemsFolder then
+        for _, model in pairs(itemsFolder:GetChildren()) do
+            for _, obj in pairs(model:GetChildren()) do
+                if obj:IsA("BillboardGui") or obj:IsA("Highlight") then
+                    obj:Destroy()
+                end
+            end
+        end
+    end
+end
+
+local function highlightModel(model)
+    if not model:IsA("Model") then return end
+
+    for _, item in ipairs(selectedItem) do
+        if model.Name == item and not model:FindFirstChildOfClass("Highlight") then
+            local highlight = Instance.new("Highlight")
+            highlight.Parent = model
+            highlight.Adornee = model
+            highlight.FillColor = Color3.fromRGB(255, 255, 0)
+            highlight.FillTransparency = 0.4
+            highlight.OutlineColor = Color3.fromRGB(0, 0, 0)
+            highlight.OutlineTransparency = 0.5
+
+            local billboardGui = Instance.new("BillboardGui")
+            billboardGui.Parent = model
+            billboardGui.Adornee = model
+            billboardGui.Size = UDim2.new(0, 200, 0, 30)
+            billboardGui.StudsOffset = Vector3.new(0, 3, 0)
+            billboardGui.AlwaysOnTop = true
+
+            local textLabel = Instance.new("TextLabel")
+            textLabel.Parent = billboardGui
+            textLabel.Size = UDim2.new(1, 0, 1, 0)
+            textLabel.BackgroundTransparency = 1
+            textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+            textLabel.TextSize = 8
+            textLabel.Text = string.format("%s (--)", model.Name)
+
+            table.insert(espVisuals, highlight)
+            table.insert(espVisuals, billboardGui)
+
+            local player = game.Players.LocalPlayer
+            local character = player.Character or player.CharacterAdded:Wait()
+            local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+            local heartbeatConn = game:GetService("RunService").Heartbeat:Connect(function()
+                if not espEnabled then return end
+                if model.PrimaryPart then
+                    local distance = (model.PrimaryPart.Position - humanoidRootPart.Position).Magnitude
+                    textLabel.Text = string.format("%s (%d)", model.Name, math.floor(distance))
+                end
+            end)
+            table.insert(espConnections, heartbeatConn)
+
+            return
+        end
+    end
+end
+
+Toggle4:OnChanged(function()
+    if not Toggle4Interacted then
+        Toggle4Interacted = true
+        return
+    end
+
+    espEnabled = not espEnabled
+
+    local itemsFolder = workspace:WaitForChild("Map"):WaitForChild("Ingame"):WaitForChild("Map")
+
+    if espEnabled then
+        for _, model in pairs(itemsFolder:GetChildren()) do
+            highlightModel(model)
+        end
+
+        local conn = itemsFolder.ChildAdded:Connect(function(newModel)
+            if espEnabled then
+                highlightModel(newModel)
+            end
+        end)
+        table.insert(espConnections, conn)
+    else
+        removeAllESP()
     end
 end)
