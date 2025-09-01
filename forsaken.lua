@@ -141,7 +141,7 @@ local Input = Tabs.Main:CreateInput("Input", {
 local Toggle2 = Tabs.Main:CreateToggle("MyToggle", {Title = "Apply stamina", Default = false})
 
 Toggle2:OnChanged(function()
-    if not Toggl2Interacted then
+    if not Toggle2Interacted then
         Toggle2Interacted = true
         return
     end
@@ -151,11 +151,9 @@ Toggle2:OnChanged(function()
     if StaminaEnabled then
         task.spawn(function()
             while StaminaEnabled do
-                if staminaModule then
-                    staminaModule.MaxStamina = staminalol
-                    staminaModule.Stamina = staminalol
-                end
-                task.wait(1)
+                staminaModule.MaxStamina = staminalol
+                staminaModule.Stamina = staminalol
+                task.wait(1) -- keep this inside the loop
             end
         end)
     end
