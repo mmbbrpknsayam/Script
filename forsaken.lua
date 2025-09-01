@@ -124,7 +124,25 @@ local Slider = Tabs.Main:CreateSlider("Slider", {
     end
 })
 
-local staminaModule = require(game.ReplicatedStorage.Systems.Character.Game.Sprinting)
+Tabs.Main:CreateButton{
+    Title = "1k stamina",
+    Description = "",
+    Callback = function()
+        local staminaModule = require(game.ReplicatedStorage.Systems.Character.Game.Sprinting)
+
+        staminaModule.MaxStamina = 1000
+        staminaModule.Stamina = 1000
+    end
+}
+
+local Tabs = {
+    Main = Window:CreateTab{
+        Title = "in-dev",
+        Icon = "nil"
+    }
+}
+
+local staminainput = require(game.ReplicatedStorage.Systems.Character.Game.Sprinting)
 
 local Input = Tabs.Main:CreateInput("Input", {
     Title = "Stamina",
@@ -133,18 +151,75 @@ local Input = Tabs.Main:CreateInput("Input", {
     Numeric = true,
     Finished = false,
     Callback = function(Value)
-        staminalol = Value
-        print("staminalol :", staminalol)
+        staminainput1 = Value
+        print("staminainput1 :", staminainput1)
     end
 })
 
 Tabs.Main:CreateButton{
-    Title = "Apply Stamina",
-    Description = "Sets your stamina instantly",
+    Title = "apply stamina",
+    Description = "",
     Callback = function()
-        staminaModule.MaxStamina = staminalol
-        staminaModule.Stamina = math.min(staminalol, staminaModule.MaxStamina)
-        print("Stamina applied:", staminaModule.Stamina, "/", staminaModule.MaxStamina)
+        staminainput.MaxStamina = staminainput1
+        staminainput.Stamina = math.min(staminainput1, staminainput.staminainput1)
+        print("Stamina applied:", staminainput.Stamina, "/", staminainput.MaxStamina)
     end
 }
 
+local Toggle3 = Tabs.Main:CreateToggle("MyToggle", {Title = "esp survivor", Default = false})
+
+Toggle3:OnChanged(function()
+    if not Toggle3Interacted then
+        Toggle3Interacted = true
+        return
+    end
+
+    espSurvivor = not espSurvivor
+
+    if espSurvivor then
+
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+
+        local function highlightCharacter(char)
+            local highlight = Instance.new("Highlight")
+            highlight.Name = "CustomHighlight"
+            highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+            highlight.FillColor = Color3.fromRGB(0, 0, 255)
+            highlight.FillTransparency = 0.5
+            highlight.OutlineColor = Color3.fromRGB(0, 85, 127)
+            highlight.OutlineTransparency = 0
+            highlight.Enabled = true
+            highlight.Parent = char
+        end
+
+        if espSurvivor then
+            -- highlight existing players
+            for _, player in ipairs(Players:GetPlayers()) do
+                if player ~= LocalPlayer and player.Character then
+                    highlightCharacter(player.Character)
+                end
+                if player ~= LocalPlayer then
+                    player.CharacterAdded:Connect(highlightCharacter)
+                end
+            end
+
+            -- highlight new players
+            Players.PlayerAdded:Connect(function(player)
+                if player ~= LocalPlayer then
+                    player.CharacterAdded:Connect(highlightCharacter)
+                end
+            end)
+        else
+            -- remove highlights from all players
+            for _, player in ipairs(Players:GetPlayers()) do
+                if player ~= LocalPlayer and player.Character then
+                    local highlight = player.Character:FindFirstChild("CustomHighlight")
+                    if highlight then
+                        highlight:Destroy()
+                    end
+                end
+            end
+        end
+    end
+end)
