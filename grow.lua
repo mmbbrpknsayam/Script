@@ -1,4 +1,3 @@
--- current toggle [4]
 local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOogway/Fluent-Renewed/releases/latest/download/Fluent.luau"))()
 
 local Window = Library:CreateWindow{
@@ -6,55 +5,25 @@ local Window = Library:CreateWindow{
     SubTitle = "V-0.1.1",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
-    Resize = true, -- Resize this ^ Size according to a 1920x1080 screen, good for mobile users but may look weird on some devices
+    Resize = true,
     MinSize = Vector2.new(470, 380),
-    Acrylic = true, -- The blur may be detectable, setting this to false disables blur entirely
+    Acrylic = true,
     Theme = "Dark",
-    MinimizeKey = Enum.KeyCode.LeftControl -- Used when theres no MinimizeKeybind
+    MinimizeKey = Enum.KeyCode.LeftControl
 }
 
 local Tabs = {
     Main = Window:CreateTab{
-        Title = "Tab Local Player",
+        Title = "Shop",
         Icon = "nil"
     }
 }
 
-Tabs.Main:CreateButton{
-    Title = "Boost Fps",
-    Description = "",
-    Callback = function()
-        -- Target particle names to delete
-        local targetNames = {
-            FrozenParticle = true,
-            WetParticle = true,
-            ChilledParticle = true,
-            Fire = true,
-            Shine_Particle = true,
-            ShockedParticle = true,
-        }
+local Toggle1 = Tabs.Main:CreateToggle("MyToggle", {Title = "Auto Sell", Default = false})
 
-        -- Scan the entire game
-        for _, obj in ipairs(game:GetDescendants()) do
-            if obj:IsA("ParticleEmitter") and targetNames[obj.Name] then
-                obj:Destroy()
-            end
-        end
-    end
-}
-
-local Tabs = {
-    Main = Window:CreateTab{
-        Title = "Tab Shop",
-        Icon = "nil"
-    }
-}
-
-local Toggle4 = Tabs.Main:CreateToggle("MyToggle", {Title = "Auto Sell", Default = false})
-
-Toggle4:OnChanged(function()
-    if not Toggle4Interacted then
-        Toggle4Interacted = true
+Toggle1:OnChanged(function()
+    if not Toggle1Interacted then
+        Toggle1Interacted = true
         return
     end
 
@@ -65,10 +34,8 @@ Toggle4:OnChanged(function()
     end
 end)
 
--- Store selected seeds
 local selectedSeeds = {}
 
--- Create dropdown
 local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
     Title = "Seed",
     Description = "",
@@ -77,7 +44,6 @@ local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
     Default = {},
 })
 
--- Update selected seeds when changed
 MultiDropdown:OnChanged(function(Value)
     selectedSeeds = {}
     for SeedName, IsSelected in pairs(Value) do
@@ -87,11 +53,11 @@ MultiDropdown:OnChanged(function(Value)
     end
 end)
 
-local Toggle1 = Tabs.Main:CreateToggle("MyToggle", {Title = "Auto buy", Default = false})
+local Toggle2 = Tabs.Main:CreateToggle("MyToggle", {Title = "Auto buy", Default = false})
 
-Toggle1:OnChanged(function()
-    if not Toggle1Interacted then
-        Toggle1Interacted = true
+Toggle2:OnChanged(function()
+    if not Toggle2Interacted then
+        Toggle2Interacted = true
         return
     end
 
@@ -112,7 +78,6 @@ end)
 
 local selectedGears = {}
 
--- Create dropdown
 local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
     Title = "Gear",
     Description = "",
@@ -121,7 +86,6 @@ local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
     Default = {},
 })
 
--- Update selected seeds when changed
 MultiDropdown:OnChanged(function(Value)
     selectedGears = {}
     for GearName, IsSelected in pairs(Value) do
@@ -131,11 +95,11 @@ MultiDropdown:OnChanged(function(Value)
     end
 end)
 
-local Toggle2 = Tabs.Main:CreateToggle("MyToggle", {Title = "Auto buy", Default = false})
+local Toggle3 = Tabs.Main:CreateToggle("MyToggle", {Title = "Auto buy", Default = false})
 
-Toggle2:OnChanged(function()
-    if not Toggle2Interacted then
-        Toggle2Interacted = true
+Toggle3:OnChanged(function()
+    if not Toggle3Interacted then
+        Toggle3Interacted = true
         return
     end
 
@@ -154,357 +118,56 @@ Toggle2:OnChanged(function()
     end
 end)
 
-local Paragraph = Tabs.Main:CreateParagraph("Paragraph", {
-    Title = "Event shop",
-    Content = ""
-})
+local Tabs = {
+    Main = Window:CreateTab{
+        Title = "Crafting",
+        Icon = "nil"
+    }
+}
 
-local selectedEvents = {}
-
--- Create dropdown
-local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
-    Title = "Item",
+Tabs.Main:CreateButton{
+    Title = "select craft bean shard",
     Description = "",
-    Values = {"Mysterious Crate", "Night Egg", "Night Seed Pack", "Blood Banana", "Moon Melon", "Star Caller", "Blood Hedgehog", "Blood Kiwi"},
-    Multi = true,
-    Default = {},
-})
-
--- Update selected seeds when changed
-MultiDropdown:OnChanged(function(Value)
-    selectedEvents = {}
-    for EventName, IsSelected in pairs(Value) do
-        if IsSelected then
-            table.insert(selectedEvents, EventName)
-        end
+    Callback = function()
+        local args = {
+            "SetRecipe",
+            workspace:WaitForChild("UpdateService"):WaitForChild("BeanstalkEvent"):WaitForChild("Model"):WaitForChild("GiantCraftingWorkBench"),
+            "GiantBeanstalkEventWorkbench",
+            "Pet Shard GiantBean"
+        }
+        game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("CraftingGlobalObjectService"):FireServer(unpack(args))
     end
-end)
+}
 
-local Toggle5 = Tabs.Main:CreateToggle("MyToggle", {Title = "Auto buy", Default = false})
-
-Toggle5:OnChanged(function()
-    if not Toggle5Interacted then
-        Toggle5Interacted = true
-        return
+Tabs.Main:CreateButton{
+    Title = "unselect craft bean shard",
+    Description = "",
+    Callback = function()
+        local args = {
+            "Cancel",
+            workspace:WaitForChild("UpdateService"):WaitForChild("BeanstalkEvent"):WaitForChild("Model"):WaitForChild("GiantCraftingWorkBench"),
+            "GiantBeanstalkEventWorkbench"
+        }
+        game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("CraftingGlobalObjectService"):FireServer(unpack(args))
     end
+}
 
-    BuyEventEnabled = not BuyEventEnabled
-
-    if BuyEventEnabled then
-        task.spawn(function()
-            while BuyEventEnabled do
-                for _, event in ipairs(selectedEvents) do
-                    local args = {event}
-                    game:GetService("ReplicatedStorage").GameEvents.BuyEventShopStock:FireServer(unpack(args))
-                    task.wait(0.1)
-                end
-            end
-        end)
-    end
-end)
-
-local Toggle3 = Tabs.Main:CreateToggle("MyToggle", {Title = "Auto Sumbit Moonlit-Bloodlit Plant", Default = false})
-
-Toggle3:OnChanged(function()
-    if not Toggle3Interacted then
-        Toggle3Interacted = true
-        return
-    end
-
-    AutoSumbitEnabled = not AutoSumbitEnabled
-
-    if AutoSumbitEnabled then
-        task.spawn(function()
-            while AutoSumbitEnabled do
-                local args = {
-                    [1] = "SubmitAllPlants"
+Tabs.Main:CreateButton{
+    Title = "input material",
+    Description = "",
+    Callback = function()
+        local args = {
+            "InputItem",
+            workspace:WaitForChild("UpdateService"):WaitForChild("BeanstalkEvent"):WaitForChild("Model"):WaitForChild("GiantCraftingWorkBench"),
+            "GiantBeanstalkEventWorkbench",
+            1,
+            {
+                ItemType = "Holdable",
+                ItemData = {
+                    UUID = "0"
                 }
-
-                game:GetService("ReplicatedStorage").GameEvents.NightQuestRemoteEvent:FireServer(unpack(args))
-                task.wait(0.1)
-            end
-        end)
-    end
-end)
-
-local Tabs = {
-    Main = Window:CreateTab{
-        Title = "Tab Place",
-        Icon = "nil"
-    }
-}
-
-Tabs.Main:CreateButton{
-    Title = "Seed",
-    Description = "",
-    Callback = function()
-        -- Teleport Script
-        local tpPosition = Vector3.new(61.585472106933594, 2.999999761581421, -27.00398063659668)
-
-        local player = game.Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-
-        -- Teleport
-        humanoidRootPart.CFrame = CFrame.new(tpPosition)
+            }
+        }
+        game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("CraftingGlobalObjectService"):FireServer(unpack(args))
     end
 }
-
-Tabs.Main:CreateButton{
-    Title = "Sell",
-    Description = "",
-    Callback = function()
-        -- Teleport Script
-        local tpPosition = Vector3.new(61.58181381225586, 2.999999761581421, 0.4267866313457489)
-
-        local player = game.Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-
-        -- Teleport
-        humanoidRootPart.CFrame = CFrame.new(tpPosition)
-    end
-}
-
-Tabs.Main:CreateButton{
-    Title = "Gear",
-    Description = "",
-    Callback = function()
-        -- Teleport Script
-        local tpPosition = Vector3.new(-261.4085693359375, 2.999999761581421, -31.108388900756836)
-
-        local player = game.Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-
-        -- Teleport
-        humanoidRootPart.CFrame = CFrame.new(tpPosition)
-    end
-}
-
-Tabs.Main:CreateButton{
-    Title = "Animal",
-    Description = "",
-    Callback = function()
-        -- Teleport Script
-        local tpPosition = Vector3.new(-258.21160888671875, 2.999999761581421, -2.736046314239502)
-
-        local player = game.Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-
-        -- Teleport
-        humanoidRootPart.CFrame = CFrame.new(tpPosition)
-    end
-}
-
-Tabs.Main:CreateButton{
-    Title = "Hungry plant",
-    Description = "",
-    Callback = function()
-        -- Teleport Script
-        local tpPosition = Vector3.new(-99.64273071289062, 4.00001335144043, -8.707715034484863)
-
-        local player = game.Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-
-        -- Teleport
-        humanoidRootPart.CFrame = CFrame.new(tpPosition)
-    end
-}
-
-local Tabs = {
-    Main = Window:CreateTab{
-        Title = "Tab Server",
-        Icon = "nil"
-    }
-}
-
--- Variables to store input values
-local gameid = ""
-local jobid = ""
-
-Tabs.Main:CreateButton{
-    Title = "Copy gameid",
-    Description = "",
-    Callback = function()
-        local clipboardFunc = setclipboard or toclipboard
-        if clipboardFunc then
-            clipboardFunc(tostring(game.PlaceId))
-            print("Copied Game ID:", game.PlaceId)
-        else
-            warn("Clipboard not supported on this executor.")
-        end
-    end
-}
-
-Tabs.Main:CreateButton{
-    Title = "Copy jobid",
-    Description = "",
-    Callback = function()
-        local clipboardFunc = setclipboard or toclipboard
-        if clipboardFunc then
-            clipboardFunc(tostring(game.JobId))
-            print("Copied Job ID:", game.JobId)
-        else
-            warn("Clipboard not supported on this executor.")
-        end
-    end
-}
-
-local Input = Tabs.Main:CreateInput("Input", {
-    Title = "GameId",
-    Default = "",
-    Placeholder = "",
-    Numeric = false, -- Only allows numbers
-    Finished = false,
-    Callback = function(Value)
-        gameid = Value
-        print("Game ID set to:", gameid)
-    end
-})
-
-local Input = Tabs.Main:CreateInput("Input", {
-    Title = "JobId",
-    Default = "",
-    Placeholder = "",
-    Numeric = false, -- Only allows numbers
-    Finished = false,
-    Callback = function(Value)
-        jobid = Value
-        print("Job ID set to:", jobid)
-    end
-})
-
-Tabs.Main:CreateButton{
-    Title = "Join Server",
-    Description = "",
-    Callback = function()
-        local TeleportService = game:GetService("TeleportService")
-        local placeId = tonumber(gameid)
-        local instanceId = tostring(jobid)
-
-        while true do
-            if placeId and instanceId ~= "" then
-                TeleportService:TeleportToPlaceInstance(placeId, instanceId, game.Players.LocalPlayer)
-            else
-                warn("Invalid Game ID or Job ID.")
-            end
-            wait(0.5) -- retry delay
-        end
-    end
-}
-
-local Tabs = {
-    Main = Window:CreateTab{
-        Title = "Tab Graphic",
-        Icon = "nil"
-    }
-}
-
-Tabs.Main:CreateButton{
-    Title = "Realistic Graphic",
-    Description = "",
-    Callback = function()
-        local Lighting = game:GetService("Lighting")
-
-        -- Set Lighting properties
-        Lighting.Ambient = Color3.fromRGB(50, 45, 50)
-        Lighting.Brightness = 8
-        Lighting.ColorShift_Bottom = Color3.fromRGB(255, 255, 255)
-        Lighting.ColorShift_Top = Color3.fromRGB(255, 255, 255)
-        Lighting.EnvironmentDiffuseScale = 1
-        Lighting.EnvironmentSpecularScale = 1
-        Lighting.GlobalShadows = true
-        Lighting.OutdoorAmbient = Color3.fromRGB(125, 125, 125)
-        Lighting.ShadowSoftness = 0.25
-        Lighting.Technology = Enum.Technology.Future
-        Lighting.ClockTime = 6.4
-        Lighting.GeographicLatitude = 3.141
-        Lighting.TimeOfDay = "06:24:00"
-        Lighting.ExposureCompensation = -0.5
-        Lighting.FogColor = Color3.fromRGB(192, 192, 192)
-        Lighting.FogStart = 0
-        Lighting.FogEnd = 100000
-
-        -- Delete existing Sky objects
-        for _, v in pairs(Lighting:GetChildren()) do
-            if v:IsA("Sky") then
-                v:Destroy()
-            end
-        end
-
-        -- Modify existing Atmosphere
-        local atmosphere = Lighting:FindFirstChildOfClass("Atmosphere")
-        if atmosphere then
-            atmosphere.Density = 0.3
-            atmosphere.Offset = 0
-            atmosphere.Color = Color3.fromRGB(255, 255, 255)
-            atmosphere.Decay = Color3.fromRGB(16, 22, 25)
-            atmosphere.Glare = 0.1
-            atmosphere.Haze = 2
-        end
-
-        -- Modify existing BloomEffect
-        local bloom = Lighting:FindFirstChildOfClass("BloomEffect")
-        if bloom then
-            bloom.Intensity = 2.5
-            bloom.Size = 25
-            bloom.Threshold = 2
-        end
-
-        -- Modify existing ColorCorrectionEffect
-        local colorCorrection = Lighting:FindFirstChildOfClass("ColorCorrectionEffect")
-        if colorCorrection then
-            colorCorrection.Brightness = -0.025
-            colorCorrection.Contrast = 0
-            colorCorrection.Saturation = -0.1
-            colorCorrection.TintColor = Color3.fromRGB(255, 255, 255)
-        end
-
-        -- Modify existing DepthOfFieldEffect
-        local depthOfField = Lighting:FindFirstChildOfClass("DepthOfFieldEffect")
-        if depthOfField then
-            depthOfField.FarIntensity = 0.219
-            depthOfField.FocusDistance = 51.6
-            depthOfField.InFocusRadius = 50
-            depthOfField.NearIntensity = 1
-        end
-
-        -- Modify existing SunRaysEffect
-        local sunRays = Lighting:FindFirstChildOfClass("SunRaysEffect")
-        if sunRays then
-            sunRays.Intensity = 0.1
-            sunRays.Spread = 0.1
-        end
-    end
-}
-
-local screenGui = Instance.new("ScreenGui")
-screenGui.ResetOnSpawn = false  -- Prevent the UI from resetting on spawn
-screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-
--- Create ImageButton
-local imageButton = Instance.new("ImageButton")
-imageButton.Parent = screenGui
-imageButton.Size = UDim2.new(0, 50, 0, 50)  -- Set size of the button
-imageButton.Position = UDim2.new(0, 10, 0, 70)  -- Move the button down 50 pixels
-imageButton.Image = "rbxassetid://128243454668365"  -- Set image using the asset ID
-
--- Set the button's background transparency to 100% (invisible)
-imageButton.BackgroundTransparency = 1
-
--- Create UICorner for rounding the button's corners
-local uiCorner = Instance.new("UICorner")
-uiCorner.CornerRadius = UDim.new(1, 0)  -- Full circle if the button is square
-uiCorner.Parent = imageButton
-
--- When the button is clicked
-imageButton.MouseButton1Click:Connect(function()
-    keypress(Enum.KeyCode.LeftControl)
-    task.wait(0.1) -- short delay to mimic natural keypress
-    keyrelease(Enum.KeyCode.LeftControl)
-end)
-
-require(game.ReplicatedStorage.Modules.Notification):CreateNotification("<font color=\"#ADD8E6\"><b>Banana Loaded!</b></font>")
