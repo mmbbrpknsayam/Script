@@ -1,8 +1,8 @@
 local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOogway/Fluent-Renewed/releases/latest/download/Fluent.luau"))()
 
 local Window = Library:CreateWindow{
-    Title = `MyLoader`,
-    SubTitle = "MyLoader",
+    Title = `setting`,
+    SubTitle = "",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
     Resize = true, -- Resize this ^ Size according to a 1920x1080 screen, good for mobile users but may look weird on some devices
@@ -14,22 +14,7 @@ local Window = Library:CreateWindow{
 
 local Tabs = {
     Main = Window:CreateTab{
-        Title = "News",
-        Icon = "nil"
-    }
-}
-
-local Paragraph = Tabs.Main:CreateParagraph("Paragraph", {
-    Title = "Change logs!",
-    Content = [[
-Update!
-[+] no longer need key
-]]
-})
-
-local Tabs = {
-    Main = Window:CreateTab{
-        Title = "Server",
+        Title = "Server hop",
         Icon = "nil"
     }
 }
