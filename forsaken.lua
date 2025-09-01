@@ -1,7 +1,7 @@
 local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOogway/Fluent-Renewed/releases/latest/download/Fluent.luau"))()
 
 local Window = Library:CreateWindow{
-    Title = `forsaken [ beta fake ]`,
+    Title = `forsaken`,
     SubTitle = "v1",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
@@ -302,7 +302,7 @@ Toggle3:OnChanged(function()
     end
 end)
 
-local Toggle4 = Tabs.Main:CreateToggle("MyToggle", {Title = "ESP", Default = false})
+local Toggle4 = Tabs.Main:CreateToggle("MyToggle", {Title = "esp item", Default = false})
 
 local espVisuals = {}
 local espConnections = {}
