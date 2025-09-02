@@ -208,53 +208,6 @@ Toggle2:OnChanged(function()
     end
 end)
 
-local Toggle2 = Tabs.Main:CreateToggle("MyToggle", {Title = "esp survivor", Default = false})
-
-Toggle2:OnChanged(function()
-    if not Toggle2Interacted then
-        Toggle2Interacted = true
-        return
-    end
-
-    espSurvivor = not espSurvivor
-
-    local SurvivorFolder = workspace.Players.Survivors
-
-    local function createHighlight(model)
-        local highlight = Instance.new("Highlight")
-        highlight.Name = "CustomHighlight"
-        highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-        highlight.FillColor = Color3.fromRGB(255, 191, 0)
-        highlight.FillTransparency = 0.5
-        highlight.OutlineColor = Color3.fromRGB(255, 191, 0)
-        highlight.OutlineTransparency = 0
-        highlight.Parent = model
-    end
-
-    if espSurvivor then
-
-        for _, model in ipairs(SurvivorFolder:GetChildren()) do
-            if model:IsA("Model") then
-                createHighlight(model)
-            end
-        end
-
-        SurvivorFolder.ChildAdded:Connect(function(child)
-            if child:IsA("Model") then
-                createHighlight(child)
-            end
-        end)
-    else
-
-        for _, model in ipairs(SurvivorFolder:GetChildren()) do
-            local hl = model:FindFirstChild("CustomHighlight")
-            if hl then
-                hl:Destroy()
-            end
-        end
-    end
-end)
-
 local Toggle3 = Tabs.Main:CreateToggle("MyToggle", {Title = "esp killer", Default = false})
 
 Toggle3:OnChanged(function()
@@ -302,13 +255,15 @@ Toggle3:OnChanged(function()
     end
 end)
 
-local Toggle4 = Tabs.Main:CreateToggle("MyToggle", {Title = "esp item", Default = false})
+local Toggle4 = Tabs.Main:CreateToggle("MyToggle", {Title = "esp itam", Default = false})
 
 local espVisuals = {}
 local espConnections = {}
-
 local selectedItem = {"BloxyCola", "Medkit"}
+local espEnabled = false
+local Toggle4Interacted = false
 
+-- Clear all ESP
 local function removeAllESP()
     for _, v in pairs(espVisuals) do
         if v and v.Parent then
@@ -326,21 +281,30 @@ local function removeAllESP()
 
     local itemsFolder = workspace:WaitForChild("Map"):WaitForChild("Ingame"):WaitForChild("Map")
     if itemsFolder then
-        for _, model in pairs(itemsFolder:GetChildren()) do
-            for _, obj in pairs(model:GetChildren()) do
-                if obj:IsA("BillboardGui") or obj:IsA("Highlight") then
-                    obj:Destroy()
-                end
+        for _, model in pairs(itemsFolder:GetDescendants()) do
+            if model:IsA("BillboardGui") or model:IsA("Highlight") then
+                model:Destroy()
             end
         end
     end
 end
 
+-- Create ESP for a model
 local function highlightModel(model)
     if not model:IsA("Model") then return end
 
     for _, item in ipairs(selectedItem) do
         if model.Name == item and not model:FindFirstChildOfClass("Highlight") then
+            -- Ensure PrimaryPart exists
+            if not model.PrimaryPart then
+                local primary = model:FindFirstChildWhichIsA("BasePart")
+                if primary then
+                    model.PrimaryPart = primary
+                else
+                    return -- can't track if no part
+                end
+            end
+
             local highlight = Instance.new("Highlight")
             highlight.Parent = model
             highlight.Adornee = model
@@ -351,7 +315,7 @@ local function highlightModel(model)
 
             local billboardGui = Instance.new("BillboardGui")
             billboardGui.Parent = model
-            billboardGui.Adornee = model
+            billboardGui.Adornee = model.PrimaryPart
             billboardGui.Size = UDim2.new(0, 200, 0, 30)
             billboardGui.StudsOffset = Vector3.new(0, 3, 0)
             billboardGui.AlwaysOnTop = true
@@ -361,7 +325,7 @@ local function highlightModel(model)
             textLabel.Size = UDim2.new(1, 0, 1, 0)
             textLabel.BackgroundTransparency = 1
             textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-            textLabel.TextSize = 8
+            textLabel.TextSize = 12
             textLabel.Text = string.format("%s (--)", model.Name)
 
             table.insert(espVisuals, highlight)
@@ -385,6 +349,25 @@ local function highlightModel(model)
     end
 end
 
+-- Recursively connect to new children
+local function trackFolder(folder)
+    for _, child in pairs(folder:GetChildren()) do
+        highlightModel(child)
+        if child:IsA("Folder") or child:IsA("Model") then
+            trackFolder(child)
+        end
+    end
+
+    local conn = folder.ChildAdded:Connect(function(newChild)
+        highlightModel(newChild)
+        if newChild:IsA("Folder") or newChild:IsA("Model") then
+            trackFolder(newChild)
+        end
+    end)
+    table.insert(espConnections, conn)
+end
+
+-- Toggle
 Toggle4:OnChanged(function()
     if not Toggle4Interacted then
         Toggle4Interacted = true
@@ -396,16 +379,7 @@ Toggle4:OnChanged(function()
     local itemsFolder = workspace:WaitForChild("Map"):WaitForChild("Ingame"):WaitForChild("Map")
 
     if espEnabled then
-        for _, model in pairs(itemsFolder:GetChildren()) do
-            highlightModel(model)
-        end
-
-        local conn = itemsFolder.ChildAdded:Connect(function(newModel)
-            if espEnabled then
-                highlightModel(newModel)
-            end
-        end)
-        table.insert(espConnections, conn)
+        trackFolder(itemsFolder)
     else
         removeAllESP()
     end
