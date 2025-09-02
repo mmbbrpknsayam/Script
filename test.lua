@@ -19,26 +19,69 @@ local Tabs = {
     }
 }
 
-Tabs.Main:CreateButton({
-    Title = "auto generators",
-    Description = "",
-    Callback = function()
-        task.spawn(function()
-            while true do
-                local generatorFolder = workspace:WaitForChild("Map"):WaitForChild("Ingame"):WaitForChild("Map")
-                for _, gen in ipairs(generatorFolder:GetChildren()) do
-                    local remotes = gen:FindFirstChild("Remotes")
-                    if remotes then
-                        local re = remotes:FindFirstChild("RE")
-                        if re and re:IsA("RemoteEvent") then
-                            pcall(function()
-                                re:FireServer()
-                            end)
-                        end
-                    end
-                end
-                task.wait(1)
+local Toggle3 = Tabs.Main:CreateToggle("MyToggle", {Title = "esp killer", Default = false})
+
+Toggle3:OnChanged(function()
+    if not Toggle3Interacted then
+        Toggle3Interacted = true
+        return
+    end
+
+    espGenerator = not espGenerator
+
+    local Generatorlol = workspace.Map.Ingame.Map
+
+    local function updateHighlight(model, highlight)
+        local numVal = model:FindFirstChildWhichIsA("NumberValue")
+        if numVal then
+            if numVal.Value < 100 then
+                highlight.FillColor = Color3.fromRGB(0, 0, 255) -- Blue
+                highlight.OutlineColor = Color3.fromRGB(0, 0, 127)
+            elseif numVal.Value >= 100 then
+                highlight.FillColor = Color3.fromRGB(0, 255, 0) -- Green
+                highlight.OutlineColor = Color3.fromRGB(0, 170, 0)
+            end
+        end
+    end
+
+    local function createHighlight(model)
+        local highlight = Instance.new("Highlight")
+        highlight.Name = "CustomHighlight"
+        highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+        highlight.FillTransparency = 0.5
+        highlight.OutlineTransparency = 0
+        highlight.Parent = model
+
+        -- Update immediately
+        updateHighlight(model, highlight)
+
+        -- Keep updating when NumberValue changes
+        local numVal = model:FindFirstChildWhichIsA("NumberValue")
+        if numVal then
+            numVal:GetPropertyChangedSignal("Value"):Connect(function()
+                updateHighlight(model, highlight)
+            end)
+        end
+    end
+
+    if espGenerator then
+        for _, model in ipairs(Generatorlol:GetChildren()) do
+            if model:IsA("Model") then
+                createHighlight(model)
+            end
+        end
+
+        Generatorlol.ChildAdded:Connect(function(child)
+            if child:IsA("Model") then
+                createHighlight(child)
             end
         end)
+    else
+        for _, model in ipairs(Generatorlol:GetChildren()) do
+            local hl = model:FindFirstChild("CustomHighlight")
+            if hl then
+                hl:Destroy()
+            end
+        end
     end
-})
+end)
