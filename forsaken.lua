@@ -2,7 +2,7 @@ local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOog
 
 local Window = Library:CreateWindow{
     Title = `forsaken`,
-    SubTitle = "v1",
+    SubTitle = "v2",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
     Resize = true,
@@ -130,6 +130,103 @@ Tabs.Main:CreateButton{
     end
 }
 
+local Toggle2 = Tabs.Main:CreateToggle("MyToggle", {Title = "esp generator", Default = false})
+
+Toggle2:OnChanged(function()
+    if not Toggle2Interacted then
+        Toggle2Interacted = true
+        return
+    end
+
+    espGenerator = not espGenerator
+    local connections = {}
+
+    local function updateHighlight(generator, highlight)
+        local numVal = generator:FindFirstChildWhichIsA("NumberValue")
+        if numVal then
+            if numVal.Value < 100 then
+                highlight.FillColor = Color3.fromRGB(0, 0, 255) -- Blue
+                highlight.OutlineColor = Color3.fromRGB(0, 0, 127)
+            else
+                highlight.FillColor = Color3.fromRGB(0, 255, 0) -- Green
+                highlight.OutlineColor = Color3.fromRGB(0, 170, 0)
+            end
+        end
+    end
+
+    local function createHighlight(generator)
+        if generator:FindFirstChild("CustomHighlight") then return end
+        if not generator:IsA("Model") then return end
+        if generator.Name ~= "Generator" then return end
+
+        local highlight = Instance.new("Highlight")
+        highlight.Name = "CustomHighlight"
+        highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+        highlight.FillTransparency = 0.5
+        highlight.OutlineTransparency = 0
+        highlight.Parent = generator
+
+        updateHighlight(generator, highlight)
+
+        local numVal = generator:FindFirstChildWhichIsA("NumberValue")
+        if numVal then
+            table.insert(connections, numVal:GetPropertyChangedSignal("Value"):Connect(function()
+                updateHighlight(generator, highlight)
+            end))
+        end
+    end
+
+    local function applyToMap(map)
+        -- Apply to all current generators
+        for _, obj in ipairs(map:GetChildren()) do
+            if obj.Name == "Generator" then
+                createHighlight(obj)
+            end
+        end
+
+        -- Listen for new generators in this map
+        table.insert(connections, map.ChildAdded:Connect(function(child)
+            if child.Name == "Generator" then
+                createHighlight(child)
+            end
+        end))
+    end
+
+    if espGenerator then
+        -- Hook into current + future maps
+        local function hookMap(map)
+            if map.Name == "Map" then
+                applyToMap(map)
+            end
+        end
+
+        local ingame = workspace:WaitForChild("Map"):WaitForChild("Ingame")
+        for _, child in ipairs(ingame:GetChildren()) do
+            hookMap(child)
+        end
+
+        table.insert(connections, ingame.ChildAdded:Connect(hookMap))
+    else
+        -- Cleanup all highlights + disconnect signals
+        for _, c in ipairs(connections) do
+            c:Disconnect()
+        end
+        table.clear(connections)
+
+        local currentMap = workspace:FindFirstChild("Map") and workspace.Map.Ingame:FindFirstChild("Map")
+        if currentMap then
+            for _, obj in ipairs(currentMap:GetChildren()) do
+                if obj.Name == "Generator" then
+                    local hl = obj:FindFirstChild("CustomHighlight")
+                    if hl then
+                        hl:Destroy()
+                    end
+                end
+            end
+        end
+    end
+end)
+
 local Tabs = {
     Main = Window:CreateTab{
         Title = "in-dev",
@@ -161,11 +258,11 @@ Tabs.Main:CreateButton{
     end
 }
 
-local Toggle2 = Tabs.Main:CreateToggle("MyToggle", {Title = "esp survivor", Default = false})
+local Toggle3 = Tabs.Main:CreateToggle("MyToggle", {Title = "esp survivor", Default = false})
 
-Toggle2:OnChanged(function()
-    if not Toggle2Interacted then
-        Toggle2Interacted = true
+Toggle3:OnChanged(function()
+    if not Toggle3Interacted then
+        Toggle3Interacted = true
         return
     end
 
@@ -208,11 +305,11 @@ Toggle2:OnChanged(function()
     end
 end)
 
-local Toggle3 = Tabs.Main:CreateToggle("MyToggle", {Title = "esp killer", Default = false})
+local Toggle4 = Tabs.Main:CreateToggle("MyToggle", {Title = "esp killer", Default = false})
 
-Toggle3:OnChanged(function()
-    if not Toggle3Interacted then
-        Toggle3Interacted = true
+Toggle4:OnChanged(function()
+    if not Toggle4Interacted then
+        Toggle4Interacted = true
         return
     end
 
@@ -255,7 +352,7 @@ Toggle3:OnChanged(function()
     end
 end)
 
-local Toggle4 = Tabs.Main:CreateToggle("MyToggle", {Title = "esp itam", Default = false})
+local Toggle5 = Tabs.Main:CreateToggle("MyToggle", {Title = "esp itam", Default = false})
 
 local espVisuals = {}
 local espConnections = {}
@@ -368,9 +465,9 @@ local function trackFolder(folder)
 end
 
 -- Toggle
-Toggle4:OnChanged(function()
-    if not Toggle4Interacted then
-        Toggle4Interacted = true
+Toggle5:OnChanged(function()
+    if not Toggle5Interacted then
+        Toggle5Interacted = true
         return
     end
 
