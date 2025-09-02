@@ -19,3 +19,26 @@ local Tabs = {
     }
 }
 
+Tabs.Main:CreateButton({
+    Title = "auto generators",
+    Description = "",
+    Callback = function()
+        task.spawn(function()
+            while true do
+                local openFolder = workspace:WaitForChild("Map"):WaitForChild("Ingame"):WaitForChild("Map")
+                for _, open in ipairs(generatorFolder:GetChildren()) do
+                    local invo = open:FindFirstChild("Remotes")
+                    if invo then
+                        local re = remotes:FindFirstChild("RE")
+                        if re and re:IsA("RemoteEvent") then
+                            pcall(function()
+                                re:FireServer()
+                            end)
+                        end
+                    end
+                end
+                task.wait(4)
+            end
+        end)
+    end
+})
