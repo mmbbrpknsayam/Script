@@ -30,9 +30,9 @@ Tabs.Main:CreateButton({
                     local invo = open:FindFirstChild("Remotes")
                     if invo then
                         local rf = remotes:FindFirstChild("RF")
-                        if rf and rf:IsA("RemoteFuction") then
+                        if rf and rf:IsA("RemoteFunction") then
                             pcall(function()
-                                rf:InvokeServer()
+                                rf:InvokeServer("Enter")
                             end)
                         end
                     end
