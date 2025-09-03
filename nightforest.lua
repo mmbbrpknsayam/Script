@@ -5,11 +5,11 @@ local Window = Library:CreateWindow{
     SubTitle = "",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
-    Resize = true, -- Resize this ^ Size according to a 1920x1080 screen, good for mobile users but may look weird on some devices
+    Resize = true,
     MinSize = Vector2.new(470, 380),
-    Acrylic = true, -- The blur may be detectable, setting this to false disables blur entirely
+    Acrylic = true,
     Theme = "Dark",
-    MinimizeKey = Enum.KeyCode.LeftControl -- Used when theres no MinimizeKeybind
+    MinimizeKey = Enum.KeyCode.LeftControl
 }
 
 local Tabs = {
@@ -87,9 +87,8 @@ end)
 
 local Toggle1 = Tabs.Main:CreateToggle("MyToggle", {Title = "esp", Default = false})
 
--- Full cleanup function
 local function removeAllESP()
-    -- Destroy everything we tracked
+
     for _, v in pairs(espVisuals) do
         if v and v.Parent then
             v:Destroy()
@@ -97,7 +96,6 @@ local function removeAllESP()
     end
     espVisuals = {}
 
-    -- Disconnect all events
     for _, conn in pairs(espConnections) do
         if conn.Connected then
             conn:Disconnect()
@@ -105,7 +103,6 @@ local function removeAllESP()
     end
     espConnections = {}
 
-    -- Safety wipe: remove ANY leftover ESP objects from items
     local itemsFolder = workspace:FindFirstChild("Items")
     if itemsFolder then
         for _, model in pairs(itemsFolder:GetChildren()) do
@@ -198,7 +195,6 @@ local inventory = player:WaitForChild("Inventory")
 local itemsFolder = workspace:WaitForChild("Items")
 local remote = game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("RequestBagStoreItem")
 
--- Dropdown setup
 local selectedItems = {}
 
 local MultiDropdown = Tabs.Main:CreateDropdown("StoreDropdown", {
@@ -277,7 +273,7 @@ Toggle1:OnChanged(function()
                     end
                 end
 
-                task.wait(0.05) -- fast repeat
+                task.wait(0.05)
             end
         end)
     end
@@ -288,7 +284,6 @@ local Inventory = player:WaitForChild("Inventory")
 local charactersFolder = workspace:WaitForChild("Characters")
 local remote = game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("ToolDamageObject")
 
--- Selected mobs
 local selectedMobs = {}
 
 local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
@@ -324,7 +319,6 @@ Toggle3:OnChanged(function()
                 local char = player.Character
                 local root = char and char:FindFirstChild("HumanoidRootPart")
 
-                -- find best axe
                 local axe = Inventory:FindFirstChild("Old Axe")
                         or Inventory:FindFirstChild("Good Axe")
                         or Inventory:FindFirstChild("Spear")
@@ -334,7 +328,7 @@ Toggle3:OnChanged(function()
                         if inst:IsA("Model") and table.find(selectedMobs, inst.Name) then
                             local mobRoot = inst:FindFirstChild("HumanoidRootPart")
                             if mobRoot then
-                                -- instantly hit this mob, no waiting for it to die
+
                                 pcall(function()
                                     remote:InvokeServer(inst, axe, "11_7500899975", root.CFrame)
                                 end)
@@ -343,7 +337,7 @@ Toggle3:OnChanged(function()
                     end
                 end
 
-                task.wait(0.3) -- attack speed
+                task.wait(0.3)
             end
         end)
     end
