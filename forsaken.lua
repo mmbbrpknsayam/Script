@@ -145,10 +145,10 @@ Toggle2:OnChanged(function()
         local numVal = generator:FindFirstChildWhichIsA("NumberValue")
         if numVal then
             if numVal.Value < 100 then
-                highlight.FillColor = Color3.fromRGB(0, 0, 255) -- Blue
+                highlight.FillColor = Color3.fromRGB(0, 0, 255)
                 highlight.OutlineColor = Color3.fromRGB(0, 0, 127)
             else
-                highlight.FillColor = Color3.fromRGB(0, 255, 0) -- Green
+                highlight.FillColor = Color3.fromRGB(0, 255, 0)
                 highlight.OutlineColor = Color3.fromRGB(0, 170, 0)
             end
         end
@@ -193,7 +193,7 @@ Toggle2:OnChanged(function()
     end
 
     if espGenerator then
-        -- Hook into current + future maps
+
         local function hookMap(map)
             if map.Name == "Map" then
                 applyToMap(map)
@@ -207,7 +207,7 @@ Toggle2:OnChanged(function()
 
         table.insert(connections, ingame.ChildAdded:Connect(hookMap))
     else
-        -- Cleanup all highlights + disconnect signals
+
         for _, c in ipairs(connections) do
             c:Disconnect()
         end
@@ -446,7 +446,6 @@ local function highlightModel(model)
     end
 end
 
--- Recursively connect to new children
 local function trackFolder(folder)
     for _, child in pairs(folder:GetChildren()) do
         highlightModel(child)
@@ -464,7 +463,6 @@ local function trackFolder(folder)
     table.insert(espConnections, conn)
 end
 
--- Toggle
 Toggle5:OnChanged(function()
     if not Toggle5Interacted then
         Toggle5Interacted = true
