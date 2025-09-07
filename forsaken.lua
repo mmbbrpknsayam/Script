@@ -166,21 +166,6 @@ Tabs.Main:CreateButton({
     end
 })
 
-local staminaa = require(game.ReplicatedStorage.Systems.Character.Game.Sprinting)
-
-local Slider = Tabs.Main:CreateSlider("Slider", {
-    Title = "stamina bar",
-    Description = "",
-    Default = 100,
-    Min = 100,
-    Max = 10000,
-    Rounding = 1,
-    Callback = function(Value)
-        staminaa.MaxStamina = Value
-        staminaa.Stamina = Value
-    end
-})
-
 Tabs.Main:CreateButton{
     Title = "1k stamina",
     Description = "",
