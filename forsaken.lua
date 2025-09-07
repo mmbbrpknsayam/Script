@@ -2,7 +2,7 @@ local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOog
 
 local Window = Library:CreateWindow{
     Title = `forsaken`,
-    SubTitle = "v2",
+    SubTitle = "",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
     Resize = true,
@@ -120,7 +120,7 @@ Tabs.Main:CreateButton({
                         stopAutoRepair()
                         break
                     end
-                    task.wait(3) -- wait 3s before firing
+                    task.wait(3.5) -- wait 3s before firing
                     if repairing and progress.Value < 100 then
                         pcall(function()
                             re:FireServer()
