@@ -120,7 +120,7 @@ Tabs.Main:CreateButton({
                         stopAutoRepair()
                         break
                     end
-                    task.wait(0.5) -- wait 3s before firing
+                    task.wait(3.5) -- wait 3s before firing
                     if repairing and progress.Value < 100 then
                         pcall(function()
                             re:FireServer()
