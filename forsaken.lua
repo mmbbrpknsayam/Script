@@ -172,8 +172,7 @@ Tabs.Main:CreateButton{
     Callback = function()
         local staminaModule = require(game.ReplicatedStorage.Systems.Character.Game.Sprinting)
 
-        staminaModule.MaxStamina = 1000
-        staminaModule.Stamina = 1000
+        staminaModule.DefaultConfig.MaxStamina = 1000
     end
 }
 
