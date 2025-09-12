@@ -1,7 +1,7 @@
 local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOogway/Fluent-Renewed/releases/latest/download/Fluent.luau"))()
 
 local Window = Library:CreateWindow{
-    Title = `vulkan`,
+    Title = `vulkanVK`,
     SubTitle = "",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
@@ -75,7 +75,6 @@ Tabs.Main:CreateButton({
     Title = "auto generators",
     Description = "",
     Callback = function()
-
         local repairing = false
         local currentGen = nil
         local repairThread = nil
@@ -155,24 +154,35 @@ Tabs.Main:CreateButton({
             end
         end
 
-        local function setupMap(map)
-            local generatorFolder = map:WaitForChild("Ingame"):WaitForChild("Map")
-            for _, g in ipairs(generatorFolder:GetChildren()) do
+        -- 🔥 Function that sets up generators whenever map is loaded
+        local function setupMap()
+            -- Clear old connections
+            for _, conn in ipairs(genConnections) do
+                pcall(function() conn:Disconnect() end)
+            end
+            genConnections = {}
+
+            local map = workspace:WaitForChild("Map"):WaitForChild("Ingame"):WaitForChild("Map")
+            for _, g in ipairs(map:GetChildren()) do
                 pcall(setupGenerator, g)
             end
 
-            generatorFolder.ChildAdded:Connect(function(child)
+            map.ChildAdded:Connect(function(child)
                 pcall(setupGenerator, child)
             end)
         end
 
-        local mapFolder = workspace:WaitForChild("Map")
-        setupMap(mapFolder)
+        -- Initial setup
+        setupMap()
 
-        mapFolder.ChildAdded:Connect(function(child)
-            if child.Name == "Ingame" or child.Name == "Map" then
-                task.wait(1) -- give it time to load
-                pcall(setupMap, mapFolder)
+        -- 🔥 Detect when map resets each round
+        workspace.Map.Ingame.ChildRemoved:Connect(function(child)
+            if child.Name == "Map" then
+                -- Wait for new map
+                task.spawn(function()
+                    local newMap = workspace.Map.Ingame:WaitForChild("Map")
+                    setupMap()
+                end)
             end
         end)
     end
