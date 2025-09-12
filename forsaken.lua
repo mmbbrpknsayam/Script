@@ -1,7 +1,7 @@
 local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOogway/Fluent-Renewed/releases/latest/download/Fluent.luau"))()
 
 local Window = Library:CreateWindow{
-    Title = `forsaken`,
+    Title = `vulkan`,
     SubTitle = "",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
@@ -75,7 +75,7 @@ Tabs.Main:CreateButton({
     Title = "auto generators",
     Description = "",
     Callback = function()
-        -- Auto Generator Repair (clean version)
+
         local repairing = false
         local currentGen = nil
         local repairThread = nil
@@ -120,7 +120,7 @@ Tabs.Main:CreateButton({
                         stopAutoRepair()
                         break
                     end
-                    task.wait(3.5) -- wait 3s before firing
+                    task.wait(3.5)
                     if repairing and progress.Value < 100 then
                         pcall(function()
                             re:FireServer()
@@ -155,13 +155,25 @@ Tabs.Main:CreateButton({
             end
         end
 
-        local generatorFolder = workspace:WaitForChild("Map"):WaitForChild("Ingame"):WaitForChild("Map")
-        for _, g in ipairs(generatorFolder:GetChildren()) do
-            pcall(setupGenerator, g)
+        local function setupMap(map)
+            local generatorFolder = map:WaitForChild("Ingame"):WaitForChild("Map")
+            for _, g in ipairs(generatorFolder:GetChildren()) do
+                pcall(setupGenerator, g)
+            end
+
+            generatorFolder.ChildAdded:Connect(function(child)
+                pcall(setupGenerator, child)
+            end)
         end
 
-        generatorFolder.ChildAdded:Connect(function(child)
-            pcall(setupGenerator, child)
+        local mapFolder = workspace:WaitForChild("Map")
+        setupMap(mapFolder)
+
+        mapFolder.ChildAdded:Connect(function(child)
+            if child.Name == "Ingame" or child.Name == "Map" then
+                task.wait(1) -- give it time to load
+                pcall(setupMap, mapFolder)
+            end
         end)
     end
 })
