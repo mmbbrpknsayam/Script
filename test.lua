@@ -21,17 +21,33 @@ local Tabs = {
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local workspace = game:GetService("Workspace")
 
 local LocalPlayer = Players.LocalPlayer
 local KillersFolder = workspace:WaitForChild("Players"):WaitForChild("Killers")
-local TARGET_ANIM_ID = {
-    "18885909645",
-    "105458270463374",
-    "106538427162796",
-    "138754221537146",
-    "126830014841198"
-}
 local RANGE = 13
+
+-- map killer model names to a list of animations
+-- each animation can have an optional delay
+local TARGET_ANIM_BY_NAME = {
+    ["c00kidd"] = {
+        {id = "18885909645"} -- no delay
+    },
+    ["JohnDoe"] = {
+        {id = "105458270463374"}
+    },
+    ["Noli"] = {
+        {id = "106538427162796"}
+    },
+    ["1x1x1x1"] = {
+        {id = "138754221537146"}
+    },
+    ["Slasher"] = {
+        {id = "126355327951215", delay = 0.3}, -- delay 0.3 sec
+        {id = "121086746534252"},
+        {id = "126830014841198"}
+    }
+}
 
 -- helper to fire the skill
 local function fireSkill()
@@ -42,22 +58,32 @@ local function fireSkill()
         }
     }
     ReplicatedStorage.Modules.Network.RemoteEvent:FireServer(unpack(args))
-    print("Fired UseActorAbility for animation", TARGET_ANIM_ID)
+    print("Fired UseActorAbility")
 end
 
--- hook a single Humanoid
+-- hook a single humanoid
 local function hookHumanoid(humanoid, model)
     humanoid.AnimationPlayed:Connect(function(track)
         local anim = track.Animation
         local animId = anim and anim.AnimationId and tostring(anim.AnimationId):match("%d+") or "UNKNOWN"
+        local modelName = model.Name
 
-        if animId == TARGET_ANIM_ID then
-            local myHRP = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-            local targetPart = model:FindFirstChildWhichIsA("BasePart") -- use any part for distance
-            if myHRP and targetPart then
-                local distance = (myHRP.Position - targetPart.Position).Magnitude
-                if distance <= RANGE then
-                    fireSkill()
+        local targetAnims = TARGET_ANIM_BY_NAME[modelName]
+        if targetAnims then
+            for _, animData in ipairs(targetAnims) do
+                if animId == animData.id then
+                    local myHRP = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+                    local targetPart = model:FindFirstChildWhichIsA("BasePart")
+                    if myHRP and targetPart then
+                        local distance = (myHRP.Position - targetPart.Position).Magnitude
+                        if distance <= RANGE then
+                            if animData.delay then
+                                task.delay(animData.delay, fireSkill)
+                            else
+                                fireSkill()
+                            end
+                        end
+                    end
                 end
             end
         end
@@ -79,3 +105,5 @@ KillersFolder.ChildAdded:Connect(function(killer)
         hookHumanoid(hum, killer)
     end
 end)
+
+print("Multi-animation killer script loaded (no cooldown).")
