@@ -31,6 +31,7 @@ local KillerData = {
     ["JohnDoe"] = "105458270463374",
     ["Noli"] = "106538427162796",
     ["1x1x1x1"] = "138754221537146"
+    ["Slasher"] = "126830014841198"
 }
 
 local function fireSkill()
