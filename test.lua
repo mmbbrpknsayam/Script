@@ -24,16 +24,16 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local LocalPlayer = Players.LocalPlayer
 local KillersFolder = workspace:WaitForChild("Players"):WaitForChild("Killers")
+local TARGET_ANIM_ID = {
+    "18885909645",
+    "105458270463374",
+    "106538427162796",
+    "138754221537146",
+    "126830014841198"
+}
 local RANGE = 13
 
-local KillerData = {
-    ["coolkid"] = "18885909645",
-    ["JohnDoe"] = "105458270463374",
-    ["Noli"] = "106538427162796",
-    ["1x1x1x1"] = "138754221537146"
-    ["Slasher"] = "126830014841198"
-}
-
+-- helper to fire the skill
 local function fireSkill()
     local args = {
         "UseActorAbility",
@@ -42,48 +42,40 @@ local function fireSkill()
         }
     }
     ReplicatedStorage.Modules.Network.RemoteEvent:FireServer(unpack(args))
-    print("Fired UseActorAbility!")
+    print("Fired UseActorAbility for animation", TARGET_ANIM_ID)
 end
 
-local function hookHumanoid(humanoid, model, targetAnimId, killerName)
+-- hook a single Humanoid
+local function hookHumanoid(humanoid, model)
     humanoid.AnimationPlayed:Connect(function(track)
         local anim = track.Animation
         local animId = anim and anim.AnimationId and tostring(anim.AnimationId):match("%d+") or "UNKNOWN"
 
-        if animId == targetAnimId then
+        if animId == TARGET_ANIM_ID then
             local myHRP = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-            local targetPart = model:FindFirstChildWhichIsA("BasePart")
+            local targetPart = model:FindFirstChildWhichIsA("BasePart") -- use any part for distance
             if myHRP and targetPart then
                 local distance = (myHRP.Position - targetPart.Position).Magnitude
                 if distance <= RANGE then
-
-                    if killerName == "JohnDoe" then
-                        task.delay(0.3, fireSkill)
-                    else
-                        fireSkill()
-                    end
+                    fireSkill()
                 end
             end
         end
     end)
 end
 
-for killerName, animId in pairs(KillerData) do
-    local killerModel = KillersFolder:FindFirstChild(killerName)
-    if killerModel then
-        local hum = killerModel:FindFirstChildOfClass("Humanoid")
-        if hum then
-            hookHumanoid(hum, killerModel, animId, killerName)
-        end
+-- hook all existing killers
+for _, killer in ipairs(KillersFolder:GetChildren()) do
+    local hum = killer:FindFirstChildOfClass("Humanoid")
+    if hum then
+        hookHumanoid(hum, killer)
     end
 end
 
+-- hook new killers as they spawn
 KillersFolder.ChildAdded:Connect(function(killer)
-    local targetAnimId = KillerData[killer.Name]
-    if targetAnimId then
-        local hum = killer:WaitForChild("Humanoid", 5)
-        if hum then
-            hookHumanoid(hum, killer, targetAnimId, killer.Name)
-        end
+    local hum = killer:WaitForChild("Humanoid", 5)
+    if hum then
+        hookHumanoid(hum, killer)
     end
 end)
