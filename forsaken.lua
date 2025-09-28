@@ -1,7 +1,7 @@
 local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOogway/Fluent-Renewed/releases/latest/download/Fluent.luau"))()
 
 local Window = Library:CreateWindow{
-    Title = `vulkanVK`,
+    Title = `Glsl 4`,
     SubTitle = "",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
@@ -221,7 +221,7 @@ Toggle9:OnChanged(function()
     local RANGE = 13
 
     local TARGET_ANIM_BY_NAME = {
-        ["c00kidd"] = { {id = "18885909645"} },
+        ["c00lkidd"] = { {id = "18885909645"} },
         ["JohnDoe"] = { {id = "105458270463374"} },
         ["Noli"] = { {id = "106538427162796"} },
         ["1x1x1x1"] = { {id = "83829782357897"} },
