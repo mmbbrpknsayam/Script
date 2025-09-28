@@ -21,6 +21,10 @@ local Tabs = {
 
 local Toggle9 = Tabs.Main:CreateToggle("MyToggle", {Title = "auto block", Default = false})
 
+local blockEnabled = false
+local Toggle9Interacted = false
+local humConnections = {} -- store connections so we can disconnect later
+
 Toggle9:OnChanged(function()
     if not Toggle9Interacted then
         Toggle9Interacted = true
@@ -29,75 +33,81 @@ Toggle9:OnChanged(function()
 
     blockEnabled = not blockEnabled
 
-    if blockEnabled then
+    local Players = game:GetService("Players")
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
+    local workspace = game:GetService("Workspace")
 
-        local Players = game:GetService("Players")
-        local ReplicatedStorage = game:GetService("ReplicatedStorage")
-        local workspace = game:GetService("Workspace")
+    local LocalPlayer = Players.LocalPlayer
+    local KillersFolder = workspace:WaitForChild("Players"):WaitForChild("Killers")
+    local RANGE = 13
 
-        local LocalPlayer = Players.LocalPlayer
-        local KillersFolder = workspace:WaitForChild("Players"):WaitForChild("Killers")
-        local RANGE = 13
-
-        local TARGET_ANIM_BY_NAME = {
-            ["c00kidd"] = {
-                {id = "18885909645"}
-            },
-            ["JohnDoe"] = {
-                {id = "105458270463374"}
-            },
-            ["Noli"] = {
-                {id = "106538427162796"}
-            },
-            ["1x1x1x1"] = {
-                {id = "83829782357897"}
-            },
-            ["Slasher"] = {
-                {id = "126355327951215"},
-                {id = "121086746534252"},
-                {id = "126830014841198"}
-            }
+    -- killer -> animId -> animData
+    local TARGET_ANIM_BY_NAME = {
+        ["c00lkidd"] = {
+            ["18885909645"] = {}
+        },
+        ["JohnDoe"] = {
+            ["105458270463374"] = {}
+        },
+        ["Noli"] = {
+            ["106538427162796"] = {}
+        },
+        ["1x1x1x1"] = {
+            ["83829782357897"] = {}
+        },
+        ["Slasher"] = {
+            ["126355327951215"] = {delay = 0.3},
+            ["121086746534252"] = {},
+            ["126830014841198"] = {}
         }
+    }
 
-        local function fireSkill()
-            local args = {
-                "UseActorAbility",
-                {
-                    buffer.fromstring("\"Block\"")
-                }
-            }
-            ReplicatedStorage.Modules.Network.RemoteEvent:FireServer(unpack(args))
-            print("Fired UseActorAbility")
-        end
+    local function fireSkill()
+        local args = { "UseActorAbility", { buffer.fromstring("\"Block\"") } }
+        ReplicatedStorage.Modules.Network.RemoteEvent:FireServer(unpack(args))
+        print("Fired UseActorAbility")
+    end
 
-        local function hookHumanoid(humanoid, model)
-            humanoid.AnimationPlayed:Connect(function(track)
-                local anim = track.Animation
-                local animId = anim and anim.AnimationId and tostring(anim.AnimationId):match("%d+") or "UNKNOWN"
-                local modelName = model.Name
+    local function hookHumanoid(humanoid, model)
+        local targetAnims = TARGET_ANIM_BY_NAME[model.Name]
+        if not targetAnims then return end
 
-                local targetAnims = TARGET_ANIM_BY_NAME[modelName]
-                if targetAnims then
-                    for _, animData in ipairs(targetAnims) do
-                        if animId == animData.id then
-                            local myHRP = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-                            local targetPart = model:FindFirstChildWhichIsA("BasePart")
-                            if myHRP and targetPart then
-                                local distance = (myHRP.Position - targetPart.Position).Magnitude
-                                if distance <= RANGE then
-                                    if animData.delay then
-                                        task.delay(animData.delay, fireSkill)
-                                    else
-                                        fireSkill()
-                                    end
-                                end
-                            end
+        -- cache HRPs
+        local myHRP = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+        local targetHRP = model:FindFirstChild("HumanoidRootPart")
+
+        local function onAnim(track)
+            if not blockEnabled then return end
+            local anim = track.Animation
+            local animId = anim and anim.AnimationId and tostring(anim.AnimationId):match("%d+")
+            if animId and targetAnims[animId] then
+                if myHRP and targetHRP then
+                    local distance = (myHRP.Position - targetHRP.Position).Magnitude
+                    if distance <= RANGE then
+                        local animData = targetAnims[animId]
+                        if animData.delay then
+                            task.delay(animData.delay, fireSkill)
+                        else
+                            fireSkill()
                         end
                     end
                 end
-            end)
+            end
         end
 
+        -- hook Animator if possible (fires earlier)
+        local animator = humanoid:FindFirstChildOfClass("Animator")
+        local conn
+        if animator then
+            conn = animator.AnimationPlayed:Connect(onAnim)
+        else
+            conn = humanoid.AnimationPlayed:Connect(onAnim)
+        end
+        table.insert(humConnections, conn)
+    end
+
+    if blockEnabled then
+        -- hook existing killers
         for _, killer in ipairs(KillersFolder:GetChildren()) do
             local hum = killer:FindFirstChildOfClass("Humanoid")
             if hum then
@@ -105,13 +115,31 @@ Toggle9:OnChanged(function()
             end
         end
 
-        KillersFolder.ChildAdded:Connect(function(killer)
-            local hum = killer:WaitForChild("Humanoid", 5)
-            if hum then
-                hookHumanoid(hum, killer)
+        -- hook new humanoids via DescendantAdded (better than WaitForChild(5))
+        local descConn
+        descConn = KillersFolder.DescendantAdded:Connect(function(desc)
+            if not blockEnabled then
+                descConn:Disconnect()
+                return
+            end
+            if desc:IsA("Humanoid") then
+                local model = desc.Parent
+                if model and model:IsA("Model") then
+                    hookHumanoid(desc, model)
+                end
             end
         end)
+        table.insert(humConnections, descConn)
 
-        print("Multi-animation killer script loaded (no cooldown).")
+        print("Auto block ON (optimized, no cooldown, instant killer hook).")
+    else
+        -- turn off: disconnect all connections
+        for _, conn in ipairs(humConnections) do
+            if conn and conn.Disconnect then
+                conn:Disconnect()
+            end
+        end
+        humConnections = {}
+        print("Auto block OFF.")
     end
 end)
