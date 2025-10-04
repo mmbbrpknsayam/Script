@@ -1,8 +1,8 @@
 local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOogway/Fluent-Renewed/releases/latest/download/Fluent.luau"))()
 
 local Window = Library:CreateWindow{
-    Title = `plant and zombie`,
-    SubTitle = "V-0.1.1",
+    Title = `plant`,
+    SubTitle = "",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
     Resize = true,
@@ -53,7 +53,7 @@ Toggle2:OnChanged(function()
             while BuyEnabled do
                 for _, seed in ipairs(selectedSeeds) do
                     local args = {
-                        {seed, "\a"}
+                        {seed, "true"}
                     }
                     game:GetService("ReplicatedStorage")
                         :WaitForChild("BridgeNet2")
@@ -100,7 +100,7 @@ Toggle3:OnChanged(function()
             while BuyGearEnabled do
                 for _, gear in ipairs(selectedGears) do
                     local args = {
-                        {gear, " "}
+                        {gear, "true"}
                     }
                     game:GetService("ReplicatedStorage")
                         :WaitForChild("BridgeNet2")
