@@ -24,7 +24,7 @@ local selectedSeeds = {}
 local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
     Title = "Seed",
     Description = "",
-    Values = {"Cactus Seed", "Strawberry Seed", "Blueberry", "Pumpkin Seed", "Sunflower Seed", "Dragon Fruit Seed", "Eggplant Seed", "Watermelon Seed", "Cocotank Seed", "Carnivorous Plant Seed", "Mr Carrot Seed", "Tomatrio Seed"},
+    Values = {"Cactus Seed", "Strawberry Seed", "Pumpkin Seed", "Sunflower Seed", "Dragon Fruit Seed", "Eggplant Seed", "Watermelon Seed", "Grape Seed", "Cocotank Seed", "Carnivorous Plant Seed", "Mr Carrot Seed", "Tomatrio Seed", "Shroombino Seed},
     Multi = true,
     Default = {},
 })
@@ -53,11 +53,11 @@ Toggle2:OnChanged(function()
             while BuyEnabled do
                 for _, seed in ipairs(selectedSeeds) do
                     local args = {
-                        {seed, true}
+                        seed, true
                     }
                     game:GetService("ReplicatedStorage")
                         :WaitForChild("Remotes")
-                        :WaitForChild("BuyGear")
+                        :WaitForChild("BuyItem")
                         :FireServer(unpack(args))
                     task.wait(0.1)
                 end
@@ -100,7 +100,7 @@ Toggle3:OnChanged(function()
             while BuyGearEnabled do
                 for _, gear in ipairs(selectedGears) do
                     local args = {
-                        {gear, true}
+                        gear, true
                     }
                     game:GetService("ReplicatedStorage")
                         :WaitForChild("Remotes")
