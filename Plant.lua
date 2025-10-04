@@ -56,8 +56,8 @@ Toggle2:OnChanged(function()
                         {seed, true}
                     }
                     game:GetService("ReplicatedStorage")
-                        :WaitForChild("BridgeNet2")
-                        :WaitForChild("dataRemoteEvent")
+                        :WaitForChild("Remotes")
+                        :WaitForChild("BuyGear")
                         :FireServer(unpack(args))
                     task.wait(0.1)
                 end
@@ -103,8 +103,8 @@ Toggle3:OnChanged(function()
                         {gear, true}
                     }
                     game:GetService("ReplicatedStorage")
-                        :WaitForChild("BridgeNet2")
-                        :WaitForChild("dataRemoteEvent")
+                        :WaitForChild("Remotes")
+                        :WaitForChild("BuyGear")
                         :FireServer(unpack(args))
                     task.wait(0.1)
                 end
