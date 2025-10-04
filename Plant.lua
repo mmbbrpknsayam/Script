@@ -24,7 +24,7 @@ local selectedSeeds = {}
 local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
     Title = "Seed",
     Description = "",
-    Values = {"Cactus Seed", "Strawberry Seed", "Pumpkin Seed", "Sunflower Seed", "Dragon Fruit Seed", "Eggplant Seed", "Watermelon Seed", "Grape Seed", "Cocotank Seed", "Carnivorous Plant Seed", "Mr Carrot Seed", "Tomatrio Seed", "Shroombino Seed},
+    Values = {"Cactus Seed", "Strawberry Seed", "Pumpkin Seed", "Sunflower Seed", "Dragon Fruit Seed", "Eggplant Seed", "Watermelon Seed", "Grape Seed", "Cocotank Seed", "Carnivorous Plant Seed", "Mr Carrot Seed", "Tomatrio Seed", "Shroombino Seed"},
     Multi = true,
     Default = {},
 })
