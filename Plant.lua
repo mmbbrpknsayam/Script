@@ -53,7 +53,7 @@ Toggle2:OnChanged(function()
             while BuyEnabled do
                 for _, seed in ipairs(selectedSeeds) do
                     local args = {
-                        {seed, "true"}
+                        {seed, true}
                     }
                     game:GetService("ReplicatedStorage")
                         :WaitForChild("BridgeNet2")
@@ -100,7 +100,7 @@ Toggle3:OnChanged(function()
             while BuyGearEnabled do
                 for _, gear in ipairs(selectedGears) do
                     local args = {
-                        {gear, "true"}
+                        {gear, true}
                     }
                     game:GetService("ReplicatedStorage")
                         :WaitForChild("BridgeNet2")
