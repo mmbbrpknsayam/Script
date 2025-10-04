@@ -172,13 +172,11 @@ Tabs.Main:CreateButton({
             end)
         end
 
-        -- Initial setup
         setupMap()
 
-        -- 🔥 Detect when map resets each round
         workspace.Map.Ingame.ChildRemoved:Connect(function(child)
             if child.Name == "Map" then
-                -- Wait for new map
+
                 task.spawn(function()
                     local newMap = workspace.Map.Ingame:WaitForChild("Map")
                     setupMap()
@@ -202,7 +200,7 @@ local Toggle9 = Tabs.Main:CreateToggle("MyToggle", {Title = "auto block", Defaul
 
 local blockEnabled = false
 local Toggle9Interacted = false
-local humConnections = {} -- store connections so we can disconnect later
+local humConnections = {}
 
 Toggle9:OnChanged(function()
     if not Toggle9Interacted then
@@ -220,7 +218,6 @@ Toggle9:OnChanged(function()
     local KillersFolder = workspace:WaitForChild("Players"):WaitForChild("Killers")
     local RANGE = 13
 
-    -- killer -> animId -> animData
     local TARGET_ANIM_BY_NAME = {
         ["c00lkidd"] = {
             ["18885909645"] = {}
@@ -235,7 +232,7 @@ Toggle9:OnChanged(function()
             ["83829782357897"] = {}
         },
         ["Slasher"] = {
-            ["126355327951215"] = {delay = 0.3},
+            ["126355327951215"] = {},
             ["121086746534252"] = {},
             ["126830014841198"] = {}
         }
@@ -251,7 +248,6 @@ Toggle9:OnChanged(function()
         local targetAnims = TARGET_ANIM_BY_NAME[model.Name]
         if not targetAnims then return end
 
-        -- cache HRPs
         local myHRP = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
         local targetHRP = model:FindFirstChild("HumanoidRootPart")
 
@@ -274,7 +270,6 @@ Toggle9:OnChanged(function()
             end
         end
 
-        -- hook Animator if possible (fires earlier)
         local animator = humanoid:FindFirstChildOfClass("Animator")
         local conn
         if animator then
@@ -286,7 +281,7 @@ Toggle9:OnChanged(function()
     end
 
     if blockEnabled then
-        -- hook existing killers
+
         for _, killer in ipairs(KillersFolder:GetChildren()) do
             local hum = killer:FindFirstChildOfClass("Humanoid")
             if hum then
@@ -294,7 +289,6 @@ Toggle9:OnChanged(function()
             end
         end
 
-        -- hook new humanoids via DescendantAdded (better than WaitForChild(5))
         local descConn
         descConn = KillersFolder.DescendantAdded:Connect(function(desc)
             if not blockEnabled then
@@ -312,7 +306,7 @@ Toggle9:OnChanged(function()
 
         print("Auto block ON (optimized, no cooldown, instant killer hook).")
     else
-        -- turn off: disconnect all connections
+
         for _, conn in ipairs(humConnections) do
             if conn and conn.Disconnect then
                 conn:Disconnect()
@@ -384,7 +378,6 @@ Toggle2:OnChanged(function()
             end
         end
 
-        -- Listen for new generators in this map
         table.insert(connections, map.ChildAdded:Connect(function(child)
             if child.Name == "Generator" then
                 createHighlight(child)
