@@ -112,3 +112,54 @@ Toggle3:OnChanged(function()
         end)
     end
 end)
+
+local Tabs = {
+    Main = Window:CreateTab{
+        Title = "Setting",
+        Icon = "nil"
+    }
+}
+
+local placeId = game.PlaceId
+local jobid = ""
+
+Tabs.Main:CreateButton{
+    Title = "Copy jobid",
+    Description = "",
+    Callback = function()
+        local clipboardFunc = setclipboard or toclipboard
+        if clipboardFunc then
+            clipboardFunc(tostring(game.JobId))
+            print("Copied Job ID:", game.JobId)
+        else
+            warn("Clipboard not supported on this executor.")
+        end
+    end
+}
+
+local Input = Tabs.Main:CreateInput("Input", {
+    Title = "JobId",
+    Default = "",
+    Placeholder = "",
+    Numeric = false,
+    Finished = false,
+    Callback = function(Value)
+        jobid = Value
+        print("Job ID set to:", jobid)
+    end
+})
+
+Tabs.Main:CreateButton{
+    Title = "Join Server",
+    Description = "",
+    Callback = function()
+        local TeleportService = game:GetService("TeleportService")
+        local instanceId = tostring(jobid)
+
+        if instanceId ~= "" then
+            TeleportService:TeleportToPlaceInstance(placeId, instanceId, game.Players.LocalPlayer)
+        else
+            warn("Invalid Job ID.")
+        end
+    end
+}
