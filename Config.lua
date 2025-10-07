@@ -1,6 +1,11 @@
--- LocalScript
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local ParryButtonPress = ReplicatedStorage.Remotes:WaitForChild("ParryButtonPress")
+game.Players.LocalPlayer.Character.Humanoid.JumpPower = 200
 
--- Fire to the server
-ParryButtonPress:FireServer()
+local gmt = getrawmetatable(game)
+setreadonly(gmt, false)
+local oldindex = gmt.__index
+
+gmt.__index = newcclosure(function(self,spoof)
+    if spoof == "JumpPower" then return 50 end
+    if spoof == "WalkSpeed" then return 16 end
+    return oldindex(self,spoof)
+end)
