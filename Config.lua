@@ -1,4 +1,5 @@
 game.Players.LocalPlayer.Character.Humanoid.JumpPower = 200
+game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 100
 
 local gmt = getrawmetatable(game)
 setreadonly(gmt, false)
