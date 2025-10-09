@@ -24,7 +24,22 @@ local selectedSeeds = {}
 local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
     Title = "Seed",
     Description = "",
-    Values = {"Cactus Seed", "Strawberry Seed", "Pumpkin Seed", "Sunflower Seed", "Dragon Fruit Seed", "Eggplant Seed", "Watermelon Seed", "Grape Seed", "Cocotank Seed", "Carnivorous Plant Seed", "Mr Carrot Seed", "Tomatrio Seed", "Shroombino Seed", "Mango Seed"},
+    Values = {
+        "Cactus Seed",
+        "Strawberry Seed",
+        "Pumpkin Seed",
+        "Sunflower Seed",
+        "Dragon Fruit Seed",
+        "Eggplant Seed",
+        "Watermelon Seed",
+        "Grape Seed",
+        "Cocotank Seed",
+        "Carnivorous Plant Seed",
+        "Mr Carrot Seed",
+        "Tomatrio Seed",
+        "Shroombino Seed",
+        "Mango Seed"
+    },
     Multi = true,
     Default = {},
 })
@@ -71,7 +86,13 @@ local selectedGears = {}
 local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
     Title = "Gear",
     Description = "",
-    Values = {"Water Bucket", "Frost Grenade", "Banana Gun", "Frost Blower", "Carrot Launcher"},
+    Values = {
+        "Water Bucket",
+        "Frost Grenade",
+        "Banana Gun",
+        "Frost Blower",
+       "Carrot Launcher"
+    },
     Multi = true,
     Default = {},
 })
