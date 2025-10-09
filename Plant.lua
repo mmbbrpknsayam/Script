@@ -185,7 +185,5 @@ Tabs.Main:CreateButton{
     end
 }
 
-InterfaceManager:SetFolder("FluentScriptHub")
 SaveManager:SetFolder("Loader/Plant")
--- Build config section (this creates the Save and Load UI)
 SaveManager:BuildConfigSection(Tabs.Settings)
