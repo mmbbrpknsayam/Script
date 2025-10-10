@@ -47,7 +47,7 @@ local Tabs = {
     }
 }
 
-local selectedSeeds = settings.selectedSeeds = settings.selectedSeeds or {}
+local selectedSeeds = settings.selectedSeeds or {}
 
 local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
     Title = "Seed",
@@ -92,8 +92,8 @@ Toggle2:OnChanged(function(value)
         return
     end
 
-    BuyEnabled = value
-    settings.AutoBuy = value
+    BuyEnabled = (value)
+    settings.AutoBuy = (value)
     SaveSettings()
 
     if BuyEnabled then
