@@ -1,64 +1,87 @@
-local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOogway/Fluent-Renewed/releases/latest/download/Fluent.luau"))()
+--// 🧠 Services
+local HttpService = game:GetService("HttpService")
 
+--// 🗂️ Config
+local Config = {
+    Folder = "Loader",
+    File = "settings.json"
+}
+
+--// 📂 Ensure folder exists
+if not isfolder(Config.Folder) then
+    makefolder(Config.Folder)
+end
+
+local filePath = Config.Folder .. "/" .. Config.File
+
+--// 📝 Ensure settings file exists & valid
+local settings
+if not isfile(filePath) then
+    writefile(filePath, "{}")
+    settings = {}
+else
+    local success, result = pcall(function()
+        return HttpService:JSONDecode(readfile(filePath))
+    end)
+    settings = success and result or {}
+end
+
+--// 💾 Save function
+local function SaveSettings()
+    writefile(filePath, HttpService:JSONEncode(settings))
+end
+
+-------------------------------------------------------------------
+-- 🪟 FLUENT SETUP
+-------------------------------------------------------------------
+
+local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOogway/Fluent-Renewed/releases/latest/download/Fluent.luau"))()
 local Window = Library:CreateWindow{
-    Title = `setting`,
-    SubTitle = "",
-    TabWidth = 160,
-    Size = UDim2.fromOffset(830, 525),
-    Resize = true, -- Resize this ^ Size according to a 1920x1080 screen, good for mobile users but may look weird on some devices
-    MinSize = Vector2.new(470, 380),
-    Acrylic = true, -- The blur may be detectable, setting this to false disables blur entirely
-    Theme = "Dark",
-    MinimizeKey = Enum.KeyCode.RightControl -- Used when theres no MinimizeKeybind
+    Title = "Fluent Script Hub",
+    SubTitle = "Save Seeds Example",
+    Size = UDim2.fromOffset(700, 450),
+    Acrylic = true,
+    Theme = "Dark"
 }
 
 local Tabs = {
-    Main = Window:CreateTab{
-        Title = "Server hop",
-        Icon = "nil"
-    }
+    Main = Window:CreateTab{ Title = "Main", Icon = "leaf" },
 }
 
-local placeId = game.PlaceId
-local jobid = ""
+settings.selectedSeeds = settings.selectedSeeds or {}
 
-Tabs.Main:CreateButton{
-    Title = "Copy jobid",
-    Description = "",
-    Callback = function()
-        local clipboardFunc = setclipboard or toclipboard
-        if clipboardFunc then
-            clipboardFunc(tostring(game.JobId))
-            print("Copied Job ID:", game.JobId)
-        else
-            warn("Clipboard not supported on this executor.")
-        end
-    end
-}
-
-local Input = Tabs.Main:CreateInput("Input", {
-    Title = "JobId",
-    Default = "",
-    Placeholder = "",
-    Numeric = false,
-    Finished = false,
-    Callback = function(Value)
-        jobid = Value
-        print("Job ID set to:", jobid)
-    end
+local MultiDropdown = Tabs.Main:CreateDropdown("SeedDropdown", {
+    Title = "Seed",
+    Description = "Choose seeds to plant.",
+    Values = {
+        "Cactus Seed",
+        "Strawberry Seed",
+        "Pumpkin Seed",
+        "Sunflower Seed",
+        "Dragon Fruit Seed",
+        "Eggplant Seed",
+        "Watermelon Seed",
+        "Grape Seed",
+        "Cocotank Seed",
+        "Carnivorous Plant Seed",
+        "Mr Carrot Seed",
+        "Tomatrio Seed",
+        "Shroombino Seed",
+        "Mango Seed"
+    },
+    Multi = true,
+    Default = settings.selectedSeeds
 })
 
-Tabs.Main:CreateButton{
-    Title = "Join Server",
-    Description = "",
-    Callback = function()
-        local TeleportService = game:GetService("TeleportService")
-        local instanceId = tostring(jobid)
-
-        if instanceId ~= "" then
-            TeleportService:TeleportToPlaceInstance(placeId, instanceId, game.Players.LocalPlayer)
-        else
-            warn("Invalid Job ID.")
+MultiDropdown:OnChanged(function(Value)
+    local selected = {}
+    for SeedName, IsSelected in pairs(Value) do
+        if IsSelected then
+            table.insert(selected, SeedName)
         end
     end
-}
+
+    settings.selectedSeeds = selected
+    SaveSettings()
+    print("[🌱] Saved selected seeds:", table.concat(selected, ", "))
+end)
