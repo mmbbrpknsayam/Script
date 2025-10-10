@@ -1,20 +1,16 @@
---// 🧠 Services
 local HttpService = game:GetService("HttpService")
 
---// 🗂️ Config
 local Config = {
     Folder = "Loader",
     File = "settings.json"
 }
 
---// 📂 Ensure folder exists
 if not isfolder(Config.Folder) then
     makefolder(Config.Folder)
 end
 
 local filePath = Config.Folder .. "/" .. Config.File
 
---// 📝 Ensure settings file exists & valid
 local settings
 if not isfile(filePath) then
     writefile(filePath, "{}")
@@ -26,33 +22,36 @@ else
     settings = success and result or {}
 end
 
---// 💾 Save function
 local function SaveSettings()
     writefile(filePath, HttpService:JSONEncode(settings))
 end
 
--------------------------------------------------------------------
--- 🪟 FLUENT SETUP
--------------------------------------------------------------------
-
 local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOogway/Fluent-Renewed/releases/latest/download/Fluent.luau"))()
+
 local Window = Library:CreateWindow{
-    Title = "Fluent Script Hub",
-    SubTitle = "Save Seeds Example",
-    Size = UDim2.fromOffset(700, 450),
+    Title = `plant`,
+    SubTitle = "",
+    TabWidth = 160,
+    Size = UDim2.fromOffset(830, 525),
+    Resize = true,
+    MinSize = Vector2.new(470, 380),
     Acrylic = true,
-    Theme = "Dark"
+    Theme = "Dark",
+    MinimizeKey = Enum.KeyCode.LeftControl
 }
 
 local Tabs = {
-    Main = Window:CreateTab{ Title = "Main", Icon = "leaf" },
+    Main = Window:CreateTab{
+        Title = "Shop",
+        Icon = "nil"
+    }
 }
 
-settings.selectedSeeds = settings.selectedSeeds or {}
+local selectedSeeds = settings.selectedSeeds = settings.selectedSeeds or {}
 
-local MultiDropdown = Tabs.Main:CreateDropdown("SeedDropdown", {
+local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
     Title = "Seed",
-    Description = "Choose seeds to plant.",
+    Description = "",
     Values = {
         "Cactus Seed",
         "Strawberry Seed",
@@ -83,5 +82,4 @@ MultiDropdown:OnChanged(function(Value)
 
     settings.selectedSeeds = selected
     SaveSettings()
-    print("[🌱] Saved selected seeds:", table.concat(selected, ", "))
 end)
