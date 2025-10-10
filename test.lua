@@ -83,3 +83,33 @@ MultiDropdown:OnChanged(function(Value)
     settings.selectedSeeds = selected
     SaveSettings()
 end)
+
+local Toggle2 = Tabs.Main:CreateToggle("MyToggle", {Title = "Auto buy", Default = false})
+
+Toggle2:OnChanged(function(value)
+    if not Toggle2Interacted then
+        Toggle2Interacted = true
+        return
+    end
+
+    BuyEnabled = value
+    settings.AutoBuy = value
+    SaveSettings()
+
+    if BuyEnabled then
+        task.spawn(function()
+            while BuyEnabled do
+                for _, seed in ipairs(selectedSeeds) do
+                    local args = {
+                        seed, true
+                    }
+                    game:GetService("ReplicatedStorage")
+                        :WaitForChild("Remotes")
+                        :WaitForChild("BuyItem")
+                        :FireServer(unpack(args))
+                    task.wait(0.1)
+                end
+            end
+        end)
+    end
+end)
