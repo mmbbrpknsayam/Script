@@ -118,6 +118,50 @@ Toggle3:OnChanged(function()
     end
 end)
 
+local selectedGhouls = {}
+
+local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
+    Title = "Ghoul",
+    Description = "",
+    Values = {"Spooky Egg"},
+    Multi = true,
+    Default = {},
+})
+
+MultiDropdown:OnChanged(function(Value)
+    selectedGhouls = {}
+    for GhoulName, IsSelected in pairs(Value) do
+        if IsSelected then
+            table.insert(selectedGhouls, GhoulName)
+        end
+    end
+end)
+
+local Toggle5 = Tabs.Main:CreateToggle("MyToggle", {Title = "Auto buy", Default = false})
+
+Toggle5:OnChanged(function()
+    if not Toggle5Interacted then
+        Toggle5Interacted = true
+        return
+    end
+
+    BuyHallEnabled = not BuyHallEnabled
+
+    if BuyHallEnabled then
+        task.spawn(function()
+            while BuyHallEnabled do
+                for _, seed in ipairs(selectedSeeds) do
+                    local args = {
+                        ghoul, Creepy Critters
+                    }
+                    game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("BuyEventShopStock"):FireServer(unpack(args))
+                    task.wait(0.1)
+                end
+            end
+        end)
+    end
+end)
+
 local Tabs = {
     Main = Window:CreateTab{
         Title = "ghoul",
