@@ -55,6 +55,9 @@ end)
 
 f(x)
 
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
 local Toggle2 = Tabs.Main:CreateToggle("MyToggle", {Title = "Unbreakable", Default = false})
 
 Toggle2:OnChanged(function()
