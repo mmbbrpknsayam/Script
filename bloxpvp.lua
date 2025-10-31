@@ -69,8 +69,8 @@ Toggle2:OnChanged(function()
     BuyEnabled = not BuyEnabled
 
     if BuyEnabled then
-        workspace.Characters.LocalPlayer.UnbreakableAll = true
+        workspace.Characters:FindFirstChild(LocalPlayer.Name):SetAttribute("UnbreakableAll", true)
 	else
-		workspace.Characters.LocalPlayer.UnbreakableAll = false
+		workspace.Characters:FindFirstChild(LocalPlayer.Name):SetAttribute("UnbreakableAll", false)
 	end
 end)
