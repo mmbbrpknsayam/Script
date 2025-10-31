@@ -54,3 +54,20 @@ p.PlayerAdded:Connect(function(player)
 end)
 
 f(x)
+
+local Toggle2 = Tabs.Main:CreateToggle("MyToggle", {Title = "Unbreakable", Default = false})
+
+Toggle2:OnChanged(function()
+    if not Toggle2Interacted then
+        Toggle2Interacted = true
+        return
+    end
+
+    BuyEnabled = not BuyEnabled
+
+    if BuyEnabled then
+        workspace.Characters.LocalPlayer.UnbreakableAll = true
+	else
+		workspace.Characters.LocalPlayer.UnbreakableAll = false
+	end
+end)
