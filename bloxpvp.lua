@@ -24,8 +24,8 @@ local l = p.LocalPlayer
 local c = workspace:WaitForChild("Characters")
 
 local function f(s)
-	for _, model in pairs(Characters:GetChildren()) do
-		if model:FindFirstChild("HumanoidRootPart") and model.Name ~= LocalPlayer.Name then
+	for _, model in pairs(c:GetChildren()) do
+		if model:FindFirstChild("HumanoidRootPart") and model.Name ~= l.Name then
 			model.HumanoidRootPart.Size = Vector3.new(s, s, s)
 		end
 	end
