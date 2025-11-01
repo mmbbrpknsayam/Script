@@ -19,14 +19,14 @@ local Tabs = {
     }
 }
 
-local p = game:GetService("Players")
-local l = p.LocalPlayer
-local c = workspace:WaitForChild("Characters")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local Characters = workspace:WaitForChild("Characters")
 
-local function f(s)
-	for _, model in pairs(c:GetChildren()) do
-		if model:FindFirstChild("HumanoidRootPart") and model.Name ~= l.Name then
-			model.HumanoidRootPart.Size = Vector3.new(s, s, s)
+local function appHit(size)
+	for _, model in pairs(Characters:GetChildren()) do
+		if model:FindFirstChild("HumanoidRootPart") and model.Name ~= LocalPlayer.Name then
+			model.HumanoidRootPart.Size = Vector3.new(size, size, size)
 		end
 	end
 end
@@ -38,27 +38,47 @@ local Slider = Tabs.Main:CreateSlider("Slider", {
 	Min = 1,
 	Max = 200,
 	Rounding = 1,
-	Callback = function(x)
-		v = x
-		f(x)
+	Callback = function(Value)
+		crHit = Value
+		appHit(Value)
 	end
 })
 
-p.PlayerAdded:Connect(function(player)
-	p.CharacterAdded:Connect(function(char)
+Players.PlayerAdded:Connect(function(player)
+	player.CharacterAdded:Connect(function(char)
 		repeat task.wait() until char:FindFirstChild("HumanoidRootPart")
-		if char.Name ~= l.Name then
-			char.HumanoidRootPart.Size = Vector3.new(v, v, v)
+		if char.Name ~= LocalPlayer.Name then
+			char.HumanoidRootPart.Size = Vector3.new(crHit, crHit, crHit)
 		end
 	end)
 end)
 
-f(x)
+appHit(crHit)
 
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
-local Toggle2 = Tabs.Main:CreateToggle("MyToggle", {Title = "Unbreakable", Default = false})
+local Toggle1= Tabs.Main:CreateToggle("MyToggle", {Title = "Unbreakable", Default = false})
+
+Toggle1:OnChanged(function()
+    if not Toggle1Interacted then
+        Toggle1Interacted = true
+        return
+    end
+
+    Unbreakables = not Unbreakables
+
+    if BuyEnabled then
+        workspace.Characters:FindFirstChild(LocalPlayer.Name):SetAttribute("UnbreakableAll", true)
+	else
+		workspace.Characters:FindFirstChild(LocalPlayer.Name):SetAttribute("UnbreakableAll", false)
+	end
+end)
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local Toggle2 = Tabs.Main:CreateToggle("MyToggle", {Title = "Water walk", Default = false})
 
 Toggle2:OnChanged(function()
     if not Toggle2Interacted then
@@ -66,11 +86,39 @@ Toggle2:OnChanged(function()
         return
     end
 
-    BuyEnabled = not BuyEnabled
+    Waterwalk = not Waterwalk
 
     if BuyEnabled then
-        workspace.Characters:FindFirstChild(LocalPlayer.Name):SetAttribute("UnbreakableAll", true)
+        workspace.Characters:FindFirstChild(LocalPlayer.Name):SetAttribute("WaterWalking", true)
 	else
-		workspace.Characters:FindFirstChild(LocalPlayer.Name):SetAttribute("UnbreakableAll", false)
+		workspace.Characters:FindFirstChild(LocalPlayer.Name):SetAttribute("WaterWalking", false)
 	end
+end)
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local function applySpeed(value)
+	if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+		LocalPlayer.Character.Humanoid.WalkSpeed = value
+	end
+end
+
+local Slider = Tabs.Main:CreateSlider("Slider", {
+	Title = "WalkSpeed",
+	Description = "",
+	Default = 100,
+	Min = 1,
+	Max = 300,
+	Rounding = 1,
+	Callback = function(Value)
+		currentSpeed = Value
+		applySpeed(Value)
+	end
+})
+
+LocalPlayer.CharacterAdded:Connect(function(char)
+	char:WaitForChild("Humanoid")
+	task.wait(0.1)
+	applySpeed(currentSpeed)
 end)
