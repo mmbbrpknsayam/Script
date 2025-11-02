@@ -196,6 +196,16 @@ Tabs.Main:CreateButton{
     end
 }
 
+Tabs.Main:CreateButton{
+    Title = "auto sprint",
+    Description = "",
+    Callback = function()
+        local staminaModule = require(game.ReplicatedStorage.Systems.Character.Game.Sprinting)
+
+        staminaModule.DefaultConfig.IsSprinting = true
+    end
+}
+
 local Toggle9 = Tabs.Main:CreateToggle("MyToggle", {Title = "auto block", Default = false})
 
 local blockEnabled = false
