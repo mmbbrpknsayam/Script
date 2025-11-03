@@ -32,7 +32,7 @@ local function moveTo(targetPart)
 		Humanoid.MoveToFinished:Wait()
 	end
 
-	repeat task.wait(0.05) until (HumanoidRootPart.Position - targetPart.Position).Magnitude < 5
+	repeat task.wait(0.1) until (HumanoidRootPart.Position - targetPart.Position).Magnitude < 5
 end
 
 --------------------------------------------------------
