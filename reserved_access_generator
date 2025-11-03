@@ -195,6 +195,8 @@ end
 --------------------------------------------------------
 -- 🗺️ MAP RESET HANDLER
 --------------------------------------------------------
+local module_upvr = require(game.ReplicatedStorage.Systems.Character.Game.Sprinting)
+
 local function onMapReset()
 	print("🌀 Map reset detected — restarting auto generator system...")
 	stopAutoRepair()
@@ -205,6 +207,8 @@ local function onMapReset()
 	HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
 
 	task.spawn(autoRepairLoop)
+
+	module_upvr.__sprintedEvent:Fire(true)
 end
 
 --------------------------------------------------------
