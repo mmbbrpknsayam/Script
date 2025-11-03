@@ -2,14 +2,14 @@ local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOog
 
 local Window = Library:CreateWindow{
     Title = `MarbleHub`,
-    SubTitle = " [Dev] ",
+    SubTitle = "",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
-    Resize = true, -- Resize this ^ Size according to a 1920x1080 screen, good for mobile users but may look weird on some devices
+    Resize = true,
     MinSize = Vector2.new(470, 380),
-    Acrylic = true, -- The blur may be detectable, setting this to false disables blur entirely
+    Acrylic = true,
     Theme = "Dark",
-    MinimizeKey = Enum.KeyCode.RightControl -- Used when theres no MinimizeKeybind
+    MinimizeKey = Enum.KeyCode.RightControl
 }
 
 local Tabs = {
@@ -18,28 +18,6 @@ local Tabs = {
         Icon = "nil"
     }
 }
-
--- Store selected items
-local selectedItem = {}
-
--- Create dropdown
-local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
-    Title = "Item",
-    Description = "",
-    Values = {"Apple", "Bandage", "Boba", "Bull's essence", "Cube of Ice", "Forcefield Crystal", "Frog Potion", "Lightning Potion", "Speed Potion", "Sphere of fury", "True Power"},
-    Multi = true,
-    Default = {},
-})
-
--- Update selected items when changed
-MultiDropdown:OnChanged(function(Value)
-    selectedItem = {} -- Reset
-    for ItemName, IsSelected in pairs(Value) do
-        if IsSelected then
-            table.insert(selectedItem, ItemName)
-        end
-    end
-end)
 
 local selectedItem = {}
 
@@ -55,7 +33,6 @@ local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
     Default = {},
 })
 
--- Update selected items when changed
 MultiDropdown:OnChanged(function(Value)
     selectedItem = {}
     for ItemName, IsSelected in pairs(Value) do
@@ -65,7 +42,6 @@ MultiDropdown:OnChanged(function(Value)
     end
 end)
 
--- ESP Toggle
 local Toggle1 = Tabs.Main:CreateToggle("MyToggle", {Title = "ESP", Default = false})
 
 local espVisuals = {}
@@ -112,7 +88,6 @@ Toggle1:OnChanged(function()
 
                     table.insert(espVisuals, billboardGui)
 
-                    -- Update distance dynamically
                     local heartbeatConn
                     heartbeatConn = game:GetService("RunService").Heartbeat:Connect(function()
                         if not espEnabled then
@@ -131,7 +106,6 @@ Toggle1:OnChanged(function()
             end
         end
 
-        -- Apply ESP to existing items
         local itemsFolder = workspace:FindFirstChild("Items")
         if itemsFolder then
             for _, model in pairs(itemsFolder:GetChildren()) do
@@ -139,7 +113,6 @@ Toggle1:OnChanged(function()
             end
         end
 
-        -- Add ESP for new items appearing
         if itemsFolder then
             itemsFolder.ChildAdded:Connect(function(newModel)
                 if espEnabled then
@@ -148,7 +121,7 @@ Toggle1:OnChanged(function()
             end)
         end
     else
-        -- Remove all ESP visuals
+
         for _, v in pairs(espVisuals) do
             if v and v.Parent then
                 v:Destroy()
@@ -162,12 +135,10 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local LocalPlayer = Players.LocalPlayer
 
--- Store selected players
 local selectedPlayers = {}
 local auraEnabled = false
 local Toggle2Interacted = false
 
--- Function to get current player list (excluding yourself)
 local function getPlayerList()
     local playerNames = {}
     for _, player in ipairs(Players:GetPlayers()) do
@@ -178,7 +149,6 @@ local function getPlayerList()
     return playerNames
 end
 
--- Multi-dropdown for player selection
 local MultiDropdown = Tabs.Main:CreateDropdown("MultiDropdown", {
     Title = "Select Players",
     Description = "Choose players to slap",
@@ -196,7 +166,6 @@ MultiDropdown:OnChanged(function(Value)
     end
 end)
 
--- Auto refresh dropdown when players join/leave
 Players.PlayerAdded:Connect(function()
     MultiDropdown:SetValues(getPlayerList())
 end)
@@ -205,7 +174,6 @@ Players.PlayerRemoving:Connect(function()
     MultiDropdown:SetValues(getPlayerList())
 end)
 
--- Toggle for Slap Aura
 local Toggle2 = Tabs.Main:CreateToggle("MyToggle", {Title = "Slap Aura", Default = false})
 
 Toggle2:OnChanged(function()
