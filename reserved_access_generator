@@ -1,1 +1,230 @@
-return(function()local p=[[bG9jYWwgUGxheWVycyA9IGdhbWU6R2V0U2VydmljZSgiUGxheWVycyIpCmxvY2FsIFBhdGhmaW5kaW5nU2VydmljZSA9IGdhbWU6R2V0U2VydmljZSgiUGF0aGZpbmRpbmdTZXJ2aWNlIikKbG9jYWwgTG9jYWxQbGF5ZXIgPSBQbGF5ZXJzLkxvY2FsUGxheWVyCgpsb2NhbCBDaGFyYWN0ZXIgPSBMb2NhbFBsYXllci5DaGFyYWN0ZXIgb3IgTG9jYWxQbGF5ZXIuQ2hhcmFjdGVyQWRkZWQ6V2FpdCgpCmxvY2FsIEh1bWFub2lkID0gQ2hhcmFjdGVyOldhaXRGb3JDaGlsZCgiSHVtYW5vaWQiKQpsb2NhbCBIdW1hbm9pZFJvb3RQYXJ0ID0gQ2hhcmFjdGVyOldhaXRGb3JDaGlsZCgiSHVtYW5vaWRSb290UGFydCIpCgpsb2NhbCBmdW5jdGlvbiBtb3ZlVG8odGFyZ2V0UGFydCkKCWlmIG5vdCB0YXJnZXRQYXJ0IG9yIG5vdCB0YXJnZXRQYXJ0LlBvc2l0aW9uIHRoZW4gcmV0dXJuIGVuZAoKCWxvY2FsIHBhdGggPSBQYXRoZmluZGluZ1NlcnZpY2U6Q3JlYXRlUGF0aCh7CgkJQWdlbnRSYWRpdXMgPSAyLAoJCUFnZW50SGVpZ2h0ID0gNSwKCQlBZ2VudENhbkp1bXAgPSB0cnVlCgl9KQoKCXBhdGg6Q29tcHV0ZUFzeW5jKEh1bWFub2lkUm9vdFBhcnQuUG9zaXRpb24sIHRhcmdldFBhcnQuUG9zaXRpb24pCglpZiBwYXRoLlN0YXR1cyA9PSBFbnVtLlBhdGhTdGF0dXMuU3VjY2VzcyB0aGVuCgkJZm9yIF8sIHdheXBvaW50IGluIGlwYWlycyhwYXRoOkdldFdheXBvaW50cygpKSBkbwoJCQlpZiB3YXlwb2ludC5BY3Rpb24gPT0gRW51bS5QYXRoV2F5cG9pbnRBY3Rpb24uSnVtcCB0aGVuCgkJCQlIdW1hbm9pZC5KdW1wID0gdHJ1ZQoJCQllbmQKCQkJSHVtYW5vaWQ6TW92ZVRvKHdheXBvaW50LlBvc2l0aW9uKQoJCQlIdW1hbm9pZC5Nb3ZlVG9GaW5pc2hlZDpXYWl0KCkKCQllbmQKCWVsc2UKCgkJSHVtYW5vaWQ6TW92ZVRvKHRhcmdldFBhcnQuUG9zaXRpb24pCgkJSHVtYW5vaWQuTW92ZVRvRmluaXNoZWQ6V2FpdCgpCgllbmQKCglyZXBlYXQgdGFzay53YWl0KDAuMSkgdW50aWwgKEh1bWFub2lkUm9vdFBhcnQuUG9zaXRpb24gLSB0YXJnZXRQYXJ0LlBvc2l0aW9uKS5NYWduaXR1ZGUgPCA1CmVuZAoKbG9jYWwgcmVwYWlyaW5nID0gZmFsc2UKbG9jYWwgY3VycmVudEdlbiA9IG5pbApsb2NhbCByZXBhaXJUaHJlYWQgPSBuaWwKbG9jYWwgZ2VuQ29ubmVjdGlvbnMgPSB7fQoKbG9jYWwgZnVuY3Rpb24gc3RvcEF1dG9SZXBhaXIoKQoJaWYgcmVwYWlyVGhyZWFkIHRoZW4KCQlwY2FsbCh0YXNrLmNhbmNlbCwgcmVwYWlyVGhyZWFkKQoJCXJlcGFpclRocmVhZCA9IG5pbAoJZW5kCglyZXBhaXJpbmcgPSBmYWxzZQoJY3VycmVudEdlbiA9IG5pbAplbmQKCmxvY2FsIGZ1bmN0aW9uIHN0YXJ0QXV0b1JlcGFpcihnZW5lcmF0b3IpCglzdG9wQXV0b1JlcGFpcigpCglpZiBub3QgZ2VuZXJhdG9yIG9yIG5vdCBnZW5lcmF0b3IuUGFyZW50IHRoZW4gcmV0dXJuIGVuZAoKCWxvY2FsIHByb2dyZXNzID0gZ2VuZXJhdG9yOkZpbmRGaXJzdENoaWxkKCJQcm9ncmVzcyIpCglsb2NhbCByZW1vdGVzID0gZ2VuZXJhdG9yOkZpbmRGaXJzdENoaWxkKCJSZW1vdGVzIikKCWlmIG5vdCAocHJvZ3Jlc3MgYW5kIHByb2dyZXNzOklzQSgiTnVtYmVyVmFsdWUiKSkgdGhlbiByZXR1cm4gZW5kCglpZiBub3QgcmVtb3RlcyB0aGVuIHJldHVybiBlbmQKCglsb2NhbCByZSA9IHJlbW90ZXM6RmluZEZpcnN0Q2hpbGQoIlJFIikKCWlmIG5vdCAocmUgYW5kIHJlOklzQSgiUmVtb3RlRXZlbnQiKSkgdGhlbiByZXR1cm4gZW5kCgoJY3VycmVudEdlbiA9IGdlbmVyYXRvcgoJcmVwYWlyaW5nID0gdHJ1ZQoKCWxvY2FsIHByb2dyZXNzQ29ubgoJcHJvZ3Jlc3NDb25uID0gcHJvZ3Jlc3M6R2V0UHJvcGVydHlDaGFuZ2VkU2lnbmFsKCJWYWx1ZSIpOkNvbm5lY3QoZnVuY3Rpb24oKQoJCWlmIHByb2dyZXNzLlZhbHVlID49IDEwMCB0aGVuCgkJCXByb2dyZXNzQ29ubjpEaXNjb25uZWN0KCkKCQkJc3RvcEF1dG9SZXBhaXIoKQoJCWVuZAoJZW5kKQoJdGFibGUuaW5zZXJ0KGdlbkNvbm5lY3Rpb25zLCBwcm9ncmVzc0Nvbm4pCgoJcmVwYWlyVGhyZWFkID0gdGFzay5zcGF3bihmdW5jdGlvbigpCgkJd2hpbGUgcmVwYWlyaW5nIGFuZCBjdXJyZW50R2VuID09IGdlbmVyYXRvciBkbwoJCQlpZiBwcm9ncmVzcy5WYWx1ZSA+PSAxMDAgdGhlbgoJCQkJc3RvcEF1dG9SZXBhaXIoKQoJCQkJYnJlYWsKCQkJZW5kCgkJCXRhc2sud2FpdCg0KQoJCQlpZiByZXBhaXJpbmcgYW5kIHByb2dyZXNzLlZhbHVlIDwgMTAwIHRoZW4KCQkJCXBjYWxsKGZ1bmN0aW9uKCkKCQkJCQlyZTpGaXJlU2VydmVyKCkKCQkJCWVuZCkKCQkJZW5kCgkJZW5kCgllbmQpCmVuZAoKbG9jYWwgZnVuY3Rpb24gZ2V0TmVhcmVzdEdlbmVyYXRvckJlbG93MTAwKCkKCWxvY2FsIG1hcEZvbGRlciA9IHdvcmtzcGFjZTpGaW5kRmlyc3RDaGlsZCgiTWFwIikKCWlmIG5vdCBtYXBGb2xkZXIgdGhlbiByZXR1cm4gbmlsIGVuZAoKCWxvY2FsIGluZ2FtZSA9IG1hcEZvbGRlcjpGaW5kRmlyc3RDaGlsZCgiSW5nYW1lIikKCWlmIG5vdCBpbmdhbWUgdGhlbiByZXR1cm4gbmlsIGVuZAoKCWxvY2FsIG1hcCA9IGluZ2FtZTpGaW5kRmlyc3RDaGlsZCgiTWFwIikKCWlmIG5vdCBtYXAgdGhlbiByZXR1cm4gbmlsIGVuZAoKCWxvY2FsIG5lYXJlc3QgPSBuaWwKCWxvY2FsIHNob3J0ZXN0ID0gbWF0aC5odWdlCgoJZm9yIF8sIGdlbiBpbiBpcGFpcnMobWFwOkdldENoaWxkcmVuKCkpIGRvCgkJaWYgZ2VuLk5hbWUgPT0gIkdlbmVyYXRvciIgdGhlbgoJCQlsb2NhbCBwcm9ncmVzcyA9IGdlbjpGaW5kRmlyc3RDaGlsZCgiUHJvZ3Jlc3MiKQoJCQlsb2NhbCBwb3NpdGlvbnMgPSBnZW46RmluZEZpcnN0Q2hpbGQoIlBvc2l0aW9ucyIpCgkJCWlmIHByb2dyZXNzIGFuZCBwcm9ncmVzczpJc0EoIk51bWJlclZhbHVlIikgYW5kIHByb2dyZXNzLlZhbHVlIDwgMTAwIGFuZCBwb3NpdGlvbnMgdGhlbgoJCQkJbG9jYWwgY2VudGVyID0gcG9zaXRpb25zOkZpbmRGaXJzdENoaWxkKCJDZW50ZXIiKQoJCQkJaWYgY2VudGVyIHRoZW4KCQkJCQlsb2NhbCBkaXN0ID0gKEh1bWFub2lkUm9vdFBhcnQuUG9zaXRpb24gLSBjZW50ZXIuUG9zaXRpb24pLk1hZ25pdHVkZQoJCQkJCWlmIGRpc3QgPCBzaG9ydGVzdCB0aGVuCgkJCQkJCXNob3J0ZXN0ID0gZGlzdAoJCQkJCQluZWFyZXN0ID0gZ2VuCgkJCQkJZW5kCgkJCQllbmQKCQkJZW5kCgkJZW5kCgllbmQKCglyZXR1cm4gbmVhcmVzdAplbmQKCmxvY2FsIGZ1bmN0aW9uIGF1dG9SZXBhaXJMb29wKCkKCXByaW50KCJXYWl0aW5nIGZvciBtYXAgYW5kIGdlbmVyYXRvcnMuLi4iKQoJbG9jYWwgbWFwID0gd29ya3NwYWNlOldhaXRGb3JDaGlsZCgiTWFwIik6V2FpdEZvckNoaWxkKCJJbmdhbWUiKTpXYWl0Rm9yQ2hpbGQoIk1hcCIpCgoJLS0gV2FpdCB1bnRpbCBhdCBsZWFzdCBvbmUgZ2VuZXJhdG9yIGV4aXN0cwoJcmVwZWF0CgkJdGFzay53YWl0KDEpCgl1bnRpbCBtYXA6RmluZEZpcnN0Q2hpbGQoIkdlbmVyYXRvciIpCgoJcHJpbnQoIkdlbmVyYXRvcnMgZm91bmQhIFN0YXJ0aW5nIGF1dG8gcmVwYWlyIGxvb3AuLi4iKQoKCXdoaWxlIHRhc2sud2FpdCgxKSBkbwoJCWlmIHJlcGFpcmluZyB0aGVuIGNvbnRpbnVlIGVuZAoKCQlsb2NhbCBnZW4gPSBnZXROZWFyZXN0R2VuZXJhdG9yQmVsb3cxMDAoKQoJCWlmIG5vdCBnZW4gdGhlbgoJCQlwcmludCgiQWxsIGdlbmVyYXRvcnMgcmVwYWlyZWQhIFdhaXRpbmcgZm9yIG1hdGNoIHJlc2V0Li4uIikKCQkJYnJlYWsKCQllbmQKCgkJbG9jYWwgcG9zaXRpb25zRm9sZGVyID0gZ2VuOkZpbmRGaXJzdENoaWxkKCJQb3NpdGlvbnMiKQoJCWxvY2FsIG1haW4gPSBnZW46RmluZEZpcnN0Q2hpbGQoIk1haW4iKQoJCWxvY2FsIHByb21wdCA9IG1haW4gYW5kIChtYWluOkZpbmRGaXJzdENoaWxkKCJQcm9tcHQiKSBvciBtYWluOkZpbmRGaXJzdENoaWxkV2hpY2hJc0EoIlByb3hpbWl0eVByb21wdCIpKQoJCWlmIG5vdCBwb3NpdGlvbnNGb2xkZXIgb3Igbm90IHByb21wdCB0aGVuIGNvbnRpbnVlIGVuZAoKCQlsb2NhbCBwb3NpdGlvbnMgPSB7IkNlbnRlciIsICJSaWdodCIsICJMZWZ0In0KCQlmb3IgXywgcG9zTmFtZSBpbiBpcGFpcnMocG9zaXRpb25zKSBkbwoJCQlsb2NhbCB0YXJnZXRQYXJ0ID0gcG9zaXRpb25zRm9sZGVyOkZpbmRGaXJzdENoaWxkKHBvc05hbWUpCgkJCWlmIHRhcmdldFBhcnQgdGhlbgoJCQkJcHJpbnQoIk1vdmluZyB0byIsIHBvc05hbWUsICJwb3NpdGlvbiBvZiBnZW5lcmF0b3I6IiwgZ2VuOkdldEZ1bGxOYW1lKCkpCgkJCQltb3ZlVG8odGFyZ2V0UGFydCkKCgkJCQktLSBGaXJlIHByb21wdCB3aGVuIGluIHJhbmdlCgkJCQlmaXJlcHJveGltaXR5cHJvbXB0KHByb21wdCkKCgkJCQktLSBDaGVjayBpZiBQdXp6bGVVSSBhcHBlYXJlZAoJCQkJdGFzay53YWl0KDAuNSkKCQkJCWlmIFBsYXllcnMuTG9jYWxQbGF5ZXIuUGxheWVyR3VpOkZpbmRGaXJzdENoaWxkKCJQdXp6bGVVSSIpIHRoZW4KCQkJCQlwcmludCgiUHV6emxlVUkgZGV0ZWN0ZWQhIFN0YXJ0aW5nIGF1dG8gcmVwYWlyLiIpCgkJCQkJc3RhcnRBdXRvUmVwYWlyKGdlbikKCQkJCQlicmVhawoJCQkJZW5kCgkJCWVuZAoJCWVuZAoJZW5kCmVuZAoKbG9jYWwgZnVuY3Rpb24gb25NYXBSZXNldCgpCglwcmludCgiTWFwIHJlc2V0IGRldGVjdGVkIOKAlCByZXN0YXJ0aW5nIGF1dG8gZ2VuZXJhdG9yIHN5c3RlbS4uLiIpCglzdG9wQXV0b1JlcGFpcigpCgoJdGFzay53YWl0KDYpIC0tIFdhaXQgZm9yIG5ldyBtYXAgdG8gZnVsbHkgbG9hZAoJQ2hhcmFjdGVyID0gTG9jYWxQbGF5ZXIuQ2hhcmFjdGVyIG9yIExvY2FsUGxheWVyLkNoYXJhY3RlckFkZGVkOldhaXQoKQoJSHVtYW5vaWQgPSBDaGFyYWN0ZXI6V2FpdEZvckNoaWxkKCJIdW1hbm9pZCIpCglIdW1hbm9pZFJvb3RQYXJ0ID0gQ2hhcmFjdGVyOldhaXRGb3JDaGlsZCgiSHVtYW5vaWRSb290UGFydCIpCgoJdGFzay5zcGF3bihhdXRvUmVwYWlyTG9vcCkKZW5kCgpsb2NhbCBmdW5jdGlvbiBpbml0QXV0b1N5c3RlbSgpCglwcmludCgiQXV0byBHZW5lcmF0b3IgU3lzdGVtIGluaXRpYWxpemVkLiIpCgl0YXNrLnNwYXduKGF1dG9SZXBhaXJMb29wKQoKCXdvcmtzcGFjZS5NYXAuSW5nYW1lLkNoaWxkUmVtb3ZlZDpDb25uZWN0KGZ1bmN0aW9uKGNoaWxkKQoJCWlmIGNoaWxkLk5hbWUgPT0gIk1hcCIgdGhlbgoJCQlvbk1hcFJlc2V0KCkKCQllbmQKCWVuZCkKZW5kCgotLSBXYWl0IGZvciBwbGF5ZXIgY2hhcmFjdGVyICYgdXBkYXRlIHJlZmVyZW5jZXMKTG9jYWxQbGF5ZXIuQ2hhcmFjdGVyQWRkZWQ6Q29ubmVjdChmdW5jdGlvbihjaGFyKQoJQ2hhcmFjdGVyID0gY2hhcgoJSHVtYW5vaWQgPSBjaGFyOldhaXRGb3JDaGlsZCgiSHVtYW5vaWQiKQoJSHVtYW5vaWRSb290UGFydCA9IGNoYXI6V2FpdEZvckNoaWxkKCJIdW1hbm9pZFJvb3RQYXJ0IikKZW5kKQoKdGFzay5zcGF3bihpbml0QXV0b1N5c3RlbSkK]];local m='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';local map={} for i=1,64 do map[m:sub(i,i)]=i-1 end; local function dec(s)local t={} local i=1 while i<=#s do local c1=map[s:sub(i,i)] or 0 local c2=map[s:sub(i+1,i+1)] or 0 local c3=map[s:sub(i+2,i+2)] or 0 local c4=map[s:sub(i+3,i+3)] or 0 local trip=bit32.bor(bit32.lshift(c1,18), bit32.lshift(c2,12), bit32.lshift(c3,6), c4) local a=bit32.band(bit32.rshift(trip,16),255) local b=bit32.band(bit32.rshift(trip,8),255) local c=bit32.band(trip,255) t[#t+1]=string.char(a) if s:sub(i+3,i+3)~='=' then t[#t+1]=string.char(b) end if s:sub(i+4,i+4)~='=' then t[#t+1]=string.char(c) end i=i+4 end return table.concat(t) end local src=dec(p) local L=loadstring or load if not L then error('no loader') end local f,err = L(src) if not f then error(err) end return f() end)()
+--------------------------------------------------------
+-- ⚙️ SERVICES
+--------------------------------------------------------
+local Players = game:GetService("Players")
+local PathfindingService = game:GetService("PathfindingService")
+local LocalPlayer = Players.LocalPlayer
+
+local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+local Humanoid = Character:WaitForChild("Humanoid")
+local HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
+
+--------------------------------------------------------
+-- 🧭 MOVE FUNCTION (no jump)
+--------------------------------------------------------
+local function moveTo(targetPart)
+	if not targetPart or not targetPart.Position then return end
+
+	local path = PathfindingService:CreatePath({
+		AgentRadius = 2,
+		AgentHeight = 5,
+		AgentCanJump = false -- no jumping
+	})
+
+	path:ComputeAsync(HumanoidRootPart.Position, targetPart.Position)
+	if path.Status == Enum.PathStatus.Success then
+		for _, waypoint in ipairs(path:GetWaypoints()) do
+			Humanoid:MoveTo(waypoint.Position)
+			Humanoid.MoveToFinished:Wait()
+		end
+	else
+		Humanoid:MoveTo(targetPart.Position)
+		Humanoid.MoveToFinished:Wait()
+	end
+
+	repeat task.wait(0.05) until (HumanoidRootPart.Position - targetPart.Position).Magnitude < 5
+end
+
+--------------------------------------------------------
+-- 🔧 REPAIR SYSTEM
+--------------------------------------------------------
+local repairing = false
+local currentGen = nil
+local repairThread = nil
+local genConnections = {}
+
+local function stopAutoRepair()
+	if repairThread then
+		pcall(task.cancel, repairThread)
+		repairThread = nil
+	end
+	repairing = false
+	currentGen = nil
+end
+
+local function startAutoRepair(generator)
+	stopAutoRepair()
+	if not generator or not generator.Parent then return end
+
+	local progress = generator:FindFirstChild("Progress")
+	local remotes = generator:FindFirstChild("Remotes")
+	if not (progress and progress:IsA("NumberValue")) then return end
+	if not remotes then return end
+
+	local re = remotes:FindFirstChild("RE")
+	if not (re and re:IsA("RemoteEvent")) then return end
+
+	currentGen = generator
+	repairing = true
+
+	-- 🧠 Fast PuzzleUI monitor (instant re-path)
+	task.spawn(function()
+		while repairing and currentGen == generator do
+			local puzzleUI = Players.LocalPlayer.PlayerGui:FindFirstChild("PuzzleUI")
+			if not puzzleUI and progress.Value < 100 then
+				print("⚡ PuzzleUI closed early — instantly re-pathing!")
+				local positions = generator:FindFirstChild("Positions")
+				local main = generator:FindFirstChild("Main")
+				local prompt = main and (main:FindFirstChild("Prompt") or main:FindFirstChildWhichIsA("ProximityPrompt"))
+				if positions and prompt then
+					local retryTarget = positions:FindFirstChild("Center") or positions:FindFirstChildWhichIsA("BasePart")
+					if retryTarget then
+						moveTo(retryTarget)
+						fireproximityprompt(prompt)
+					end
+				end
+			end
+			task.wait(0.3)
+		end
+	end)
+
+	-- 🔁 RE firing + instant complete detect
+	repairThread = task.spawn(function()
+		-- fast watcher for instant completion
+		task.spawn(function()
+			while repairing and currentGen == generator do
+				if progress.Value >= 100 then
+					stopAutoRepair()
+					break
+				end
+				task.wait(0.2)
+			end
+		end)
+
+		-- main 4s RE firing loop
+		while repairing and currentGen == generator do
+			task.wait(4)
+			if repairing and progress.Value < 100 then
+				pcall(function()
+					re:FireServer()
+				end)
+			end
+		end
+	end)
+end
+
+--------------------------------------------------------
+-- 🔍 FIND NEAREST GENERATOR < 100
+--------------------------------------------------------
+local function getNearestGeneratorBelow100()
+	local mapFolder = workspace:FindFirstChild("Map")
+	if not mapFolder then return nil end
+
+	local ingame = mapFolder:FindFirstChild("Ingame")
+	if not ingame then return nil end
+
+	local map = ingame:FindFirstChild("Map")
+	if not map then return nil end
+
+	local nearest, shortest = nil, math.huge
+
+	for _, gen in ipairs(map:GetChildren()) do
+		if gen.Name == "Generator" then
+			local progress = gen:FindFirstChild("Progress")
+			local positions = gen:FindFirstChild("Positions")
+			if progress and progress:IsA("NumberValue") and progress.Value < 100 and positions then
+				local center = positions:FindFirstChild("Center")
+				if center then
+					local dist = (HumanoidRootPart.Position - center.Position).Magnitude
+					if dist < shortest then
+						shortest = dist
+						nearest = gen
+					end
+				end
+			end
+		end
+	end
+
+	return nearest
+end
+
+--------------------------------------------------------
+-- 🔁 AUTO REPAIR LOOP
+--------------------------------------------------------
+local function autoRepairLoop()
+	print("Waiting for map and generators...")
+	local map = workspace:WaitForChild("Map"):WaitForChild("Ingame"):WaitForChild("Map")
+
+	repeat task.wait(1) until map:FindFirstChild("Generator")
+	print("Generators found! Starting auto repair loop...")
+
+	while task.wait(1) do
+		if repairing then continue end
+
+		local gen = getNearestGeneratorBelow100()
+		if not gen then
+			print("✅ All generators repaired! Waiting for match reset...")
+			break
+		end
+
+		local positionsFolder = gen:FindFirstChild("Positions")
+		local main = gen:FindFirstChild("Main")
+		local prompt = main and (main:FindFirstChild("Prompt") or main:FindFirstChildWhichIsA("ProximityPrompt"))
+		if not positionsFolder or not prompt then continue end
+
+		local positions = {"Center", "Right", "Left"}
+		for _, posName in ipairs(positions) do
+			local targetPart = positionsFolder:FindFirstChild(posName)
+			if targetPart then
+				print("Moving to", posName, "position of generator:", gen:GetFullName())
+				moveTo(targetPart)
+
+				fireproximityprompt(prompt)
+				task.wait(0.5)
+
+				if Players.LocalPlayer.PlayerGui:FindFirstChild("PuzzleUI") then
+					print("🧩 PuzzleUI detected! Starting auto repair.")
+					startAutoRepair(gen)
+					break
+				end
+			end
+		end
+	end
+end
+
+--------------------------------------------------------
+-- 🗺️ MAP RESET HANDLER
+--------------------------------------------------------
+local function onMapReset()
+	print("🌀 Map reset detected — restarting auto generator system...")
+	stopAutoRepair()
+
+	task.wait(6)
+	Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+	Humanoid = Character:WaitForChild("Humanoid")
+	HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
+
+	task.spawn(autoRepairLoop)
+end
+
+--------------------------------------------------------
+-- 🚀 INITIALIZE
+--------------------------------------------------------
+local function initAutoSystem()
+	print("⚙️ Auto Generator System initialized.")
+	task.spawn(autoRepairLoop)
+
+	workspace.Map.Ingame.ChildRemoved:Connect(function(child)
+		if child.Name == "Map" then
+			onMapReset()
+		end
+	end)
+end
+
+LocalPlayer.CharacterAdded:Connect(function(char)
+	Character = char
+	Humanoid = char:WaitForChild("Humanoid")
+	HumanoidRootPart = char:WaitForChild("HumanoidRootPart")
+end)
+
+task.spawn(initAutoSystem)
