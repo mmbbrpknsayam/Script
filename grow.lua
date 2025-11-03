@@ -1,7 +1,7 @@
 local Library = loadstring(game:HttpGetAsync("https://github.com/ActualMasterOogway/Fluent-Renewed/releases/latest/download/Fluent.luau"))()
 
 local Window = Library:CreateWindow{
-    Title = `banana [ beta ]`,
+    Title = `MarbleHub`,
     SubTitle = "V-0.1.1",
     TabWidth = 160,
     Size = UDim2.fromOffset(830, 525),
