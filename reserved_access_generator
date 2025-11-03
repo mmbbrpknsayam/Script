@@ -4,6 +4,13 @@
 local Players = game:GetService("Players")
 local PathfindingService = game:GetService("PathfindingService")
 local LocalPlayer = Players.LocalPlayer
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local module_upvr = require(ReplicatedStorage.Systems.Character.Game.Sprinting)
+
+if not module_upvr.DefaultsSet then
+    module_upvr.Init()
+end
 
 local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
 local Humanoid = Character:WaitForChild("Humanoid")
@@ -195,7 +202,13 @@ end
 --------------------------------------------------------
 -- 🗺️ MAP RESET HANDLER
 --------------------------------------------------------
-local module_upvr = require(game.ReplicatedStorage.Systems.Character.Game.Sprinting)
+
+local function toggleSprintAfterDelay()
+
+    task.wait(6)
+
+    module_upvr.__sprintedEvent:Fire(true)
+end
 
 local function onMapReset()
 	print("🌀 Map reset detected — restarting auto generator system...")
@@ -208,8 +221,14 @@ local function onMapReset()
 
 	task.spawn(autoRepairLoop)
 
-	module_upvr.__sprintedEvent:Fire(true)
 end
+
+workspace.Map.Ingame.ChildAdded:Connect(function(child)
+    if child.Name == "Map" then
+        print("New map spawned, waiting 6 seconds to toggle sprint...")
+        task.spawn(toggleSprintAfterDelay)
+    end
+end)
 
 --------------------------------------------------------
 -- 🚀 INITIALIZE
